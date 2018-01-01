@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:text="Back" />
+
+            <Button
+                android:id="@+id/refresh_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:nextFocusLeft="@id/back_button"
+                android:nextFocusRight="@id/fullscreen_button"
+                android:text="Refresh" />
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:nextFocusLeft="@id/refresh_button"
+                android:nextFocusRight="@id/fullscreen_button"
+                android:text="Search" />
+
+            <Button
+                android:id="@+id/fullscreen_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:nextFocusLeft="@id/refresh_button"
+                android:nextFocusRight="@id/receive_button"
+                android:text="FullScreen" />
+
+            <Button
+                android:id="@+id/receive_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:text="Receive" />
+        </LinearLayout>
+
+        <com.thekirankumar.youtubeauto.VideoEnabledWebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:nextFocusLeft="@id/fullscreen_button" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/full_screen_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</android.support.constraint.ConstraintLayout>
