@@ -5,10 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.car.Car;
 import android.support.car.CarConnectionCallback;
-import android.support.car.CarNotConnectedException;
 import android.support.car.hardware.CarSensorEvent;
 import android.support.car.hardware.CarSensorManager;
 import android.util.Log;
@@ -27,7 +28,6 @@ import com.google.android.apps.auto.sdk.CarUiController;
 import com.google.android.apps.auto.sdk.SearchCallback;
 import com.google.android.apps.auto.sdk.SearchController;
 import com.google.android.apps.auto.sdk.SearchItem;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +47,11 @@ public class WebViewCarFragment extends CarFragment {
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
     public static final String YOUTUBE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
     public static final int AUTOSUGGEST_DEBOUNCE_DELAY_MILLIS = 500;
-    private final String TAG = "WebViewCarFragment";
+    public static final String GOOGLE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=chrome&q=";
+    public static final String GOOGLE_SEARCH_URL_BASE = "https://www.google.com/#q=";
+    public static final String PREFS = "car";
+    public static final String HOME_URL = "home_url";
+    private static final String TAG = "WebViewCarFragment";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
     private TextView carSpeedView;
@@ -86,8 +90,6 @@ public class WebViewCarFragment extends CarFragment {
             try {
                 CarSensorManager sensorManager = (CarSensorManager) car.getCarManager(Car.SENSOR_SERVICE);
                 WebViewCarFragment.this.sensorManager = sensorManager;
-                refreshParkingBrakeSensor(sensorManager);
-                refreshSpeedSensor(sensorManager);
             } catch (Exception e) {
                 Log.w(TAG, "Error setting up car connection", e);
             }
@@ -99,27 +101,10 @@ public class WebViewCarFragment extends CarFragment {
         }
     };
     private VideoEnabledWebView webView;
+    private SearchMode searchMode = SearchMode.YOUTUBE;
 
     public WebViewCarFragment() {
         // Required empty public constructor
-    }
-
-    private void refreshParkingBrakeSensor(CarSensorManager sensorManager) throws CarNotConnectedException {
-        sensorManager.addListener(mSensorsListener, CarSensorManager.SENSOR_TYPE_PARKING_BRAKE,
-                CarSensorManager.SENSOR_RATE_NORMAL);
-        CarSensorEvent ds = sensorManager.getLatestSensorEvent(CarSensorManager.SENSOR_TYPE_PARKING_BRAKE);
-        if (ds != null) {
-            mSensorsListener.onSensorChanged(sensorManager, ds);
-        }
-    }
-
-    private void refreshSpeedSensor(CarSensorManager sensorManager) throws CarNotConnectedException {
-        sensorManager.addListener(mSensorsListener, CarSensorManager.SENSOR_TYPE_CAR_SPEED,
-                CarSensorManager.SENSOR_RATE_NORMAL);
-        CarSensorEvent ds = sensorManager.getLatestSensorEvent(CarSensorManager.SENSOR_TYPE_CAR_SPEED);
-        if (ds != null) {
-            mSensorsListener.onSensorChanged(sensorManager, ds);
-        }
     }
 
     @Override
@@ -159,6 +144,13 @@ public class WebViewCarFragment extends CarFragment {
                 webView.goBack();
             }
         });
+        Button homeButton = view.findViewById(R.id.home_button);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webView.loadUrl(YOUTUBE_HOME_URL_BASE);
+            }
+        });
         Button refreshButton = view.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,13 +170,32 @@ public class WebViewCarFragment extends CarFragment {
                 }
             }
         });
-        Button searchButton = view.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        Button searchYoutubeButton = view.findViewById(R.id.search_youtube_button);
+        searchYoutubeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isSearchShown) {
                     isSearchShown = true;
+                    searchMode = SearchMode.YOUTUBE;
                     carUiController.getSearchController().showSearchBox();
+                    carUiController.getSearchController().setSearchHint("YouTube Search");
+                } else {
+                    isSearchShown = false;
+                    carUiController.getSearchController().hideSearchBox();
+                    carUiController.getStatusBarController().hideAppHeader();
+                }
+            }
+        });
+
+        Button searchGoogleButton = view.findViewById(R.id.search_google_button);
+        searchGoogleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isSearchShown) {
+                    isSearchShown = true;
+                    searchMode = SearchMode.GOOGLE;
+                    carUiController.getSearchController().showSearchBox();
+                    carUiController.getSearchController().setSearchHint("Google search");
                 } else {
                     isSearchShown = false;
                     carUiController.getSearchController().hideSearchBox();
@@ -197,7 +208,7 @@ public class WebViewCarFragment extends CarFragment {
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences car = getContext().getSharedPreferences("car", Context.MODE_MULTI_PROCESS);
+                SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
                 String url = car.getString("url", null);
                 if (url != null) {
                     webView.loadUrl(url);
@@ -207,12 +218,25 @@ public class WebViewCarFragment extends CarFragment {
 
         View webViewContainer = view.findViewById(R.id.container);
         ViewGroup fullScreenVideoView = view.findViewById(R.id.full_screen_view);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new CustomWebViewClient());
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
-        webView.loadUrl(YOUTUBE_HOME_URL_BASE);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+                final String url = car.getString(HOME_URL, YOUTUBE_HOME_URL_BASE);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        webView.loadUrl(url);
+                    }
+                });
+            }
+        });
+
         webView.requestFocus();
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -243,8 +267,9 @@ public class WebViewCarFragment extends CarFragment {
                     e.printStackTrace();
                 }
 
-                webView.loadUrl(YOUTUBE_SEARCH_URL_BASE + encoded);
-
+                webView.loadUrl(getSearchUrlBase() + encoded);
+                isSearchShown = false;
+                carUiController.getSearchController().hideSearchBox();
             }
 
             @Override
@@ -256,8 +281,9 @@ public class WebViewCarFragment extends CarFragment {
                     e.printStackTrace();
                 }
 
-                webView.loadUrl(YOUTUBE_SEARCH_URL_BASE + encoded);
-
+                webView.loadUrl(getSearchUrlBase() + encoded);
+                isSearchShown = false;
+                carUiController.getSearchController().hideSearchBox();
                 return true;
             }
 
@@ -275,8 +301,14 @@ public class WebViewCarFragment extends CarFragment {
                         }
                         OkHttpClient client = new OkHttpClient();
 
+                        String urlBase = null;
+                        if (searchMode == SearchMode.YOUTUBE) {
+                            urlBase = YOUTUBE_AUTOSUGGEST_URL_BASE;
+                        } else if (searchMode == SearchMode.GOOGLE) {
+                            urlBase = GOOGLE_AUTOSUGGEST_URL_BASE;
+                        }
                         Request request = new Request.Builder()
-                                .url(YOUTUBE_AUTOSUGGEST_URL_BASE + encoded)
+                                .url(urlBase + encoded)
                                 .build();
                         final ArrayList<SearchItem> results = new ArrayList<>();
                         try {
@@ -324,6 +356,16 @@ public class WebViewCarFragment extends CarFragment {
 
     }
 
+    @NonNull
+    private String getSearchUrlBase() {
+        if (searchMode == SearchMode.YOUTUBE) {
+            return YOUTUBE_SEARCH_URL_BASE;
+        } else if (searchMode == SearchMode.GOOGLE) {
+            return GOOGLE_SEARCH_URL_BASE;
+        }
+        return null;
+    }
+
 
     @Override
     public void onStart() {
@@ -347,26 +389,23 @@ public class WebViewCarFragment extends CarFragment {
         super.onPause();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
     }
 
     @Override
     public void onDestroy() {
+        webView.destroy();
         handlerThread.quit();
         super.onDestroy();
     }
 
+    private class CustomWebViewClient extends WebViewClient {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+            car.edit().putString(HOME_URL, url).apply();
+        }
+    }
 }
