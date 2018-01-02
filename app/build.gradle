@@ -6,10 +6,10 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.thekirankumar.youtubeauto"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.1.4"
+        versionCode 9
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,9 +40,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.1.0'
     compile 'com.github.martoreto:aauto-sdk:v4.5'
+    compile 'com.github.zagum:SpeechRecognitionView:1.2.2'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
-    compile 'com.google.android.exoplayer:exoplayer:r2.5.2'
 }
 
 

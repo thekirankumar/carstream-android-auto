@@ -1,17 +1,22 @@
 package com.thekirankumar.youtubeauto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.car.Car;
 import android.support.car.CarConnectionCallback;
 import android.support.car.hardware.CarSensorEvent;
 import android.support.car.hardware.CarSensorManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,10 +25,11 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.zagum.speechrecognitionview.RecognitionProgressView;
 import com.google.android.apps.auto.sdk.CarUiController;
 import com.google.android.apps.auto.sdk.SearchCallback;
 import com.google.android.apps.auto.sdk.SearchController;
@@ -102,6 +108,8 @@ public class WebViewCarFragment extends CarFragment {
     };
     private VideoEnabledWebView webView;
     private SearchMode searchMode = SearchMode.YOUTUBE;
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -137,29 +145,91 @@ public class WebViewCarFragment extends CarFragment {
         handlerThread.start();
         final Handler handler = new Handler(handlerThread.getLooper());
         webView = view.findViewById(R.id.web_view);
-        Button backButton = view.findViewById(R.id.back_button);
+        ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 webView.goBack();
             }
         });
-        Button homeButton = view.findViewById(R.id.home_button);
+        ImageButton homeButton = view.findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 webView.loadUrl(YOUTUBE_HOME_URL_BASE);
             }
         });
-        Button refreshButton = view.findViewById(R.id.refresh_button);
+        ImageButton refreshButton = view.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 webView.reload();
             }
         });
-        Button receiveButton = view.findViewById(R.id.receive_button);
-        Button fullScreenButton = view.findViewById(R.id.fullscreen_button);
+        ImageButton voiceButton = view.findViewById(R.id.voice_button);
+        voiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (speechRecognizer != null) {
+                    speechRecognizer.stopListening();
+                    speechRecognizer = null;
+                } else {
+                    webView.pauseVideo();
+                    final RecognitionProgressView recognitionProgressView = (RecognitionProgressView) view.findViewById(R.id.speech_view);
+                    MyRecognitionListener listener = new MyRecognitionListener(new MyRecognitionListener.OnCompleteListener() {
+                        @Override
+                        public void onVoiceRecognitionComplete(String text) {
+                            String encoded = null;
+                            try {
+                                encoded = URLEncoder.encode(text, "utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            webView.loadUrl(getSearchUrlBase() + encoded);
+                            speechRecognizer = null;
+                            recognitionProgressView.stop();
+                            recognitionProgressView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            speechRecognizer = null;
+                        }
+
+                        @Override
+                        public void onError(int error) {
+                            recognitionProgressView.stop();
+                            recognitionProgressView.setVisibility(View.GONE);
+                        }
+                    });
+                    Context context = getContext();
+                    speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
+                    speechRecognizerIntent = new Intent(
+                            RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    speechRecognizer.startListening(speechRecognizerIntent);
+
+                    recognitionProgressView.setVisibility(View.VISIBLE);
+                    recognitionProgressView.play();
+                    recognitionProgressView.setSpeechRecognizer(speechRecognizer);
+                    recognitionProgressView.setRecognitionListener(listener);
+                    int[] colors = {
+                            ContextCompat.getColor(context, R.color.color1),
+                            ContextCompat.getColor(context, R.color.color2),
+                            ContextCompat.getColor(context, R.color.color3),
+                            ContextCompat.getColor(context, R.color.color4),
+                            ContextCompat.getColor(context, R.color.color5)
+                    };
+                    recognitionProgressView.setColors(colors);
+                }
+            }
+        });
+
+
+        handleVoiceVisibility();
+        ImageButton receiveButton = view.findViewById(R.id.receive_button);
+        ImageButton fullScreenButton = view.findViewById(R.id.fullscreen_button);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +240,7 @@ public class WebViewCarFragment extends CarFragment {
                 }
             }
         });
-        Button searchYoutubeButton = view.findViewById(R.id.search_youtube_button);
+        ImageButton searchYoutubeButton = view.findViewById(R.id.search_youtube_button);
         searchYoutubeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +257,7 @@ public class WebViewCarFragment extends CarFragment {
             }
         });
 
-        Button searchGoogleButton = view.findViewById(R.id.search_google_button);
+        ImageButton searchGoogleButton = view.findViewById(R.id.search_google_button);
         searchGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,6 +426,11 @@ public class WebViewCarFragment extends CarFragment {
 
     }
 
+    private boolean isRecordAudioGranted() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
     @NonNull
     private String getSearchUrlBase() {
         if (searchMode == SearchMode.YOUTUBE) {
@@ -378,6 +453,18 @@ public class WebViewCarFragment extends CarFragment {
         if (webView != null) {
             webView.requestFocus();
             webView.playVideoIfPaused();
+        }
+        handleVoiceVisibility();
+    }
+
+    private void handleVoiceVisibility() {
+        if (getView() != null) {
+            ImageButton voiceButton = getView().findViewById(R.id.voice_button);
+            if (!isRecordAudioGranted()) {
+                voiceButton.setVisibility(View.GONE);
+            } else {
+                voiceButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 

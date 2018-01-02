@@ -14,48 +14,75 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/back_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
+                android:padding="5dp"
+                android:src="@drawable/ic_back"
                 android:text="Back" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/home_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
                 android:nextFocusLeft="@id/back_button"
                 android:nextFocusRight="@id/refresh_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_home"
                 android:text="Home" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/refresh_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
                 android:nextFocusLeft="@id/home_button"
-                android:nextFocusRight="@id/fullscreen_button"
+                android:nextFocusRight="@id/voice_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_refresh"
                 android:text="Refresh" />
 
-            <Button
+            <ImageButton
+                android:id="@+id/voice_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/highlighting_drawable"
+                android:nextFocusDown="@id/web_view"
+                android:nextFocusLeft="@id/refresh_button"
+                android:nextFocusRight="@id/search_youtube_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_voice_input"
+                android:text="Voice search" />
+
+
+            <ImageButton
                 android:id="@+id/search_youtube_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
                 android:drawableLeft="@drawable/youtube"
-                android:nextFocusLeft="@id/refresh_button"
+                android:nextFocusLeft="@id/voice_button"
                 android:nextFocusRight="@id/search_google_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_search_youtube"
                 android:text="Search" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/search_google_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -64,32 +91,55 @@
                 android:drawableLeft="@drawable/google"
                 android:nextFocusLeft="@id/search_youtube_button"
                 android:nextFocusRight="@id/fullscreen_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_search_google"
                 android:text="Search" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/fullscreen_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
+                android:nextFocusDown="@id/web_view"
                 android:nextFocusLeft="@id/refresh_button"
                 android:nextFocusRight="@id/receive_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_fullscreen"
                 android:text="FullScreen" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/receive_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/highlighting_drawable"
+                android:padding="5dp"
+                android:src="@drawable/ic_receive_from_phone"
                 android:text="Receive" />
         </LinearLayout>
 
-        <com.thekirankumar.youtubeauto.VideoEnabledWebView
-            android:id="@+id/web_view"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:nextFocusLeft="@id/fullscreen_button" />
+            android:layout_height="match_parent">
+
+
+            <com.thekirankumar.youtubeauto.VideoEnabledWebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nextFocusUp="@id/voice_button" />
+
+            <com.github.zagum.speechrecognitionview.RecognitionProgressView
+                android:id="@+id/speech_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/light_gray"
+                android:padding="20dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
     </LinearLayout>
 
