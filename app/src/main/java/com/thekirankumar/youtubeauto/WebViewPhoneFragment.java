@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -13,16 +14,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-
 
 
 public class WebViewPhoneFragment extends CarFragment {
     private final String TAG = "WebViewCarFragment";
     private VideoEnabledWebView webView;
+    private EditText editText;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -78,9 +85,10 @@ public class WebViewPhoneFragment extends CarFragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         webView = view.findViewById(R.id.web_view);
+        editText = view.findViewById(R.id.edittext_url);
         ViewGroup webViewContainer = view.findViewById(R.id.container);
         ViewGroup fullScreenView = view.findViewById(R.id.full_screen_view);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new CustomWebViewClient());
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenView, new ProgressBar(getActivity()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -103,7 +111,44 @@ public class WebViewPhoneFragment extends CarFragment {
                 return false;
             }
         });
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // TODO Auto-generated method stub
+
+                if ((actionId == EditorInfo.IME_ACTION_DONE) || (actionId == EditorInfo.IME_ACTION_GO) || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    // hide virtual keyboard
+                    onDone(editText, webView);
+                    hideKeyboard(editText);
+                    return true;
+                }
+                return false;
+
+            }
+        });
+
+    }
+
+    private void hideKeyboard(EditText editTextURL) {
+        InputMethodManager imm = (InputMethodManager) editTextURL.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(editTextURL.getWindowToken(), 0);
+        }
+    }
+
+    private void onDone(EditText editText, VideoEnabledWebView webView) {
+        String s = editText.getText().toString();
+        boolean validUrl = URLUtil.isValidUrl(s);
+
+        if (!validUrl) {
+            s = "http://" + s;
+            if (URLUtil.isValidUrl(s)) {
+                webView.loadUrl(s);
+            }
+        } else {
+            webView.loadUrl(s);
+        }
     }
 
     @Override
@@ -113,4 +158,26 @@ public class WebViewPhoneFragment extends CarFragment {
     }
 
 
+    private class CustomWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                editText.setText(request.getUrl().toString());
+            }
+            return super.shouldOverrideUrlLoading(view, request);
+        }
+
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            editText.setText(url);
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            editText.setText(url);
+            super.onPageFinished(view, url);
+        }
+    }
 }
