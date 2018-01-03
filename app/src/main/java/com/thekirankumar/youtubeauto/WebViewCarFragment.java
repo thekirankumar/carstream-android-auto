@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -122,6 +123,7 @@ public class WebViewCarFragment extends CarFragment {
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private MediaSessionCompat mediaSession;
+    private ProgressBar progressBar;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -178,6 +180,7 @@ public class WebViewCarFragment extends CarFragment {
                 webView.loadUrl(YOUTUBE_HOME_URL_BASE);
             }
         });
+        progressBar = view.findViewById(R.id.progress_bar);
         ImageButton refreshButton = view.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -545,8 +548,15 @@ public class WebViewCarFragment extends CarFragment {
 
     private class CustomWebViewClient extends WebViewClient {
         @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).apply();
         }

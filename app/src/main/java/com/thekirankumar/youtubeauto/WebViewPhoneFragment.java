@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class WebViewPhoneFragment extends CarFragment {
     private final String TAG = "WebViewCarFragment";
     private VideoEnabledWebView webView;
     private EditText editText;
+    private ProgressBar progressBar;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -92,6 +94,7 @@ public class WebViewPhoneFragment extends CarFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        progressBar = view.findViewById(R.id.progress_bar);
         webView = view.findViewById(R.id.web_view);
         editText = view.findViewById(R.id.edittext_url);
         ViewGroup webViewContainer = view.findViewById(R.id.container);
@@ -241,8 +244,16 @@ public class WebViewPhoneFragment extends CarFragment {
         }
 
         @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         public void onPageFinished(WebView view, String url) {
             editText.setText(url);
+            progressBar.setVisibility(View.GONE);
             Log.d(TAG, "page finished " + url);
             super.onPageFinished(view, url);
         }
