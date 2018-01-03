@@ -3,7 +3,6 @@ package com.thekirankumar.youtubeauto;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -48,14 +47,14 @@ class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        if(listener!=null) {
+        if (listener != null) {
             listener.onEnd();
         }
     }
 
     @Override
     public void onError(int error) {
-        if(listener!=null) {
+        if (listener != null) {
             listener.onError(error);
         }
     }
@@ -67,6 +66,10 @@ class MyRecognitionListener implements RecognitionListener {
             String query = data.get(0);
             if (listener != null) {
                 listener.onVoiceRecognitionComplete(query);
+            }
+        } else {
+            if (listener != null) {
+                listener.onError(0);
             }
         }
     }
@@ -83,7 +86,9 @@ class MyRecognitionListener implements RecognitionListener {
 
     public interface OnCompleteListener {
         void onVoiceRecognitionComplete(String text);
+
         void onEnd();
+
         void onError(int error);
     }
 }
