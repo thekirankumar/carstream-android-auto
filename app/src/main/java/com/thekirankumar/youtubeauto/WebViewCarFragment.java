@@ -175,6 +175,7 @@ public class WebViewCarFragment extends CarFragment {
         handlerThread.start();
         final Handler handler = new Handler(handlerThread.getLooper());
         webView = view.findViewById(R.id.web_view);
+        mainCarActivity.getWindow().setVolumeControlStream(AudioManager.STREAM_MUSIC);
         ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
