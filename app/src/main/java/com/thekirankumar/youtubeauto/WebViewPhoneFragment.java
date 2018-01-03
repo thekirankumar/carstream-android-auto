@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +30,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.net.URISyntaxException;
 
 
 public class WebViewPhoneFragment extends CarFragment {
@@ -96,7 +100,7 @@ public class WebViewPhoneFragment extends CarFragment {
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenView, new ProgressBar(getActivity()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("https://youtube.com");
+        webView.loadUrl("https://www.youtube.com");
         webView.requestFocus();
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -199,6 +203,7 @@ public class WebViewPhoneFragment extends CarFragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 editText.setText(request.getUrl().toString());
             }
+
             return super.shouldOverrideUrlLoading(view, request);
         }
 
@@ -206,12 +211,39 @@ public class WebViewPhoneFragment extends CarFragment {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             editText.setText(url);
-            return super.shouldOverrideUrlLoading(view, url);
+            if (url.startsWith("intent://")) {
+                try {
+                    Context context = view.getContext();
+                    Intent intent = new Intent().parseUri(url, Intent.URI_INTENT_SCHEME);
+
+                    if (intent != null) {
+                        view.stopLoading();
+
+                        PackageManager packageManager = context.getPackageManager();
+                        ResolveInfo info = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                        if (info != null) {
+                            context.startActivity(intent);
+                        } else {
+                            String fallbackUrl = intent.getStringExtra("browser_fallback_url");
+                            view.loadUrl(fallbackUrl);
+
+                        }
+
+                        return true;
+                    }
+                } catch (URISyntaxException e) {
+                        Log.e(TAG, "Can't resolve intent://", e);
+
+                }
+            }
+
+            return false;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             editText.setText(url);
+            Log.d(TAG, "page finished " + url);
             super.onPageFinished(view, url);
         }
     }

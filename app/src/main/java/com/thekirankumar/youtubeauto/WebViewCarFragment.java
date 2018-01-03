@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,9 +17,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.car.Car;
 import android.support.car.CarConnectionCallback;
+import android.support.car.CarNotConnectedException;
 import android.support.car.hardware.CarSensorEvent;
 import android.support.car.hardware.CarSensorManager;
+import android.support.car.media.CarAudioManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +46,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -90,12 +97,16 @@ public class WebViewCarFragment extends CarFragment {
     };
     private boolean isSearchShown = false;
     private CarSensorManager sensorManager;
+    private Car car;
     private final CarConnectionCallback mCarConnectionCallback = new CarConnectionCallback() {
         @Override
         public void onConnected(Car car) {
             try {
                 CarSensorManager sensorManager = (CarSensorManager) car.getCarManager(Car.SENSOR_SERVICE);
                 WebViewCarFragment.this.sensorManager = sensorManager;
+                WebViewCarFragment.this.car = car;
+                gainAudioFocus();
+
             } catch (Exception e) {
                 Log.w(TAG, "Error setting up car connection", e);
             }
@@ -110,6 +121,7 @@ public class WebViewCarFragment extends CarFragment {
     private SearchMode searchMode = SearchMode.YOUTUBE;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
+    private MediaSessionCompat mediaSession;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -118,6 +130,12 @@ public class WebViewCarFragment extends CarFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaSession = new MediaSessionCompat(getContext(), "YoutubeMusicService");
+        mediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
     }
 
     @Override
@@ -125,6 +143,7 @@ public class WebViewCarFragment extends CarFragment {
         super.onAttach(context);
         Car mCar = Car.createCar(context, mCarConnectionCallback);
         mCar.connect();
+
     }
 
     @Override
@@ -172,10 +191,11 @@ public class WebViewCarFragment extends CarFragment {
             public void onClick(View v) {
                 if (speechRecognizer != null) {
                     speechRecognizer.stopListening();
+                    speechRecognizer.destroy();
                     speechRecognizer = null;
                 } else {
                     webView.pauseVideo();
-                    final RecognitionProgressView recognitionProgressView = (RecognitionProgressView) view.findViewById(R.id.speech_view);
+                    final RecognitionProgressView recognitionProgressView = view.findViewById(R.id.speech_view);
                     MyRecognitionListener listener = new MyRecognitionListener(new MyRecognitionListener.OnCompleteListener() {
                         @Override
                         public void onVoiceRecognitionComplete(String text) {
@@ -186,20 +206,26 @@ public class WebViewCarFragment extends CarFragment {
                                 e.printStackTrace();
                             }
                             webView.loadUrl(getSearchUrlBase() + encoded);
-                            speechRecognizer = null;
+                            if (speechRecognizer != null) {
+                                speechRecognizer.destroy();
+                                speechRecognizer = null;
+                            }
                             recognitionProgressView.stop();
                             recognitionProgressView.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onEnd() {
-                            speechRecognizer = null;
                         }
 
                         @Override
                         public void onError(int error) {
                             recognitionProgressView.stop();
                             recognitionProgressView.setVisibility(View.GONE);
+                            if (speechRecognizer != null) {
+                                speechRecognizer.destroy();
+                                speechRecognizer = null;
+                            }
                         }
                     });
                     Context context = getContext();
@@ -454,7 +480,36 @@ public class WebViewCarFragment extends CarFragment {
             webView.requestFocus();
             webView.playVideoIfPaused();
         }
+        if (car != null) {
+            gainAudioFocus();
+        }
         handleVoiceVisibility();
+    }
+
+    private void gainAudioFocus() {
+        final CarAudioManager carAudioManager;
+        try {
+            carAudioManager = car.getCarManager(CarAudioManager.class);
+            final AudioAttributes audioAttributes = carAudioManager.getAudioAttributesForCarUsage(
+                    CarAudioManager.CAR_AUDIO_USAGE_MUSIC);
+            int ret = carAudioManager.requestAudioFocus(null, audioAttributes,
+                    AudioManager.AUDIOFOCUS_GAIN, 0);
+        } catch (CarNotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loseAudioFocus() {
+        final CarAudioManager carAudioManager;
+        try {
+            carAudioManager = car.getCarManager(CarAudioManager.class);
+
+            final AudioAttributes audioAttributes = carAudioManager.getAudioAttributesForCarUsage(
+                    CarAudioManager.CAR_AUDIO_USAGE_MUSIC);
+            carAudioManager.abandonAudioFocus(null, audioAttributes);
+        } catch (CarNotConnectedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleVoiceVisibility() {
@@ -474,6 +529,7 @@ public class WebViewCarFragment extends CarFragment {
             webView.pauseVideo();
         }
         super.onPause();
+        loseAudioFocus();
     }
 
     public void onDetach() {
@@ -493,6 +549,36 @@ public class WebViewCarFragment extends CarFragment {
             super.onPageFinished(view, url);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).apply();
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.startsWith("intent://")) {
+                try {
+                    Context context = view.getContext();
+                    new Intent();
+                    Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                    if (intent != null) {
+                        view.stopLoading();
+
+                        PackageManager packageManager = context.getPackageManager();
+                        ResolveInfo info = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                        if (info != null) {
+                            context.startActivity(intent);
+                        } else {
+                            String fallbackUrl = intent.getStringExtra("browser_fallback_url");
+                            view.loadUrl(fallbackUrl);
+
+                        }
+
+                        return true;
+                    }
+                } catch (URISyntaxException e) {
+                    Log.e(TAG, "Can't resolve intent://", e);
+
+                }
+            }
+            return super.shouldOverrideUrlLoading(view, url);
         }
     }
 }
