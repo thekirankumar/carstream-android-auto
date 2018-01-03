@@ -27,8 +27,10 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -124,6 +126,13 @@ public class WebViewCarFragment extends CarFragment {
     private Intent speechRecognizerIntent;
     private MediaSessionCompat mediaSession;
     private ProgressBar progressBar;
+    private View toolbar;
+    private Runnable toolbarHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideToolbar();
+        }
+    };
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -170,7 +179,7 @@ public class WebViewCarFragment extends CarFragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                webView.goBack();
+                goBack();
             }
         });
         ImageButton homeButton = view.findViewById(R.id.home_button);
@@ -199,6 +208,13 @@ public class WebViewCarFragment extends CarFragment {
                 } else {
                     webView.pauseVideo();
                     final RecognitionProgressView recognitionProgressView = view.findViewById(R.id.speech_view);
+                    recognitionProgressView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            recognitionProgressView.stop();
+                            recognitionProgressView.setVisibility(View.GONE);
+                        }
+                    });
                     MyRecognitionListener listener = new MyRecognitionListener(new MyRecognitionListener.OnCompleteListener() {
                         @Override
                         public void onVoiceRecognitionComplete(String text) {
@@ -315,10 +331,11 @@ public class WebViewCarFragment extends CarFragment {
             }
         });
 
-        View webViewContainer = view.findViewById(R.id.container);
+        toolbar = view.findViewById(R.id.toolbar);
+        View webViewContainer = view.findViewById(R.id.webview_container);
         ViewGroup fullScreenVideoView = view.findViewById(R.id.full_screen_view);
         webView.setWebViewClient(new CustomWebViewClient());
-        VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
+        final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
@@ -341,13 +358,9 @@ public class WebViewCarFragment extends CarFragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    WebView webView = (WebView) v;
                     switch (keyCode) {
                         case KeyEvent.KEYCODE_BACK:
-                            if (webView.canGoBack() && webView.hasFocus()) {
-                                webView.goBack();
-                                return true;
-                            }
+                            if (goBack()) return true;
                             break;
                     }
                 }
@@ -448,12 +461,66 @@ public class WebViewCarFragment extends CarFragment {
                     searchController.hideSearchBox();
                     carUiController.getStatusBarController().hideAppHeader();
                     carUiController.getStatusBarController().hideConnectivityLevel();
+                    hideToolbar();
+                } else {
+                    showToolbar();
                 }
+            }
+        });
+        videoEnabledWebChromeClient.setVideoTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    toggleToolbarAnimation();
+                }
+                return false;
             }
         });
 
 
     }
+
+    private boolean goBack() {
+        if(webView.isVideoFullscreen()){
+            webView.exitFullScreen();
+            return true;
+        }
+        if (webView.canGoBack() && webView.hasFocus()) {
+            webView.goBack();
+            return true;
+        }
+        return false;
+    }
+
+    private void hideToolbar() {
+        toolbar.clearAnimation();
+        if (toolbar.getTranslationY() == 0) {
+            toolbar.animate().setDuration(200).translationY(-toolbar.getMeasuredHeight());
+        }
+    }
+
+    private void showToolbar() {
+        toolbar.removeCallbacks(toolbarHideRunnable);
+        toolbar.clearAnimation();
+        if (toolbar.getTranslationY() < 0) {
+            toolbar.animate().setDuration(200).translationY(0);
+        }
+    }
+
+    private void showAndHideToolbarAnimation() {
+        toolbar.removeCallbacks(toolbarHideRunnable);
+        showToolbar();
+        toolbar.postDelayed(toolbarHideRunnable, 3000);
+    }
+
+    private void toggleToolbarAnimation() {
+        if (toolbar.getTranslationY() == 0) {
+            hideToolbar();
+        } else {
+            showAndHideToolbarAnimation();
+        }
+    }
+
 
     private boolean isRecordAudioGranted() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO);
