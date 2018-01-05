@@ -1,0 +1,20 @@
+
+.lfb, body, .c, .wk, .uk, .xk, .fn, .atom{
+    background:#000;
+    background-color:#000000 !important
+}
+
+
+.nm, .xn, .ojb{
+    color: #FFF !important
+}
+
+
+
+.ojb a {
+    color: #CCC !important
+}
+
+.lfb {
+    border:none !important
+}
