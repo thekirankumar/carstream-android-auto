@@ -1,5 +1,6 @@
 package com.thekirankumar.youtubeauto;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -165,6 +166,7 @@ public class WebViewCarFragment extends CarFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        boolean isNight = getResources().getBoolean(R.bool.isNight);
         //FirebaseAnalytics.getInstance(getContext()).logEvent("CarFragment_created", null);
 
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
@@ -339,6 +341,7 @@ public class WebViewCarFragment extends CarFragment {
         webView.setWebViewClient(new CustomWebViewClient());
         final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
+        webView.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
         handler.post(new Runnable() {
