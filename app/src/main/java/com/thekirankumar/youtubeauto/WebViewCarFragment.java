@@ -24,13 +24,13 @@ import android.support.car.hardware.CarSensorManager;
 import android.support.car.media.CarAudioManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -142,11 +142,10 @@ public class WebViewCarFragment extends CarFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mediaSession = new MediaSessionCompat(getContext(), "YoutubeMusicService");
-        mediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
+        mediaSession.setActive(true);
+        PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
+        builder.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1f);
+        mediaSession.setPlaybackState(builder.build());
     }
 
     @Override
@@ -169,6 +168,8 @@ public class WebViewCarFragment extends CarFragment {
         //FirebaseAnalytics.getInstance(getContext()).logEvent("CarFragment_created", null);
 
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(mainCarActivity));
+
         final CarUiController carUiController = mainCarActivity.getCarUiController();
         final SearchController searchController = carUiController.getSearchController();
         handlerThread = new HandlerThread("autosuggest");
@@ -478,11 +479,10 @@ public class WebViewCarFragment extends CarFragment {
             }
         });
 
-
     }
 
     private boolean goBack() {
-        if(webView.isVideoFullscreen()){
+        if (webView.isVideoFullscreen()) {
             webView.exitFullScreen();
             return true;
         }
@@ -611,6 +611,7 @@ public class WebViewCarFragment extends CarFragment {
     public void onDestroy() {
         webView.destroy();
         handlerThread.quit();
+        mediaSession.release();
         super.onDestroy();
     }
 
