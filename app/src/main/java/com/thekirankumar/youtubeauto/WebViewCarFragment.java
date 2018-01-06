@@ -1,12 +1,12 @@
 package com.thekirankumar.youtubeauto;
 
-import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -50,6 +50,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ import okhttp3.Response;
 
 
 public class WebViewCarFragment extends CarFragment {
-    public static final String YOUTUBE_HOME_URL_BASE = "https://youtube.com";
+    public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
     public static final String YOUTUBE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
     public static final int AUTOSUGGEST_DEBOUNCE_DELAY_MILLIS = 500;
@@ -68,6 +69,7 @@ public class WebViewCarFragment extends CarFragment {
     public static final String GOOGLE_SEARCH_URL_BASE = "https://www.google.com/#q=";
     public static final String PREFS = "car";
     public static final String HOME_URL = "home_url";
+    public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/d277b300/night_css/";
     private static final String TAG = "WebViewCarFragment";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
@@ -134,9 +136,16 @@ public class WebViewCarFragment extends CarFragment {
             hideToolbar();
         }
     };
+    private boolean isNightMode = false;
 
     public WebViewCarFragment() {
         // Required empty public constructor
+    }
+
+    public static String getDomainName(String url) throws URISyntaxException {
+        URI uri = new URI(url);
+        String domain = uri.getHost();
+        return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 
     @Override
@@ -166,7 +175,7 @@ public class WebViewCarFragment extends CarFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        boolean isNight = getResources().getBoolean(R.bool.isNight);
+        isNightMode = getResources().getBoolean(R.bool.isNight);
         //FirebaseAnalytics.getInstance(getContext()).logEvent("CarFragment_created", null);
 
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
@@ -341,8 +350,10 @@ public class WebViewCarFragment extends CarFragment {
         webView.setWebViewClient(new CustomWebViewClient());
         final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
-        webView.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
         webView.getSettings().setJavaScriptEnabled(true);
+        if (isNightMode) {
+            webView.setBackgroundColor(Color.BLACK);
+        }
         webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
         handler.post(new Runnable() {
             @Override
@@ -525,7 +536,6 @@ public class WebViewCarFragment extends CarFragment {
         }
     }
 
-
     private boolean isRecordAudioGranted() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -540,7 +550,6 @@ public class WebViewCarFragment extends CarFragment {
         }
         return null;
     }
-
 
     @Override
     public void onStart() {
@@ -604,6 +613,8 @@ public class WebViewCarFragment extends CarFragment {
         }
         super.onPause();
         loseAudioFocus();
+        SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+        car.edit().putString(HOME_URL, webView.getUrl()).apply();
     }
 
     public void onDetach() {
@@ -612,10 +623,46 @@ public class WebViewCarFragment extends CarFragment {
 
     @Override
     public void onDestroy() {
-        webView.destroy();
-        handlerThread.quit();
-        mediaSession.release();
+        if (webView != null) {
+            webView.destroy();
+        }
+        if (handlerThread != null) {
+            handlerThread.quit();
+        }
+        if (mediaSession != null) {
+            mediaSession.release();
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
+
+    private void injectNightModeCss() {
+        String domainName = null;
+        try {
+            domainName = getDomainName(webView.getUrl());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        if (domainName != null && isNightMode) {
+            String injection = "var cssId = 'nightModeCss';\n" +
+                    "if (!document.getElementById(cssId))\n" +
+                    "{\n" +
+                    "    var head  = document.getElementsByTagName('head')[0];\n" +
+                    "    var link  = document.createElement('link');\n" +
+                    "    link.id   = cssId;\n" +
+                    "    link.rel  = 'stylesheet';\n" +
+                    "    link.type = 'text/css';\n" +
+                    "    link.href = " + NIGHT_CSS_PATH + domainName + ".css';\n" +
+                    "    link.media = 'all';\n" +
+                    "    head.appendChild(link);\n" +
+                    "}";
+            webView.loadUrl("javascript:" + injection);
+        }
     }
 
     private class CustomWebViewClient extends WebViewClient {
@@ -628,9 +675,10 @@ public class WebViewCarFragment extends CarFragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            injectNightModeCss();
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
-            car.edit().putString(HOME_URL, url).apply();
+            car.edit().putString(HOME_URL, url).commit();
         }
 
         @Override
