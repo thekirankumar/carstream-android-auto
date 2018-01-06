@@ -1,4 +1,6 @@
-
+.ub, .er {
+	background-color:#650904 !important
+}
 .lfb, body, .c, .wk, .uk, .xk, .fn, .atom{
     background:#000;
     background-color:#000000 !important
