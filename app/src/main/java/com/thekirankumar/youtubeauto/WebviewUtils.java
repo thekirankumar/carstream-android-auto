@@ -33,6 +33,14 @@ class WebviewUtils {
                     "    head.appendChild(link);\n" +
                     "}";
             webView.loadUrl("javascript:" + injection);
+        } else {
+            String injection = "var cssId = 'nightModeCss'; var element = document.getElementById(cssId);\n" +
+                    "if (element)\n" +
+                    "{\n" +
+                    "    var head  = document.getElementsByTagName('head')[0];\n" +
+                    "    head.removeChild(element);\n" +
+                    "}";
+            webView.loadUrl("javascript:" + injection);
         }
 
     }

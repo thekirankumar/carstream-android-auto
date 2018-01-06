@@ -1,5 +1,6 @@
 package com.thekirankumar.youtubeauto;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,8 @@ import android.view.Window;
 
 import com.google.android.apps.auto.sdk.CarActivity;
 import com.google.android.apps.auto.sdk.CarUiController;
+
+import java.util.HashSet;
 
 public class MainCarActivity extends CarActivity {
     private static final String FRAGMENT_MAIN = "main";
@@ -20,6 +23,7 @@ public class MainCarActivity extends CarActivity {
             updateStatusBarTitle();
         }
     };
+    private HashSet<OnConfigurationChangedListener> onConfigListener = new HashSet<>(0);
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -84,4 +88,23 @@ public class MainCarActivity extends CarActivity {
         return super.c();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        for (OnConfigurationChangedListener next : onConfigListener) {
+            next.onConfigChanged();
+        }
+    }
+
+    public void addConfigurationChangedListener(OnConfigurationChangedListener listener) {
+        this.onConfigListener.add(listener);
+    }
+
+    public void removeConfigurationChangedListener(OnConfigurationChangedListener listener) {
+        this.onConfigListener.remove(listener);
+    }
+
+    public interface OnConfigurationChangedListener {
+        void onConfigChanged();
+    }
 }

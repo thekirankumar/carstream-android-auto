@@ -59,7 +59,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class WebViewCarFragment extends CarFragment {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
     public static final String YOUTUBE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
@@ -158,6 +158,7 @@ public class WebViewCarFragment extends CarFragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -167,10 +168,10 @@ public class WebViewCarFragment extends CarFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isNightMode = getResources().getBoolean(R.bool.isNight);
         //FirebaseAnalytics.getInstance(getContext()).logEvent("CarFragment_created", null);
 
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        mainCarActivity.setIgnoreConfigChanges(512);
         Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(mainCarActivity));
 
         final CarUiController carUiController = mainCarActivity.getCarUiController();
@@ -289,6 +290,7 @@ public class WebViewCarFragment extends CarFragment {
                 }
             }
         });
+
         ImageButton searchYoutubeButton = view.findViewById(R.id.search_youtube_button);
         searchYoutubeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -469,10 +471,8 @@ public class WebViewCarFragment extends CarFragment {
                     carUiController.getStatusBarController().hideAppHeader();
                     carUiController.getStatusBarController().hideConnectivityLevel();
                     hideToolbar();
-                    mainCarActivity.setIgnoreConfigChanges(512);
                 } else {
                     showToolbar();
-                    mainCarActivity.setIgnoreConfigChanges(0);
                 }
             }
         });
@@ -485,7 +485,7 @@ public class WebViewCarFragment extends CarFragment {
                 return false;
             }
         });
-
+        mainCarActivity.addConfigurationChangedListener(this);
     }
 
     private boolean goBack() {
@@ -631,7 +631,15 @@ public class WebViewCarFragment extends CarFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        mainCarActivity.removeConfigurationChangedListener(this);
 
+    }
+
+    @Override
+    public void onConfigChanged() {
+        isNightMode = getResources().getBoolean(R.bool.isNight);
+        WebviewUtils.injectNightModeCss(webView, isNightMode);
     }
 
 
@@ -645,6 +653,7 @@ public class WebViewCarFragment extends CarFragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            isNightMode = getResources().getBoolean(R.bool.isNight);
             WebviewUtils.injectNightModeCss(webView, isNightMode);
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
