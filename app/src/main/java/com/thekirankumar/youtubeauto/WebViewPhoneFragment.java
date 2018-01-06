@@ -40,6 +40,7 @@ public class WebViewPhoneFragment extends CarFragment {
     private VideoEnabledWebView webView;
     private EditText editText;
     private ProgressBar progressBar;
+    private boolean isNightMode;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -68,6 +69,12 @@ public class WebViewPhoneFragment extends CarFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.phone_menu, menu);
+        MenuItem item = menu.findItem(R.id.night_mode);
+        if (isNightMode) {
+            item.setTitle("Day mode");
+        } else {
+            item.setTitle("Night mode");
+        }
     }
 
     @Override
@@ -87,6 +94,14 @@ public class WebViewPhoneFragment extends CarFragment {
             car.edit().putString("url", webView.getUrl()).commit();
             Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
+        } else if (item.getItemId() == R.id.night_mode) {
+            if (isNightMode) {
+                isNightMode = false;
+            } else {
+                isNightMode = true;
+            }
+            getActivity().invalidateOptionsMenu();
+            webView.reload();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -103,6 +118,11 @@ public class WebViewPhoneFragment extends CarFragment {
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenView, new ProgressBar(getActivity()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
+        if (BuildConfig.DEBUG) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                WebView.setWebContentsDebuggingEnabled(true);
+            }
+        }
         webView.loadUrl("https://www.youtube.com");
         webView.requestFocus();
         webView.setOnKeyListener(new View.OnKeyListener() {
@@ -235,7 +255,7 @@ public class WebViewPhoneFragment extends CarFragment {
                         return true;
                     }
                 } catch (URISyntaxException e) {
-                        Log.e(TAG, "Can't resolve intent://", e);
+                    Log.e(TAG, "Can't resolve intent://", e);
 
                 }
             }
@@ -256,6 +276,7 @@ public class WebViewPhoneFragment extends CarFragment {
             progressBar.setVisibility(View.GONE);
             Log.d(TAG, "page finished " + url);
             super.onPageFinished(view, url);
+            WebviewUtils.injectNightModeCss(webView, isNightMode);
         }
     }
 }

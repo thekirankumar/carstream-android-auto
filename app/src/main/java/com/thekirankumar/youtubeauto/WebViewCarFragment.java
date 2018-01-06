@@ -50,7 +50,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ public class WebViewCarFragment extends CarFragment {
     public static final String GOOGLE_SEARCH_URL_BASE = "https://www.google.com/#q=";
     public static final String PREFS = "car";
     public static final String HOME_URL = "home_url";
-    public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/d277b300/night_css/";
     private static final String TAG = "WebViewCarFragment";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
@@ -140,12 +138,6 @@ public class WebViewCarFragment extends CarFragment {
 
     public WebViewCarFragment() {
         // Required empty public constructor
-    }
-
-    public static String getDomainName(String url) throws URISyntaxException {
-        URI uri = new URI(url);
-        String domain = uri.getHost();
-        return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 
     @Override
@@ -283,7 +275,6 @@ public class WebViewCarFragment extends CarFragment {
                 }
             }
         });
-
 
         handleVoiceVisibility();
         ImageButton receiveButton = view.findViewById(R.id.receive_button);
@@ -478,8 +469,10 @@ public class WebViewCarFragment extends CarFragment {
                     carUiController.getStatusBarController().hideAppHeader();
                     carUiController.getStatusBarController().hideConnectivityLevel();
                     hideToolbar();
+                    mainCarActivity.setIgnoreConfigChanges(512);
                 } else {
                     showToolbar();
+                    mainCarActivity.setIgnoreConfigChanges(0);
                 }
             }
         });
@@ -641,29 +634,6 @@ public class WebViewCarFragment extends CarFragment {
 
     }
 
-    private void injectNightModeCss() {
-        String domainName = null;
-        try {
-            domainName = getDomainName(webView.getUrl());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        if (domainName != null && isNightMode) {
-            String injection = "var cssId = 'nightModeCss';\n" +
-                    "if (!document.getElementById(cssId))\n" +
-                    "{\n" +
-                    "    var head  = document.getElementsByTagName('head')[0];\n" +
-                    "    var link  = document.createElement('link');\n" +
-                    "    link.id   = cssId;\n" +
-                    "    link.rel  = 'stylesheet';\n" +
-                    "    link.type = 'text/css';\n" +
-                    "    link.href = " + NIGHT_CSS_PATH + domainName + ".css';\n" +
-                    "    link.media = 'all';\n" +
-                    "    head.appendChild(link);\n" +
-                    "}";
-            webView.loadUrl("javascript:" + injection);
-        }
-    }
 
     private class CustomWebViewClient extends WebViewClient {
         @Override
@@ -675,7 +645,7 @@ public class WebViewCarFragment extends CarFragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            injectNightModeCss();
+            WebviewUtils.injectNightModeCss(webView, isNightMode);
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).commit();

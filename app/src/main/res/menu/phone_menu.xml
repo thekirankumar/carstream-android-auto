@@ -17,4 +17,8 @@
         android:id="@+id/send"
         android:title="Send to car"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/night_mode"
+        android:title="Night Mode"
+        app:showAsAction="ifRoom" />
 </menu>
