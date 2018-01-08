@@ -381,7 +381,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                     @Override
                     public void run() {
                         webView.loadUrl(url);
-                        if(fullScreen) {
+                        if (fullScreen) {
                             fullScreenRequested = true;
                             fullScreenButton.setActivated(true);
                             fullScreenButton.setImageResource(R.drawable.ic_exit_fullscreen);
@@ -695,9 +695,15 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).commit();
-            if (fullScreenRequested) {
-                webView.requestFullScreen();
-            }
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (fullScreenRequested) {
+                        webView.requestFullScreen();
+                    }
+                }
+            }, 1000); // a hack to prevent chrome crashes
+
             WebviewUtils.injectHashChangeListener(webView, JAVASCRIPT_INTERFACE);
 
         }
