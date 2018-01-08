@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
  */
 
 class WebviewUtils {
-    public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/1.2.5/night_css/";
+    public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/8bfdac63/night_css/";
 
     public static void injectNightModeCss(WebView webView, boolean isNightMode) {
         String domainName = null;
@@ -48,6 +48,10 @@ class WebviewUtils {
     public static String getDomainName(String url) throws URISyntaxException {
         URI uri = new URI(url);
         String domain = uri.getHost();
-        return domain.startsWith("www.") ? domain.substring(4) : domain;
+        if (domain != null) {
+            return domain.startsWith("www.") ? domain.substring(4) : domain;
+        } else {
+            return null;
+        }
     }
 }
