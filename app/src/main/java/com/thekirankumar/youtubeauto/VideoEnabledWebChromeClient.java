@@ -5,10 +5,13 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.GeolocationPermissions;
+import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
 import android.widget.VideoView;
@@ -275,6 +278,22 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
             return false;
         }
     }
+
+    @Override
+    public void onPermissionRequest(PermissionRequest request) {
+        super.onPermissionRequest(request);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            request.grant(request.getResources());
+        }
+    }
+
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        super.onGeolocationPermissionsShowPrompt(origin, callback);
+        callback.invoke(origin,true,true);
+    }
+
+
 
     public interface ToggledFullscreenCallback {
         public void toggledFullscreen(boolean fullscreen);

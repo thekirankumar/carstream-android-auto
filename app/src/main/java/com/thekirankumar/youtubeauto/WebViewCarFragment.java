@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -57,6 +58,8 @@ import java.util.ArrayList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
 
 public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.OnURLChangeListener {
@@ -358,6 +361,12 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
+        webView.getSettings().setAllowFileAccess(true);
         if (isNightMode) {
             webView.setBackgroundColor(Color.BLACK);
         }
