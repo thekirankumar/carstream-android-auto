@@ -17,10 +17,11 @@
         <service
             android:name="com.thekirankumar.youtubeauto.CarService"
             android:label="@string/car_service_name"
+            android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="com.google.android.gms.car.category.CATEGORY_PROJECTION" />
                 <category android:name="com.google.android.gms.car.category.CATEGORY_PROJECTION_OEM" />
             </intent-filter>
