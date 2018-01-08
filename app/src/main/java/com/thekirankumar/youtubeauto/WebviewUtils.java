@@ -54,4 +54,11 @@ class WebviewUtils {
             return null;
         }
     }
+
+    public static void injectHashChangeListener(WebView webView, String javascriptInterface) {
+        webView.loadUrl("javascript:window.onhashchange = function() { " +
+                "console.log('onhashchange');\n" +
+                "window."+javascriptInterface+".onUrlChange(document.location);" +
+                "};");
+    }
 }

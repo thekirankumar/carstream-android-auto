@@ -59,7 +59,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.OnURLChangeListener {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
     public static final String YOUTUBE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
@@ -68,7 +68,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public static final String GOOGLE_SEARCH_URL_BASE = "https://www.google.com/#q=";
     public static final String PREFS = "car";
     public static final String HOME_URL = "home_url";
+    public static final String JAVASCRIPT_INTERFACE = "JavascriptCallback";
     private static final String TAG = "WebViewCarFragment";
+    private static final String FULLSCREEN_KEY = "fullscreen";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
     private TextView carSpeedView;
@@ -135,6 +137,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         }
     };
     private boolean isNightMode = false;
+    private boolean fullScreenRequested;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -180,6 +183,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         handlerThread.start();
         final Handler handler = new Handler(handlerThread.getLooper());
         webView = view.findViewById(R.id.web_view);
+        webView.addJavascriptInterface(new JavascriptCallback(this), JAVASCRIPT_INTERFACE);
         mainCarActivity.getWindow().setVolumeControlStream(AudioManager.STREAM_MUSIC);
         ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -279,14 +283,24 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
         handleVoiceVisibility();
         ImageButton receiveButton = view.findViewById(R.id.receive_button);
-        ImageButton fullScreenButton = view.findViewById(R.id.fullscreen_button);
+        final ImageButton fullScreenButton = view.findViewById(R.id.fullscreen_button);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (webView.isVideoFullscreen()) {
+                if (fullScreenRequested) {
+                    fullScreenRequested = false;
+                    fullScreenButton.setActivated(false);
+                    fullScreenButton.setImageResource(R.drawable.ic_fullscreen);
                     webView.exitFullScreen();
+                    SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+                    car.edit().putBoolean(FULLSCREEN_KEY, false).apply();
                 } else {
+                    fullScreenRequested = true;
+                    fullScreenButton.setActivated(true);
                     webView.requestFullScreen();
+                    fullScreenButton.setImageResource(R.drawable.ic_exit_fullscreen);
+                    SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+                    car.edit().putBoolean(FULLSCREEN_KEY, true).apply();
                 }
             }
         });
@@ -353,12 +367,19 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             public void run() {
                 SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
                 final String url = car.getString(HOME_URL, YOUTUBE_HOME_URL_BASE);
+                final boolean fullScreen = car.getBoolean(FULLSCREEN_KEY, false);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         webView.loadUrl(url);
+                        if(fullScreen) {
+                            fullScreenRequested = true;
+                            fullScreenButton.setActivated(true);
+                            fullScreenButton.setImageResource(R.drawable.ic_exit_fullscreen);
+                        }
                     }
                 });
+
             }
         });
 
@@ -467,6 +488,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             @Override
             public void toggledFullscreen(boolean fullscreen) {
                 if (fullscreen) {
+
                     searchController.hideSearchBox();
                     carUiController.getStatusBarController().hideAppHeader();
                     carUiController.getStatusBarController().hideConnectivityLevel();
@@ -642,6 +664,12 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         WebviewUtils.injectNightModeCss(webView, isNightMode);
     }
 
+    @Override
+    public void onURLChange(String url) {
+        SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+        car.edit().putString(HOME_URL, webView.getUrl()).apply();
+    }
+
 
     private class CustomWebViewClient extends WebViewClient {
         @Override
@@ -658,6 +686,11 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).commit();
+            if (fullScreenRequested) {
+                webView.requestFullScreen();
+            }
+            WebviewUtils.injectHashChangeListener(webView, JAVASCRIPT_INTERFACE);
+
         }
 
         @Override
