@@ -1,5 +1,6 @@
 package com.thekirankumar.youtubeauto;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -24,6 +26,7 @@ import android.support.car.CarNotConnectedException;
 import android.support.car.hardware.CarSensorEvent;
 import android.support.car.hardware.CarSensorManager;
 import android.support.car.media.CarAudioManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -64,6 +67,7 @@ import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
 public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.OnURLChangeListener {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
+    public static final String YOUTUBE_OFFLINE_URL_BASE = "file:///"+ Environment.getExternalStorageDirectory().getPath()+"/";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
     public static final String YOUTUBE_AUTOSUGGEST_URL_BASE = "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
     public static final int AUTOSUGGEST_DEBOUNCE_DELAY_MILLIS = 500;
@@ -200,6 +204,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             @Override
             public void onClick(View v) {
                 webView.loadUrl(YOUTUBE_HOME_URL_BASE);
+            }
+        });
+        homeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                webView.loadUrl(YOUTUBE_OFFLINE_URL_BASE);
+                return true;
             }
         });
         progressBar = view.findViewById(R.id.progress_bar);
@@ -346,7 +357,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+                SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                 String url = car.getString("url", null);
                 if (url != null) {
                     webView.loadUrl(url);
@@ -361,7 +372,12 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        }
+        webView.getSettings().setAllowContentAccess(true);
         webView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
@@ -593,6 +609,8 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         handleVoiceVisibility();
     }
 
+
+
     private void gainAudioFocus() {
         final CarAudioManager carAudioManager;
         try {
@@ -680,6 +698,8 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     }
 
 
+
+
     private class CustomWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -705,7 +725,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             }, 1000); // a hack to prevent chrome crashes
 
             WebviewUtils.injectHashChangeListener(webView, JAVASCRIPT_INTERFACE);
-
+            WebviewUtils.injectFileListingHack(webView);
         }
 
         @Override

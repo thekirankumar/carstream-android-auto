@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 
 class WebviewUtils {
     public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/8bfdac63/night_css/";
+    private static final String FILE_BROWSER_SCRIPT_PATH = "file:///android_asset/filebrowser.js";
+    private static final String FILE_BROWSER_CSS_PATH = "file:///android_asset/filebrowser.css";
 
     public static void injectNightModeCss(WebView webView, boolean isNightMode) {
         String domainName = null;
@@ -58,7 +60,28 @@ class WebviewUtils {
     public static void injectHashChangeListener(WebView webView, String javascriptInterface) {
         webView.loadUrl("javascript:window.onhashchange = function() { " +
                 "console.log('onhashchange');\n" +
-                "window."+javascriptInterface+".onUrlChange(document.location);" +
+                "window." + javascriptInterface + ".onUrlChange(document.location);" +
                 "};");
+    }
+
+    public static void injectFileListingHack(VideoEnabledWebView webView) {
+        String url = webView.getUrl();
+        if (url != null && url.startsWith("file:///") && url.endsWith("/")) {
+
+            String js = ("javascript:var oldHead = document.head.innerHTML;" +
+                    "    var head  = document.body;\n" +
+                    "    var link  = document.createElement('link');\n" +
+                    "    link.rel  = 'stylesheet';\n" +
+                    "    link.type = 'text/css';\n" +
+                    "    link.href = '" + FILE_BROWSER_CSS_PATH+"';\n" +
+                    "    link.media = 'all';\n" +
+                    "    head.appendChild(link);\n" +
+                    "var script = document.createElement('script');" +
+                    "script.src = '" + FILE_BROWSER_SCRIPT_PATH + "';" +
+                    "head.appendChild(script);"+
+                    "document.body.innerHTML+= '<h1 id=\"header\">Index of LOCATION</h1><div id=\"parentDirLinkBox\" style=\"display:none\"><a id=\"parentDirLink\" class=\"icon up\"><span id=\"parentDirText\">[parent directory]</span></a> </div> <table> <thead> <tr class=\"header\" id=\"theader\"><th onclick=\"javascript:sortTable(0);\">Name</th><th class=\"detailsColumn\" onclick=\"javascript:sortTable(1);\">Size </th> <th class=\"detailsColumn\" onclick=\"javascript:sortTable(2);\">Date Modified </th> </tr> </thead> <tbody id=\"tbody\"> </tbody> </table>';" +
+                    "document.body.innerHTML+= oldHead;");
+            webView.loadUrl(js);
+        }
     }
 }

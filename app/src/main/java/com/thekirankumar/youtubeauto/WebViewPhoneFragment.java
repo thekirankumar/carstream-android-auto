@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -41,6 +43,7 @@ public class WebViewPhoneFragment extends CarFragment {
     private EditText editText;
     private ProgressBar progressBar;
     private boolean isNightMode;
+    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -90,7 +93,7 @@ public class WebViewPhoneFragment extends CarFragment {
         } else if (item.getItemId() == R.id.refresh) {
             webView.reload();
         } else if (item.getItemId() == R.id.send) {
-            SharedPreferences car = getActivity().getSharedPreferences("car", Context.MODE_MULTI_PROCESS);
+            SharedPreferences car = getActivity().getSharedPreferences("car", Context.MODE_PRIVATE);
             car.edit().putString("url", webView.getUrl()).commit();
             Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
@@ -118,6 +121,18 @@ public class WebViewPhoneFragment extends CarFragment {
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenView, new ProgressBar(getActivity()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
+        webView.getSettings().setAllowContentAccess(true);
         if (BuildConfig.DEBUG) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 WebView.setWebContentsDebuggingEnabled(true);
@@ -187,6 +202,25 @@ public class WebViewPhoneFragment extends CarFragment {
         super.onResume();
         webView.requestFocus();
         askForRecordAudioPermission();
+        handleExternalSdCard();
+    }
+    private void handleExternalSdCard() {
+        if(!isReadExternalFilesGranted()) {
+            requestPermissionForReadExtertalStorage();
+        }
+    }
+    public void requestPermissionForReadExtertalStorage() {
+        try {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_STORAGE_PERMISSION_REQUEST_CODE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isReadExternalFilesGranted() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
     public void askForRecordAudioPermission() {
@@ -221,6 +255,13 @@ public class WebViewPhoneFragment extends CarFragment {
 
 
     private class CustomWebViewClient extends WebViewClient {
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            return super.shouldInterceptRequest(view, request);
+
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -277,6 +318,7 @@ public class WebViewPhoneFragment extends CarFragment {
             Log.d(TAG, "page finished " + url);
             super.onPageFinished(view, url);
             WebviewUtils.injectNightModeCss(webView, isNightMode);
+            WebviewUtils.injectFileListingHack(webView);
         }
     }
 }

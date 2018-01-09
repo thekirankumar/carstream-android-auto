@@ -39,6 +39,7 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
     private FrameLayout videoViewContainer;
     private CustomViewCallback videoViewCallback;
     private ToggledFullscreenCallback toggledFullscreenCallback;
+    private boolean videoStretchingEnabled;
 
     /**
      * Never use this constructor alone.
@@ -91,6 +92,11 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
         this.loadingView = loadingView;
         this.webView = webView;
         this.isVideoFullscreen = false;
+    }
+
+    public void setVideoStretchingEnabled(boolean videoStretchingEnabled) {
+        this.videoStretchingEnabled = videoStretchingEnabled;
+        handleVideoStretching();
     }
 
     public View.OnTouchListener getVideoTouchListener() {
@@ -158,26 +164,7 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
                 // Handle HTML5 video ended event
                 if (webView != null && webView.getSettings().getJavaScriptEnabled()) {
                     // Run javascript code that detects the video end and notifies the interface
-                    String js = "javascript:";
-                    js += "_ytrp_html5_video = document.getElementsByTagName('video')[0];";
-                    js += "if (_ytrp_html5_video !== undefined) {" +
-//                            "_ytrp_html5_video.style.objectFit='fill';" +
-                            "var originalWidth = _ytrp_html5_video.style.width; var originalHeight = _ytrp_html5_video.style.height; var originalTop = _ytrp_html5_video.style.top;" +
-                            //" _ytrp_html5_video.style.height=window.innerHeight+'px';" +
-                            //"_ytrp_html5_video.style.width=window.innerWidth+'px';" +
-                            //"_ytrp_html5_video.style.top=0;" +
-                            "";
-                    {
-                        js += "function _ytrp_html5_video_ended() {";
-                        {
-                            js += "_ytrp_html5_video.removeEventListener('ended', _ytrp_html5_video_ended);";
-//                            js += "_VideoEnabledWebView.notifyVideoEnd();"; // Must match Javascript interface name and method of VideoEnableWebView
-                        }
-                        js += "}";
-                        js += "_ytrp_html5_video.addEventListener('ended', _ytrp_html5_video_ended);";
-                    }
-                    js += "}";
-                    webView.loadUrl(js);
+                    handleVideoStretching();
                 }
             }
 
@@ -186,6 +173,28 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
                 toggledFullscreenCallback.toggledFullscreen(true);
             }
         }
+    }
+
+    private void handleVideoStretching() {
+        String js = "javascript:";
+        js += "_ytrp_html5_video = document.getElementsByTagName('video')[0];";
+        js += "if (_ytrp_html5_video !== undefined) {" +
+                "var originalWidth = _ytrp_html5_video.style.width; var originalHeight = _ytrp_html5_video.style.height; var originalTop = _ytrp_html5_video.style.top;" +
+                //" _ytrp_html5_video.style.height=window.innerHeight+'px';" +
+                //"_ytrp_html5_video.style.width=window.innerWidth+'px';" +
+                //"_ytrp_html5_video.style.top=0;" +
+                "";
+        if (videoStretchingEnabled && isVideoFullscreen()) {
+            js += "_ytrp_html5_video.style.objectFit='fill';" +
+                    " _ytrp_html5_video.style.height=window.innerHeight+'px';" +
+                    "_ytrp_html5_video.style.width=window.innerWidth+'px';" +
+                    "_ytrp_html5_video.style.top=0;";
+        } else {
+            //js += "_ytrp_html5_video.style.objectFit='none';";
+
+        }
+        js += "}";
+        webView.loadUrl(js);
     }
 
     @Override
@@ -290,9 +299,8 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
         super.onGeolocationPermissionsShowPrompt(origin, callback);
-        callback.invoke(origin,true,true);
+        callback.invoke(origin, true, true);
     }
-
 
 
     public interface ToggledFullscreenCallback {
