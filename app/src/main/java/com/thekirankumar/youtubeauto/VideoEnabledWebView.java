@@ -68,6 +68,16 @@ public class VideoEnabledWebView extends WebView {
                 "})");
     }
 
+    @Override
+    public void onPause() {
+        //super.onPause();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
+
     /**
      * Indicates if the video is being displayed using a custom view (typically full-screen)
      *

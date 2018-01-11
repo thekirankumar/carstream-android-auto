@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/Base.Theme.AppCompat">
         <service
+            android:process=":remote"
             android:name="com.thekirankumar.youtubeauto.CarService"
             android:label="@string/car_service_name"
             android:exported="true"
@@ -28,6 +29,19 @@
                 <category android:name="com.google.android.gms.car.category.CATEGORY_PROJECTION_OEM" />
             </intent-filter>
         </service>
+        <service  android:enabled="true" android:exported="true" android:name=".YoutubeMediaBrowserService"
+            android:label="Youtube auto service" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.car.application"

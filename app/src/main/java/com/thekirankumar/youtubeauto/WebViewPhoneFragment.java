@@ -1,6 +1,8 @@
 package com.thekirankumar.youtubeauto;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +13,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,12 +45,14 @@ import java.net.URISyntaxException;
 
 
 public class WebViewPhoneFragment extends CarFragment {
+    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
     private final String TAG = "WebViewCarFragment";
     private VideoEnabledWebView webView;
     private EditText editText;
     private ProgressBar progressBar;
     private boolean isNightMode;
-    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
+    private MediaSessionCompat mediaSessionCompat;
+    private MediaBrowserCompat mediaBrowser;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -54,12 +63,34 @@ public class WebViewPhoneFragment extends CarFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+    }
+
+    private long getAvailableActions() {
+        long actions =
+                PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
+                        PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH |
+                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
+//        if (true) {
+//            actions |= PlaybackStateCompat.ACTION_PAUSE;
+//        } else {
+//            actions |= PlaybackStateCompat.ACTION_PLAY;
+//        }
+        return actions;
     }
 
     @Override
@@ -115,6 +146,42 @@ public class WebViewPhoneFragment extends CarFragment {
         progressBar = view.findViewById(R.id.progress_bar);
         webView = view.findViewById(R.id.web_view);
         editText = view.findViewById(R.id.edittext_url);
+        Intent intent = new Intent(getActivity(), YoutubeMediaBrowserService.class);
+        getActivity().startService(intent);
+
+        mediaBrowser = new MediaBrowserCompat(getActivity(), new ComponentName(getActivity(), YoutubeMediaBrowserService.class),
+                new MediaBrowserCompat.ConnectionCallback() {
+                    @Override
+                    public void onConnected() {
+                        try {
+                            Log.v("MainActivity", "connected");
+                            // Ah, here’s our Token again
+                            MediaSessionCompat.Token token =
+                                    mediaBrowser.getSessionToken();
+                            // This is what gives us access to everything
+                            MediaControllerCompat controller =
+                                    new MediaControllerCompat(getActivity(), token);
+                            // Convenience method to allow you to use
+                            // MediaControllerCompat.getMediaController() anywhere
+                            MediaControllerCompat.setMediaController(
+                                    getActivity(), controller);
+
+                        } catch (RemoteException e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionSuspended() {
+                        super.onConnectionSuspended();
+                    }
+
+                    @Override
+                    public void onConnectionFailed() {
+                        super.onConnectionFailed();
+                    }
+                }, null);
+        mediaBrowser.connect();
         ViewGroup webViewContainer = view.findViewById(R.id.container);
         ViewGroup fullScreenView = view.findViewById(R.id.full_screen_view);
         webView.setWebViewClient(new CustomWebViewClient());
@@ -204,11 +271,13 @@ public class WebViewPhoneFragment extends CarFragment {
         askForRecordAudioPermission();
         handleExternalSdCard();
     }
+
     private void handleExternalSdCard() {
-        if(!isReadExternalFilesGranted()) {
+        if (!isReadExternalFilesGranted()) {
             requestPermissionForReadExtertalStorage();
         }
     }
+
     public void requestPermissionForReadExtertalStorage() {
         try {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
