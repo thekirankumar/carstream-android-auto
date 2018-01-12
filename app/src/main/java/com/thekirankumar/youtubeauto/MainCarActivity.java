@@ -1,5 +1,6 @@
 package com.thekirankumar.youtubeauto;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,11 @@ public class MainCarActivity extends CarActivity {
         switchToFragment(initialFragmentTag);
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentLifecycleCallbacks,
                 false);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override

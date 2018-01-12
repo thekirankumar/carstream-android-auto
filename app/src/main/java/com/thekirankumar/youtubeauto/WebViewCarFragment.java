@@ -1,10 +1,10 @@
 package com.thekirankumar.youtubeauto;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -12,18 +12,19 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.car.Car;
 import android.support.car.CarConnectionCallback;
 import android.support.car.CarNotConnectedException;
@@ -32,7 +33,7 @@ import android.support.car.hardware.CarSensorManager;
 import android.support.car.media.CarAudioManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -41,6 +42,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -67,10 +70,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_TITLE;
 
-
-public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.OnURLChangeListener {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.JSCallbacks {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_OFFLINE_URL_BASE = "file:///" + Environment.getExternalStorageDirectory().getPath() + "/";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
@@ -80,7 +81,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public static final String GOOGLE_SEARCH_URL_BASE = "https://www.google.com/#q=";
     public static final String PREFS = "car";
     public static final String HOME_URL = "home_url";
-    public static final String JAVASCRIPT_INTERFACE = "JavascriptCallback";
+    public static final String JAVASCRIPT_INTERFACE = "nativecallbacks";
     private static final String TAG = "WebViewCarFragment";
     private static final String FULLSCREEN_KEY = "fullscreen";
     private HandlerThread handlerThread;
@@ -113,9 +114,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             }
         }
     };
+
     private boolean isSearchShown = false;
     private CarSensorManager sensorManager;
     private Car car;
+    private MediaBrowserCompat mediaBrowser;
+    private MediaControllerCompat mediaController;
+    private VideoWebView webView;
     private final CarConnectionCallback mCarConnectionCallback = new CarConnectionCallback() {
         @Override
         public void onConnected(Car car) {
@@ -124,6 +129,52 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 WebViewCarFragment.this.sensorManager = sensorManager;
                 WebViewCarFragment.this.car = car;
                 gainAudioFocus();
+                mediaBrowser = new MediaBrowserCompat(getContext(), new ComponentName(getContext(), YoutubeMediaBrowserService.class),
+                        new MediaBrowserCompat.ConnectionCallback() {
+                            @Override
+                            public void onConnected() {
+                                try {
+                                    Log.d(TAG, "onConnected() called");
+                                    // Ah, here’s our Token again
+                                    MediaSessionCompat.Token token =
+                                            mediaBrowser.getSessionToken();
+                                    // This is what gives us access to everything
+                                    MediaControllerCompat controller =
+                                            new MediaControllerCompat(getContext(), token);
+                                    controller.registerCallback(new MediaControllerCompat.Callback() {
+                                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                                        @Override
+                                        public void onPlaybackStateChanged(PlaybackStateCompat state) {
+                                            super.onPlaybackStateChanged(state);
+                                            PlaybackState playbackState = (PlaybackState) state.getPlaybackState();
+                                            if (playbackState.getState() == PlaybackState.STATE_SKIPPING_TO_NEXT) {
+                                                webView.playNextTrack();
+                                            } else if (playbackState.getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
+                                                webView.goBack();
+                                            }
+                                            Log.d(TAG, "onPlaybackStateChanged() called with: state = [" + state + "]");
+                                        }
+                                    });
+                                    mediaController = controller;
+
+                                } catch (RemoteException e) {
+
+                                }
+                            }
+
+                            @Override
+                            public void onConnectionSuspended() {
+                                Log.d(TAG, "onConnectionSuspended() called");
+                                super.onConnectionSuspended();
+                            }
+
+                            @Override
+                            public void onConnectionFailed() {
+                                Log.d(TAG, "onConnectionFailed() called");
+                                super.onConnectionFailed();
+                            }
+                        }, null);
+                mediaBrowser.connect();
 
             } catch (Exception e) {
                 Log.w(TAG, "Error setting up car connection", e);
@@ -135,7 +186,6 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             Log.d(TAG, "Disconnected from car");
         }
     };
-    private VideoEnabledWebView webView;
     private SearchMode searchMode = SearchMode.YOUTUBE;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
@@ -150,6 +200,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     };
     private boolean isNightMode = false;
     private boolean fullScreenRequested;
+    private boolean clickFirstVideoAfterPageLoad;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -167,7 +218,28 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         Car mCar = Car.createCar(context, mCarConnectionCallback);
         mCar.connect();
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent != null && webView != null) {
+                    long actionType = intent.getLongExtra(YoutubeMediaBrowserService.ACTION_TYPE, 0);
+                    if (actionType == PlaybackState.ACTION_PLAY) {
+                        webView.playVideo();
+                    } else if (actionType == PlaybackState.ACTION_PAUSE) {
+                        webView.pauseVideo();
+                    } else if (actionType == PlaybackState.ACTION_SKIP_TO_NEXT) {
+                        webView.playNextTrack();
+                    } else if (actionType == PlaybackState.ACTION_SKIP_TO_PREVIOUS) {
+                        webView.goBack();
+                    } else if (actionType == PlaybackState.ACTION_PLAY_FROM_SEARCH) {
+                        clickFirstVideoAfterPageLoad = true;
+                        search(intent.getStringExtra(YoutubeMediaBrowserService.QUERY));
+                    }
 
+
+                }
+            }
+        }, new IntentFilter(YoutubeMediaBrowserService.PLAYER_EVENT));
     }
 
     @Override
@@ -232,7 +304,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                     speechRecognizer.destroy();
                     speechRecognizer = null;
                 } else {
-                    webView.pauseVideo();
+                    webView.pauseVideoAndSetFlag();
                     final RecognitionProgressView recognitionProgressView = view.findViewById(R.id.speech_view);
                     recognitionProgressView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -244,13 +316,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                     MyRecognitionListener listener = new MyRecognitionListener(new MyRecognitionListener.OnCompleteListener() {
                         @Override
                         public void onVoiceRecognitionComplete(String text) {
-                            String encoded = null;
-                            try {
-                                encoded = URLEncoder.encode(text, "utf-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            webView.loadUrl(getSearchUrlBase() + encoded);
+                            search(text);
                             if (speechRecognizer != null) {
                                 speechRecognizer.destroy();
                                 speechRecognizer = null;
@@ -430,28 +496,14 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         searchController.setSearchCallback(new SearchCallback() {
             @Override
             public void onSearchItemSelected(SearchItem searchItem) {
-                String encoded = null;
-                try {
-                    encoded = URLEncoder.encode(String.valueOf(searchItem.getTitle()), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                webView.loadUrl(getSearchUrlBase() + encoded);
+                search(String.valueOf(searchItem.getTitle()));
                 isSearchShown = false;
                 carUiController.getSearchController().hideSearchBox();
             }
 
             @Override
             public boolean onSearchSubmitted(String s) {
-                String encoded = null;
-                try {
-                    encoded = URLEncoder.encode(s, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                webView.loadUrl(getSearchUrlBase() + encoded);
+                search(s);
                 isSearchShown = false;
                 carUiController.getSearchController().hideSearchBox();
                 return true;
@@ -538,6 +590,16 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         mainCarActivity.addConfigurationChangedListener(this);
     }
 
+    private void search(String text) {
+        String encoded = null;
+        try {
+            encoded = URLEncoder.encode(text, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        webView.loadUrl(getSearchUrlBase() + encoded);
+    }
+
     private boolean goBack() {
         if (webView.isVideoFullscreen()) {
             webView.exitFullScreen();
@@ -604,7 +666,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         super.onResume();
         if (webView != null) {
             webView.requestFocus();
-            webView.playVideoIfPaused();
+            webView.playVideoIfPausedFlag();
         }
         if (car != null) {
             gainAudioFocus();
@@ -653,8 +715,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     @Override
     public void onPause() {
         if (webView != null) {
-            webView.pauseVideo();
+            webView.pauseVideoAndSetFlag();
         }
+
         super.onPause();
         loseAudioFocus();
         SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
@@ -697,18 +760,40 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     }
 
     @Override
-    public void onURLChange(String url) {
-        SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
-        car.edit().putString(HOME_URL, webView.getUrl()).apply();
+    public void onJSVideoEvent(String event) {
+        switch (event) {
+            case "playing":
+                BroadcastFromWebview.broadCastPlaying(getContext(), webView.getTitle());
+                break;
+            case "pause":
+                BroadcastFromWebview.broadCastPaused(getContext(), webView.getTitle());
+                break;
+            case "waiting":
+                BroadcastFromWebview.broadCastLoading(getContext(), webView.getTitle());
+                break;
+            case "error":
+                BroadcastFromWebview.broadCastError(getContext(), webView.getTitle());
+                break;
+        }
     }
 
+    @Override
+    public void onVideoElementDiscovered() {
+        if (fullScreenRequested) {
+            webView.requestFullScreen();
+        }
+        webView.attachVideoListeners();
+
+    }
 
     private class CustomWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
+            BroadcastFromWebview.broadCastLoading(getContext(), "Loading page");
         }
+
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -718,17 +803,24 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             progressBar.setVisibility(View.GONE);
             SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
             car.edit().putString(HOME_URL, url).commit();
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (fullScreenRequested) {
-                        webView.requestFullScreen();
-                    }
-                }
-            }, 1000); // a hack to prevent chrome crashes
-
-            WebviewUtils.injectHashChangeListener(webView, JAVASCRIPT_INTERFACE);
+            webView.discoverVideoElements();
             WebviewUtils.injectFileListingHack(webView);
+            BroadcastFromWebview.broadcastTitle(getContext(), view.getTitle());
+            if (clickFirstVideoAfterPageLoad) {
+                clickFirstVideoAfterPageLoad = false;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        webView.findAndClickFirstVideo();
+                    }
+                }, 1000);
+            }
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            BroadcastFromWebview.broadCastError(getContext(), error.toString());
         }
 
         @Override

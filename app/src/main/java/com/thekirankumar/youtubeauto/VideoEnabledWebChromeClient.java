@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 /**
- * This class serves as a WebChromeClient to be set to a WebView, allowing it to play video.
+ * This class serves as a WebChromeClient to be set to a WebView, allowing it to playVideo video.
  * It works with old VideoView-s as well as the new HTML5VideoFullScreen inner classes.
  * With VideoView (typically API level <11), it will always show full-screen.
  * With HTML5VideoFullScreen (typically API level 11+), it will show both in-page and full-screen.
@@ -290,7 +290,6 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
 
     @Override
     public void onPermissionRequest(PermissionRequest request) {
-        super.onPermissionRequest(request);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             request.grant(request.getResources());
         }

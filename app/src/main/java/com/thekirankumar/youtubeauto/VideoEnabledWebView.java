@@ -44,30 +44,6 @@ public class VideoEnabledWebView extends WebView {
         addedJavascriptInterface = false;
     }
 
-    public void requestFullScreen() {
-        loadUrl("javascript: function waitForElementToDisplay(selector, time, fn) {\n" +
-                "var el = document.querySelector(selector);" +
-                "if(el!=null) {" +
-                "            fn(el);" +
-                "            return;" +
-                "        }" +
-                "        else {" +
-                "            setTimeout(function() {" +
-                "                waitForElementToDisplay(selector, time, fn);" +
-                "            }, time);\n" +
-                "        }" +
-                "    }" +
-                "waitForElementToDisplay('video', 1000, function(el) {" +
-                "rfs = el.requestFullscreen\n" +
-                "        || el.webkitRequestFullScreen\n" +
-                "        || el.mozRequestFullScreen\n" +
-                "        || el.msRequestFullscreen \n" +
-                "    ;\n" +
-                "\n" +
-                "    rfs.call(el);" +
-                "})");
-    }
-
     @Override
     public void onPause() {
         //super.onPause();
@@ -91,28 +67,6 @@ public class VideoEnabledWebView extends WebView {
     public void exitFullScreen() {
         videoEnabledWebChromeClient.onHideCustomView();
     }
-
-    public void playVideo() {
-        loadUrl("javascript: var el = document.getElementsByTagName('video')[0];" +
-                "    el.play();");
-    }
-    public void playVideoIfPaused() {
-        loadUrl("javascript: " +
-                "if(window.pausedDueToMinimize) {" +
-                "var el = document.getElementsByTagName('video')[0];" +
-                "    el.play();" +
-                "window.pausedDueToMinimize = false;" +
-                "}");
-    }
-    public void pauseVideo() {
-        loadUrl("javascript: var el = document.getElementsByTagName('video')[0];\n" +
-                "if(!el.paused) {" +
-                "el.pause();" +
-                "window.pausedDueToMinimize = true;" +
-                "}" +
-                "");
-    }
-
 
     /**
      * Pass only a VideoEnabledWebChromeClient instance.

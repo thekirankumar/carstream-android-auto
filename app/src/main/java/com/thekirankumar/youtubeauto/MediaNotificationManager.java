@@ -52,8 +52,8 @@ import com.google.android.apps.auto.sdk.notification.CarNotificationExtender;
  */
 public class MediaNotificationManager extends BroadcastReceiver {
 
-    public static final String ACTION_PAUSE = "com.thekirankumar.youtubeauto.pause";
-    public static final String ACTION_PLAY = "com.thekirankumar.youtubeauto.play";
+    public static final String ACTION_PAUSE = "com.thekirankumar.youtubeauto.pauseVideo";
+    public static final String ACTION_PLAY = "com.thekirankumar.youtubeauto.playVideo";
     public static final String ACTION_PREV = "com.thekirankumar.youtubeauto.prev";
     public static final String ACTION_NEXT = "com.thekirankumar.youtubeauto.next";
     public static final String ACTION_STOP = "com.thekirankumar.youtubeauto.stop";
@@ -266,7 +266,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
         final int playPauseButtonPosition = addActions(notificationBuilder);
         notificationBuilder
                 .setStyle(new MediaStyle()
-                        // show only play/pause in compact view
+                        // show only playVideo/pauseVideo in compact view
                         .setShowActionsInCompactView(playPauseButtonPosition)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(mStopIntent)
@@ -294,14 +294,14 @@ public class MediaNotificationManager extends BroadcastReceiver {
             notificationBuilder.addAction(R.drawable.ic_prev,
                     "Previous", mPreviousIntent);
 
-            // If there is a "skip to previous" button, the play/pause button will
+            // If there is a "skip to previous" button, the playVideo/pauseVideo button will
             // be the second one. We need to keep track of it, because the MediaStyle notification
             // requires to specify the index of the buttons (actions) that should be visible
             // when in compact view.
             playPauseButtonPosition = 1;
         }
 
-        // Play or pause button, depending on the current state.
+        // Play or pauseVideo button, depending on the current state.
         final String label;
         final int icon;
         final PendingIntent intent;

@@ -9,10 +9,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
  */
 
 class YoutubeMediaCallback extends MediaSessionCompat.Callback {
-    private VideoEnabledWebView webView;
+    private VideoWebView webView;
     private MediaSessionCompat mediaSessionCompat;
 
-    public YoutubeMediaCallback(VideoEnabledWebView webView) {
+    public YoutubeMediaCallback(VideoWebView webView) {
         this.webView = webView;
         //this.mediaSessionCompat = mediaSessionCompat;
     }
@@ -20,7 +20,7 @@ class YoutubeMediaCallback extends MediaSessionCompat.Callback {
     @Override
     public void onSkipToNext() {
         super.onSkipToNext();
-        WebviewUtils.playNextTrack(webView);
+        webView.playNextTrack();
     }
 
     @Override
@@ -32,7 +32,7 @@ class YoutubeMediaCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPause() {
         super.onPause();
-        WebviewUtils.pause(webView);
+        webView.pauseVideo();
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
         builder.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1);
@@ -55,7 +55,7 @@ class YoutubeMediaCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPlay() {
         super.onPlay();
-        WebviewUtils.play(webView);
+        webView.playVideo();
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
         builder.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1);

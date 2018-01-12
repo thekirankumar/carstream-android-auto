@@ -57,12 +57,6 @@ class WebviewUtils {
         }
     }
 
-    public static void injectHashChangeListener(WebView webView, String javascriptInterface) {
-        webView.loadUrl("javascript:window.onhashchange = function() { " +
-                "console.log('onhashchange');\n" +
-                "window." + javascriptInterface + ".onUrlChange(document.location);" +
-                "};");
-    }
 
     public static void injectFileListingHack(VideoEnabledWebView webView) {
         String url = webView.getUrl();
@@ -85,15 +79,4 @@ class WebviewUtils {
         }
     }
 
-    public static void playNextTrack(VideoEnabledWebView webView) {
-        webView.loadUrl("javascript:var v = document.querySelector(\"video\"); v.currentTime = v.getDuration();\n" +
-                "var next = document.querySelectorAll('a[aria-label=\"Play next video\"]'); next[0].click();\n");
-    }
-
-    public static void pause(VideoEnabledWebView webView) {
-        webView.loadUrl("javascript:var v = document.querySelector(\"video\"); v.pause();");
-    }
-    public static void play(VideoEnabledWebView webView) {
-        webView.loadUrl("javascript:var v = document.querySelector(\"video\"); v.play();");
-    }
 }

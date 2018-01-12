@@ -17,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/Base.Theme.AppCompat">
         <service
-            android:process=":remote"
             android:name="com.thekirankumar.youtubeauto.CarService"
             android:label="@string/car_service_name"
             android:exported="true"
@@ -30,7 +29,7 @@
             </intent-filter>
         </service>
         <service  android:enabled="true" android:exported="true" android:name=".YoutubeMediaBrowserService"
-            android:label="Youtube auto service" >
+            android:label="Youtube Auto background player" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

@@ -1,0 +1,46 @@
+package com.thekirankumar.youtubeauto;
+
+import android.content.Context;
+import android.content.Intent;
+import android.media.session.PlaybackState;
+
+/**
+ * Created by kiran.kumar on 11/01/18.
+ */
+
+class BroadcastFromWebview {
+    public static void broadcastTitle(Context context, String title) {
+        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
+        context.sendBroadcast(intent);
+    }
+
+    public static void broadCastPlaying(Context context, String title) {
+        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
+        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PLAYING);
+        context.sendBroadcast(intent);
+    }
+
+    public static void broadCastPaused(Context context, String title) {
+        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
+        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PAUSED);
+        context.sendBroadcast(intent);
+    }
+
+    public static void broadCastLoading(Context context, String title) {
+        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
+        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_BUFFERING);
+        context.sendBroadcast(intent);
+    }
+
+    public static void broadCastError(Context context, String error) {
+        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, error);
+        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_ERROR);
+        context.sendBroadcast(intent);
+    }
+
+}
