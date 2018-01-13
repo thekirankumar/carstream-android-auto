@@ -5,11 +5,11 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.thekirankumar.youtubeauto"
+        applicationId "com.google.youtube.auto"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 18
-        versionName "1.4.1"
+        versionCode 19
+        versionName "1.4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

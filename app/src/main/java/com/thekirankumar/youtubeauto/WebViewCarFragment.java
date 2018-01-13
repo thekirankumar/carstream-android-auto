@@ -440,10 +440,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         final VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenVideoView, new ProgressBar(getContext()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.setInitialScale(90);
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
+        webView.getSettings().setSupportZoom(true);
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.getSettings().setLoadWithOverviewMode(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             webView.getSettings().setAllowFileAccessFromFileURLs(true);
         }
@@ -455,7 +458,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         if (isNightMode) {
             webView.setBackgroundColor(Color.BLACK);
         }
-        webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
+        //webView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
         handler.post(new Runnable() {
             @Override
             public void run() {
