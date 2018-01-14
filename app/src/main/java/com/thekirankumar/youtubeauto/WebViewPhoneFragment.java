@@ -114,7 +114,7 @@ public class WebViewPhoneFragment extends CarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.about) {
-            String url = "http://www.thekirankumar.com/blog/2017/12/29/playVideo-youtube-video-android-auto-app/?from_app=true";
+            String url = "http://www.thekirankumar.com/blog/2017/12/29/play-youtube-video-android-auto-app/?from_app=true";
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             startActivity(i);

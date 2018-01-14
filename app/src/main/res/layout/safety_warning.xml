@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_car_collision"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:text="WARNING !!!"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.5"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Watching videos when driving can cause car crashes. By dismissing this warning, you agree that you are aware of and responsible for the consequences of doing this. Neither the developer of this app nor Google nor the manufacturer of this equipment nor the manufacturer of this car is responsible for any accidents caused due to your negligence. You can switch to background playback by clicking on the media icon instead."
+        android:textSize="16sp" />
+
+    <Button
+        android:background="@drawable/highlighting_drawable"
+        android:layout_marginTop="20dp"
+        android:id="@+id/continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:focusable="true"
+        android:text="I understand the risks"
+        android:textSize="30sp" />
+</LinearLayout>

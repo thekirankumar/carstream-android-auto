@@ -44,6 +44,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:nextFocusRight="@id/home_button"
+                    android:nextFocusDown="@id/web_view"
                     android:background="@drawable/highlighting_drawable"
                     android:padding="5dp"
                     android:src="@drawable/ic_back"
@@ -58,6 +60,7 @@
                     android:background="@drawable/highlighting_drawable"
                     android:nextFocusLeft="@id/back_button"
                     android:nextFocusRight="@id/refresh_button"
+                    android:nextFocusDown="@id/web_view"
                     android:padding="5dp"
                     android:src="@drawable/ic_home"
                     android:text="Home" />
@@ -71,6 +74,7 @@
                     android:background="@drawable/highlighting_drawable"
                     android:nextFocusLeft="@id/home_button"
                     android:nextFocusRight="@id/voice_button"
+                    android:nextFocusDown="@id/web_view"
                     android:padding="5dp"
                     android:src="@drawable/ic_refresh"
                     android:text="Refresh" />
@@ -99,6 +103,7 @@
                     android:drawableLeft="@drawable/youtube"
                     android:nextFocusLeft="@id/voice_button"
                     android:nextFocusRight="@id/search_google_button"
+                    android:nextFocusDown="@id/web_view"
                     android:padding="5dp"
                     android:src="@drawable/ic_search_youtube"
                     android:text="Search" />
@@ -112,6 +117,7 @@
                     android:drawableLeft="@drawable/google"
                     android:nextFocusLeft="@id/search_youtube_button"
                     android:nextFocusRight="@id/fullscreen_button"
+                    android:nextFocusDown="@id/web_view"
                     android:padding="5dp"
                     android:src="@drawable/ic_search_google"
                     android:text="Search" />
@@ -134,6 +140,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:nextFocusDown="@id/web_view"
+                    android:nextFocusLeft="@id/fullscreen_button"
                     android:background="@drawable/highlighting_drawable"
                     android:padding="5dp"
                     android:src="@drawable/ic_receive_from_phone"
@@ -151,9 +159,12 @@
 
             <com.thekirankumar.youtubeauto.VideoWebView
                 android:id="@+id/web_view"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:nextFocusUp="@id/voice_button" />
+                android:nextFocusUp="@id/voice_button"
+                />
 
 
             <ProgressBar
@@ -167,5 +178,9 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/safety_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

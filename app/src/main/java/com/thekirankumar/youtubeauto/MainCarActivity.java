@@ -27,6 +27,11 @@ public class MainCarActivity extends CarActivity {
     private HashSet<OnConfigurationChangedListener> onConfigListener = new HashSet<>(0);
 
     @Override
+    public void onWindowFocusChanged(boolean b, boolean b1) {
+        super.onWindowFocusChanged(b, b1);
+    }
+
+    @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_car_main);

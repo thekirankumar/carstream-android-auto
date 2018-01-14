@@ -48,6 +48,7 @@ class WebviewUtils {
     }
 
     public static String getDomainName(String url) throws URISyntaxException {
+        if(url == null) return null;
         URI uri = new URI(url);
         String domain = uri.getHost();
         if (domain != null) {
