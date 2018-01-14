@@ -50,6 +50,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -88,6 +89,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public static final String SAFETY_WARNING_FRAGMENT_TAG = "safety";
     private static final String TAG = "WebViewCarFragment";
     private static final String FULLSCREEN_KEY = "fullscreen";
+    private static final String ASPECT_RATIO_KEY = "aspect_ratio";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
     private TextView carSpeedView;
@@ -222,8 +224,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             Log.d(TAG, "Disconnected from car");
         }
     };
+    private AspectRatio currentAspectRatio;
     private Handler handler;
     private SharedPreferences sharedPrefs;
+    private View cornerControls;
+    private Runnable cornerControlsHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideCornerControls(true);
+        }
+    };
+    private Button aspectButton;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -308,6 +319,14 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             public boolean onLongClick(View v) {
                 webView.loadUrl(YOUTUBE_OFFLINE_URL_BASE);
                 return true;
+            }
+        });
+        cornerControls = view.findViewById(R.id.fullscreen_corner_controls);
+        aspectButton = view.findViewById(R.id.aspect_button);
+        aspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleAspectRatio();
             }
         });
         progressBar = view.findViewById(R.id.progress_bar);
@@ -486,6 +505,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             public void run() {
                 final String url = getSharedPrefs().getString(HOME_URL, YOUTUBE_HOME_URL_BASE);
                 final boolean fullScreen = getSharedPrefs().getBoolean(FULLSCREEN_KEY, false);
+                final int aspectRatio = getSharedPrefs().getInt(ASPECT_RATIO_KEY, 0);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -494,6 +514,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                             fullScreenRequested = true;
                             fullScreenButton.setActivated(true);
                             fullScreenButton.setImageResource(R.drawable.ic_exit_fullscreen);
+                        }
+                        if (AspectRatio.values().length > aspectRatio) {
+                            setAspectRatio(AspectRatio.values()[aspectRatio]);
                         }
                     }
                 });
@@ -593,13 +616,14 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             @Override
             public void toggledFullscreen(boolean fullscreen) {
                 if (fullscreen) {
-
                     searchController.hideSearchBox();
                     carUiController.getStatusBarController().hideAppHeader();
                     carUiController.getStatusBarController().hideConnectivityLevel();
                     hideToolbar();
+                    hideCornerControls(false);
                 } else {
                     showToolbar();
+                    hideCornerControls(false);
                 }
             }
         });
@@ -608,6 +632,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     toggleToolbarAnimation();
+                    toggleCornerControlsAnimation();
                 }
                 return false;
             }
@@ -615,8 +640,18 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         mainCarActivity.addConfigurationChangedListener(this);
     }
 
+    private void toggleAspectRatio() {
+        int ordinal = currentAspectRatio.ordinal();
+        if (ordinal >= AspectRatio.values().length - 1) {
+            ordinal = 0;
+        } else {
+            ordinal++;
+        }
+        setAspectRatio(AspectRatio.values()[ordinal]);
+    }
+
     private SharedPreferences getSharedPrefs() {
-        if(sharedPrefs!=null) {
+        if (sharedPrefs != null) {
             return sharedPrefs;
         }
         sharedPrefs = getContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -652,11 +687,32 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         }
     }
 
+    private void hideCornerControls(boolean animated) {
+        if (animated) {
+            cornerControls.setVisibility(View.VISIBLE);
+            cornerControls.clearAnimation();
+            if (cornerControls.getTranslationX() == 0) {
+                cornerControls.animate().setDuration(200).translationX(cornerControls.getMeasuredWidth());
+            }
+        } else {
+            cornerControls.setTranslationX(500);
+        }
+    }
+
     private void showToolbar() {
         toolbar.removeCallbacks(toolbarHideRunnable);
         toolbar.clearAnimation();
         if (toolbar.getTranslationY() < 0) {
             toolbar.animate().setDuration(200).translationY(0);
+        }
+    }
+
+    private void showCornerControls() {
+        cornerControls.setVisibility(View.VISIBLE);
+        cornerControls.removeCallbacks(cornerControlsHideRunnable);
+        cornerControls.clearAnimation();
+        if (cornerControls.getTranslationX() > 0) {
+            cornerControls.animate().setDuration(200).translationX(0);
         }
     }
 
@@ -666,11 +722,25 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         toolbar.postDelayed(toolbarHideRunnable, 3000);
     }
 
+    private void showAndHideCornerControlsAnimation() {
+        cornerControls.removeCallbacks(cornerControlsHideRunnable);
+        showCornerControls();
+        cornerControls.postDelayed(cornerControlsHideRunnable, 3000);
+    }
+
     private void toggleToolbarAnimation() {
         if (toolbar.getTranslationY() == 0) {
             hideToolbar();
         } else {
             showAndHideToolbarAnimation();
+        }
+    }
+
+    private void toggleCornerControlsAnimation() {
+        if (cornerControls.getTranslationX() == 0) {
+            hideCornerControls(true);
+        } else {
+            showAndHideCornerControlsAnimation();
         }
     }
 
@@ -825,6 +895,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         if (fullScreenRequested) {
             webView.requestFullScreen();
         }
+        if(currentAspectRatio!=null) {
+            webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
+        }
         webView.attachVideoListeners();
 
     }
@@ -868,6 +941,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public void onReadyToExitSafetyInstructions(SafetyWarningFragment warningFragment) {
         warningAccepted = true;
         hideWarningScreen();
+    }
+
+    public void setAspectRatio(AspectRatio aspectRatio) {
+        this.currentAspectRatio = aspectRatio;
+        this.aspectButton.setText(aspectRatio.name());
+        webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
+        getSharedPrefs().edit().putInt(ASPECT_RATIO_KEY, currentAspectRatio.ordinal()).apply();
+    }
+
+    private enum AspectRatio {
+        CONTAIN, FILL, COVER
     }
 
     private class CustomWebViewClient extends WebViewClient {

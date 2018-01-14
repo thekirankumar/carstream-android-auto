@@ -47,7 +47,7 @@ import java.net.URISyntaxException;
 public class WebViewPhoneFragment extends CarFragment {
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
     private final String TAG = "WebViewCarFragment";
-    private VideoEnabledWebView webView;
+    private VideoWebView webView;
     private EditText editText;
     private ProgressBar progressBar;
     private boolean isNightMode;
@@ -129,13 +129,14 @@ public class WebViewPhoneFragment extends CarFragment {
             Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
         } else if (item.getItemId() == R.id.night_mode) {
-            if (isNightMode) {
-                isNightMode = false;
-            } else {
-                isNightMode = true;
-            }
-            getActivity().invalidateOptionsMenu();
-            webView.reload();
+//            if (isNightMode) {
+//                isNightMode = false;
+//            } else {
+//                isNightMode = true;
+//            }
+//            getActivity().invalidateOptionsMenu();
+//            webView.reload();
+            webView.setAspectRatio("fill");
         }
         return super.onOptionsItemSelected(item);
     }

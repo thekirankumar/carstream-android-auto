@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -174,13 +174,33 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:indeterminate="true" />
+
+
         </FrameLayout>
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fullscreen_corner_controls"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <Button
+            android:textSize="10sp"
+            android:drawableTop="@drawable/ic_aspect_ratio"
+            android:id="@+id/aspect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/highlighting_drawable"
+            android:padding="10dp"
+            android:text="contain" />
 
+    </LinearLayout>
     <FrameLayout
         android:id="@+id/safety_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

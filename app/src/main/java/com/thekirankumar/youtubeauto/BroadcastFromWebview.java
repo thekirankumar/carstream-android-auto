@@ -48,7 +48,7 @@ class BroadcastFromWebview {
         Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
         intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
         intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PAUSED);
-        context.sendBroadcast(intent);
+        sendBroadcast(context, intent);
     }
 
     public static void broadCastLoading(Context context, String title) {

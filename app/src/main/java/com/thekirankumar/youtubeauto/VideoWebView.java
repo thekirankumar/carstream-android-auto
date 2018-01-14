@@ -2,6 +2,7 @@ package com.thekirankumar.youtubeauto;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by kiran.kumar on 11/01/18.
@@ -95,6 +96,11 @@ public class VideoWebView extends VideoEnabledWebView {
         String s = ("javascript: var el = document.querySelector(\"a[href^='/watch'\"); " +
                 "el.click();" +
                 "");
+        loadUrl(s);
+    }
+
+    public void setAspectRatio(String mode) {
+        String s = "javascript:document.querySelector('video').setAttribute('style','object-fit:"+mode+"');";
         loadUrl(s);
     }
 }
