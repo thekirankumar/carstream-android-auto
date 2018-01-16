@@ -30,7 +30,7 @@ class BroadcastFromWebview {
     }
 
     private static void sendBroadcast(Context context, Intent intent) {
-        if (broadcastEnabled) {
+        if (broadcastEnabled && context!=null) {
             context.sendBroadcast(intent);
         } else {
             lastIntent = intent;

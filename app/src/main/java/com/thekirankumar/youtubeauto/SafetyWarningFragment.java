@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by kiran.kumar on 14/01/18.
@@ -18,6 +19,7 @@ import android.widget.Button;
 public class SafetyWarningFragment extends Fragment {
     private FragmentInteractionListener listener;
     private View continueButton;
+    private TextView appInfo;
 
     @Nullable
     @Override
@@ -28,6 +30,8 @@ public class SafetyWarningFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        appInfo = view.findViewById(R.id.app_info_view);
+        appInfo.setText("Youtube Auto v" + BuildConfig.VERSION_NAME);
         continueButton = view.findViewById(R.id.continue_button);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override

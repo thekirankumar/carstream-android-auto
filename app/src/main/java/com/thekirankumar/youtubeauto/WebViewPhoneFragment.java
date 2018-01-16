@@ -109,6 +109,9 @@ public class WebViewPhoneFragment extends CarFragment {
         } else {
             item.setTitle("Night mode");
         }
+        MenuItem infoItem = menu.findItem(R.id.app_info);
+        infoItem.setTitle("Version v"+BuildConfig.VERSION_NAME);
+        infoItem.setEnabled(false);
     }
 
     @Override
@@ -129,14 +132,13 @@ public class WebViewPhoneFragment extends CarFragment {
             Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
         } else if (item.getItemId() == R.id.night_mode) {
-//            if (isNightMode) {
-//                isNightMode = false;
-//            } else {
-//                isNightMode = true;
-//            }
-//            getActivity().invalidateOptionsMenu();
-//            webView.reload();
-            webView.setAspectRatio("fill");
+            if (isNightMode) {
+                isNightMode = false;
+            } else {
+                isNightMode = true;
+            }
+            getActivity().invalidateOptionsMenu();
+            webView.reload();
         }
         return super.onOptionsItemSelected(item);
     }

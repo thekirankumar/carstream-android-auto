@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Build;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -125,13 +126,28 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
         this.toggledFullscreenCallback = callback;
     }
 
+
     @Override
     public void onShowCustomView(View view, CustomViewCallback callback) {
         Log.d(getClass().getName(), "onShowCustomView() called with: view = [" + view + "], callback = [" + callback + "]");
         if (view instanceof FrameLayout) {
+
             // A video wants to be shown
             FrameLayout frameLayout = (FrameLayout) view;
             View focusedChild = frameLayout.getFocusedChild();
+            focusedChild.requestFocus();
+            focusedChild.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                        if(keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                            webView.goBack();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
 
             // Save video related variables
             this.isVideoFullscreen = true;

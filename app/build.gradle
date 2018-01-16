@@ -8,8 +8,8 @@ android {
         applicationId "com.google.youtube.auto"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 21
-        versionName "1.4.4"
+        versionCode 26
+        versionName "1.5.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -34,6 +34,7 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
         <ProgressBar
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"

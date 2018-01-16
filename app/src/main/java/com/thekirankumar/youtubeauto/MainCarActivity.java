@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.Window;
 
 import com.google.android.apps.auto.sdk.CarActivity;
@@ -30,6 +31,13 @@ public class MainCarActivity extends CarActivity {
     public void onWindowFocusChanged(boolean b, boolean b1) {
         super.onWindowFocusChanged(b, b1);
     }
+
+    @Override
+    public boolean onKeyUp(int i, KeyEvent keyEvent) {
+        return super.onKeyUp(i, keyEvent);
+    }
+
+
 
     @Override
     public void onCreate(Bundle bundle) {

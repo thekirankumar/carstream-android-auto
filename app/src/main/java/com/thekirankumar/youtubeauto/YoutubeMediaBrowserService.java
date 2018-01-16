@@ -58,12 +58,6 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
 
     private void setup() {
         mediaSessionCompat.setActive(true);
-        PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
-        builder.setState(PlaybackState.STATE_STOPPED, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1);
-        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-        metadata.putString(METADATA_KEY_TITLE, "Start playing from Youtube app first");
-        mediaSessionCompat.setMetadata(metadata.build());
-        mediaSessionCompat.setPlaybackState(builder.build());
         final MediaPlayer mMediaPlayer;
         mMediaPlayer = MediaPlayer.create(YoutubeMediaBrowserService.this, R.raw.silent);
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -77,6 +71,15 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
                 getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(null,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
+        builder.setActions(getAvailableActions());
+        builder.setState(PlaybackState.STATE_STOPPED, 0, 1);
+        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+        metadata.putString(METADATA_KEY_TITLE, "Click last tab in bottom bar & start playing from Youtube Auto app");
+        mediaSessionCompat.setMetadata(metadata.build());
+        mediaSessionCompat.setPlaybackState(builder.build());
+
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

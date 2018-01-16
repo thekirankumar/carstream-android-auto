@@ -29,6 +29,16 @@ public class JavascriptCallback {
     }
 
     @JavascriptInterface
+    public void onVideoCurrentTimeResult(final int currentTime) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                callbacks.onVideoCurrentTimeResult(currentTime);
+            }
+        });
+    }
+
+    @JavascriptInterface
     public void onVideoDiscovered() {
         handler.post(new Runnable() {
             @Override
@@ -42,6 +52,8 @@ public class JavascriptCallback {
         void onJSVideoEvent(String event);
 
         void onVideoElementDiscovered();
+
+        void onVideoCurrentTimeResult(int currentTime);
     }
 
 }

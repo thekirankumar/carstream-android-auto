@@ -116,6 +116,19 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     private boolean fullScreenRequested;
     private boolean clickFirstVideoAfterPageLoad;
     private boolean warningAccepted;
+    private AspectRatio currentAspectRatio;
+    private Handler handler;
+    private SharedPreferences sharedPrefs;
+    private View cornerControls;
+    private Runnable cornerControlsHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideCornerControls(true);
+        }
+    };
+    private Button aspectButton;
+    private int playerState = PlaybackState.STATE_PAUSED;
+    private boolean warningScreenOpen;
     private final CarSensorManager.OnSensorChangedListener mSensorsListener = new CarSensorManager.OnSensorChangedListener() {
         @Override
         public void onSensorChanged(CarSensorManager sensorManager, CarSensorEvent ev) {
@@ -224,17 +237,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             Log.d(TAG, "Disconnected from car");
         }
     };
-    private AspectRatio currentAspectRatio;
-    private Handler handler;
-    private SharedPreferences sharedPrefs;
-    private View cornerControls;
-    private Runnable cornerControlsHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hideCornerControls(true);
-        }
-    };
-    private Button aspectButton;
+    private Integer currentVideoTime;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -246,7 +249,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         handlerThread = new HandlerThread("autosuggest");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
-        BroadcastFromWebview.setEnableBroadcast(getContext(), false);
+        //BroadcastFromWebview.setEnableBroadcast(getContext(), false);
     }
 
     @Override
@@ -322,11 +325,21 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             }
         });
         cornerControls = view.findViewById(R.id.fullscreen_corner_controls);
+
         aspectButton = view.findViewById(R.id.aspect_button);
         aspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleAspectRatio();
+                showAndHideCornerControlsAnimation();
+                showAndHideToolbarAnimation();
+            }
+        });
+        aspectButton.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                showAndHideCornerControlsAnimation();
+                showAndHideToolbarAnimation();
             }
         });
         progressBar = view.findViewById(R.id.progress_bar);
@@ -533,6 +546,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                         case KeyEvent.KEYCODE_BACK:
                             if (goBack()) return true;
                             break;
+                        case KeyEvent.KEYCODE_DPAD_UP:
+                            if (webView.isVideoFullscreen()) {
+                                showAndHideToolbarAnimation();
+                                showAndHideCornerControlsAnimation();
+                                return true;
+                            }
+                            break;
                     }
                     return false;
                 }
@@ -688,6 +708,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     }
 
     private void hideCornerControls(boolean animated) {
+        cornerControls.clearFocus();
         if (animated) {
             cornerControls.setVisibility(View.VISIBLE);
             cornerControls.clearAnimation();
@@ -767,7 +788,6 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     @Override
     public void onResume() {
         super.onResume();
-        BroadcastFromWebview.setEnableBroadcast(getContext(), false);
         if (webView != null) {
             //webView.requestFocus();
             webView.playVideoIfPausedFlag();
@@ -825,15 +845,16 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
         super.onPause();
         loseAudioFocus();
+        final String url = webView.getUrl();
 
         handler.post(new Runnable() {
             @Override
             public void run() {
-                getSharedPrefs().edit().putString(HOME_URL, webView.getUrl()).apply();
+                getSharedPrefs().edit().putString(HOME_URL, url).apply();
 
             }
         });
-        BroadcastFromWebview.setEnableBroadcast(getContext(), true);
+        //BroadcastFromWebview.setEnableBroadcast(getContext(), true);
     }
 
     public void onDetach() {
@@ -876,9 +897,11 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public void onJSVideoEvent(String event) {
         switch (event) {
             case "playing":
+                playerState = PlaybackState.STATE_PLAYING;
                 BroadcastFromWebview.broadCastPlaying(getContext(), webView.getTitle());
                 break;
             case "pause":
+                playerState = PlaybackState.STATE_PAUSED;
                 BroadcastFromWebview.broadCastPaused(getContext(), webView.getTitle());
                 break;
             case "waiting":
@@ -895,11 +918,19 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         if (fullScreenRequested) {
             webView.requestFullScreen();
         }
-        if(currentAspectRatio!=null) {
+        if (currentAspectRatio != null) {
             webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
         }
         webView.attachVideoListeners();
+        if (currentVideoTime != null) {
+            webView.seekBySeconds(currentVideoTime);
+            currentVideoTime = null;
+        }
+    }
 
+    @Override
+    public void onVideoCurrentTimeResult(int currentTime) {
+        this.currentVideoTime = currentTime;
     }
 
     public void setParkingBrake(boolean parkingBrake) {
@@ -913,9 +944,12 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
     private void hideWarningScreen() {
         if (isAdded()) {
+            webView.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
             FragmentManager childFragmentManager = getChildFragmentManager();
             Fragment oldFragment = childFragmentManager.findFragmentByTag(SAFETY_WARNING_FRAGMENT_TAG);
             if (oldFragment != null) {
+                warningScreenOpen = false;
                 FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
                 fragmentTransaction.remove(oldFragment);
                 fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
@@ -927,10 +961,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
     private void showWarningScreen() {
         if (isAdded()) {
+            webView.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
+
+            warningScreenOpen = true;
             FragmentManager childFragmentManager = getChildFragmentManager();
-            SafetyWarningFragment warningFragment = new SafetyWarningFragment();
+            SafetyWarningFragment warningFragment = (SafetyWarningFragment) childFragmentManager.findFragmentByTag(SAFETY_WARNING_FRAGMENT_TAG);
+            if (warningFragment == null) {
+                warningFragment = new SafetyWarningFragment();
+            }
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.safety_container, warningFragment, SAFETY_WARNING_FRAGMENT_TAG);
+            fragmentTransaction.replace(R.id.safety_container, warningFragment, SAFETY_WARNING_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
         }
@@ -962,6 +1003,37 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             BroadcastFromWebview.broadCastLoading(getContext(), "Loading page");
         }
 
+        @Override
+        public void onUnhandledKeyEvent(WebView view, KeyEvent event) {
+            super.onUnhandledKeyEvent(view, event);
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                if (warningScreenOpen && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    onReadyToExitSafetyInstructions(null);
+                } else {
+                    if (webView.isVideoFullscreen()) {
+                        if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+                            showToolbar();
+                            showCornerControls();
+                            cornerControls.requestFocus(View.FOCUS_UP);
+                        } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+                            cornerControls.clearFocus();
+                            hideToolbar();
+                            hideCornerControls(true);
+                        } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                            if (playerState == PlaybackState.STATE_PLAYING) {
+                                webView.pauseVideo();
+                            } else {
+                                webView.playVideo();
+                            }
+                        } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                            webView.seekBySeconds(+10);
+                        } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                            webView.seekBySeconds(-10);
+                        }
+                    }
+                }
+            }
+        }
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -973,6 +1045,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             webView.discoverVideoElements();
             WebviewUtils.injectFileListingHack(webView);
             BroadcastFromWebview.broadcastTitle(getContext(), view.getTitle());
+
             if (clickFirstVideoAfterPageLoad) {
                 clickFirstVideoAfterPageLoad = false;
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {

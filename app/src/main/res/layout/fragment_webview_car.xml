@@ -142,6 +142,7 @@
                     android:layout_weight="1"
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/fullscreen_button"
+                    android:nextFocusRight="@id/aspect_button"
                     android:background="@drawable/highlighting_drawable"
                     android:padding="5dp"
                     android:src="@drawable/ic_receive_from_phone"
@@ -189,6 +190,7 @@
         android:layout_height="match_parent">
         <Button
             android:textSize="10sp"
+            android:nextFocusLeft="@id/receive_button"
             android:drawableTop="@drawable/ic_aspect_ratio"
             android:id="@+id/aspect_button"
             android:layout_width="wrap_content"

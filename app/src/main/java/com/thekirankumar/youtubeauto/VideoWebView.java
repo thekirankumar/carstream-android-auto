@@ -3,6 +3,9 @@ package com.thekirankumar.youtubeauto;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 /**
  * Created by kiran.kumar on 11/01/18.
@@ -11,14 +14,26 @@ import android.util.Log;
 public class VideoWebView extends VideoEnabledWebView {
     public VideoWebView(Context context) {
         super(context);
+        init();
+    }
+
+    private void init() {
+        setWebViewClient(new WebViewClient(){
+            @Override
+            public void onUnhandledKeyEvent(WebView view, KeyEvent event) {
+                super.onUnhandledKeyEvent(view, event);
+            }
+        });
     }
 
     public VideoWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public VideoWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
     }
 
     public void playNextTrack() {
@@ -102,5 +117,18 @@ public class VideoWebView extends VideoEnabledWebView {
     public void setAspectRatio(String mode) {
         String s = "javascript:document.querySelector('video').setAttribute('style','object-fit:"+mode+"');";
         loadUrl(s);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    public void seekBySeconds(int seconds) {
+        loadUrl("javascript:var v = document.querySelector(\"video\"); v.currentTime = v.currentTime + "+seconds+";");
+    }
+    public void getCurrentVideoTimeResult() {
+        loadUrl("javascript:var v = document.querySelector(\"video\"); window.nativecallbacks.onVideoCurrentTimeResult(v.currentTime);");
     }
 }

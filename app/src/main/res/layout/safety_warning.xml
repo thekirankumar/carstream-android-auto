@@ -2,10 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#00000022"
     android:gravity="center"
     android:orientation="vertical">
 
+    <TextView
+        android:padding="5dp"
+        android:text="Youtube auto version"
+        android:id="@+id/app_info_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,28 +20,30 @@
         android:drawablePadding="5dp"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:text="WARNING !!!"
+        android:text="@string/warning_title"
         android:textSize="40sp"
         android:textStyle="bold" />
 
     <TextView
+        android:layout_weight="1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:gravity="center"
-        android:lineSpacingMultiplier="1.5"
         android:paddingLeft="20dp"
+        android:ellipsize="end"
         android:paddingRight="20dp"
-        android:text="Watching videos when driving can cause car crashes. By dismissing this warning, you agree that you are aware of and responsible for the consequences of doing this. Neither the developer of this app nor Google nor the manufacturer of this equipment nor the manufacturer of this car is responsible for any accidents caused due to your negligence. You can switch to background playback by clicking on the media icon instead."
+        android:text="@string/warning_body"
         android:textSize="16sp" />
 
     <Button
         android:background="@drawable/highlighting_drawable"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:id="@+id/continue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:focusable="true"
-        android:text="I understand the risks"
+        android:text="@string/warning_accept_button"
         android:textSize="30sp" />
 </LinearLayout>

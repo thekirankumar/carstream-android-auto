@@ -13,12 +13,15 @@
         android:id="@+id/refresh"
         android:title="Refresh"
         app:showAsAction="never" />
+    <item android:id="@+id/app_info"
+        android:title="App info"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/send"
         android:title="Send to car"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/night_mode"
         android:title="Night Mode"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
