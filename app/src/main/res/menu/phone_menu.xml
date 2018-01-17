@@ -3,25 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/about"
-        android:title="About"
+        android:title="@string/about_page"
         app:showAsAction="always" />
     <item
         android:id="@+id/back"
-        android:title="Back"
+        android:title="@string/webview_back"
         app:showAsAction="never" />
     <item
         android:id="@+id/refresh"
-        android:title="Refresh"
+        android:title="@string/refresh_page"
         app:showAsAction="never" />
     <item android:id="@+id/app_info"
-        android:title="App info"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/send"
-        android:title="Send to car"
+        android:title="@string/send_to_car"
         app:showAsAction="never" />
     <item
         android:id="@+id/night_mode"
-        android:title="Night Mode"
+        android:title="@string/night_mode"
         app:showAsAction="never" />
 </menu>
