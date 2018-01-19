@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="warning_title">WARNUNG !!!</string>
+    <string name="warning_body">Schauen von Videos beim Führen des Fahrzeuges kann Unfälle verursachen. Mit dem Bestätigen dieser Warnung, stimmen Sie zu, das Sie sich der Konsequenzen eines möglichen Unfalles bewusst sind und dafür verwantwortlich sind. Weder die Entwickler dieser Applikation noch Google, Gerätehersteller oder Fahrzeughersteller sind verantwortlich für Unfälle, diese auf ihre Fahrlässigkeit zurückzuführen sind. Sie können zur Wiedergabe im Hintergrund wechseln, in dem Sie nach Auswahl des Videos auf das Mediensymbol klicken und den Hintergrundplayer auswählen.</string>
+    <string name="warning_accept_button">Ich bestätige die Risiken</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Über uns</string>
+    <string name="webview_back">Zurück</string>
+    <string name="refresh_page">Aktuallisieren</string>
+    <string name="send_to_car">An Fahrzeug senden</string>
+    <string name="night_mode">Nacht Modus</string>
+    <string name="voice_search">Sprachsuche</string>
+    <string name="search">Suche</string>
+    <string name="fullscreen">Vollbild</string>
+    <string name="receive_from_phone">Empfangen</string>
+    <string name="home">Home</string>
+    <string name="aspect_ratio_contain">Beibehalten</string>
+    <string name="aspect_ratio_fill">Füllen</string>
+    <string name="aspect_ratio_cover">Beschneiden</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarSteam Channel</string>
+
+</resources>

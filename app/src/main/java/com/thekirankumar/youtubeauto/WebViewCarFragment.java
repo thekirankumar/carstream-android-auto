@@ -986,9 +986,21 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
     public void setAspectRatio(AspectRatio aspectRatio) {
         this.currentAspectRatio = aspectRatio;
-        this.aspectButton.setText(aspectRatio.name());
+        this.aspectButton.setText(getHumanText(aspectRatio));
         webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
         getSharedPrefs().edit().putInt(ASPECT_RATIO_KEY, currentAspectRatio.ordinal()).apply();
+    }
+
+    private String getHumanText(AspectRatio aspectRatio) {
+        switch (aspectRatio) {
+            case FILL:
+                return getString(R.string.aspect_ratio_fill);
+            case COVER:
+                return getString(R.string.aspect_ratio_cover);
+            case CONTAIN:
+                return getString(R.string.aspect_ratio_contain);
+        }
+        return "";
     }
 
     private enum AspectRatio {

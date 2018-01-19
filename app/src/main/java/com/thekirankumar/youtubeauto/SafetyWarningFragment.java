@@ -31,7 +31,7 @@ public class SafetyWarningFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         appInfo = view.findViewById(R.id.app_info_view);
-        appInfo.setText("Youtube Auto v" + BuildConfig.VERSION_NAME);
+        appInfo.setText(getString(R.string.app_name)+ "v" + BuildConfig.VERSION_NAME);
         continueButton = view.findViewById(R.id.continue_button);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override

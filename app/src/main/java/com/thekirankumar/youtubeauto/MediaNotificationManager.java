@@ -344,7 +344,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
     @RequiresApi(Build.VERSION_CODES.O)
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String name = "Youtube Auto Channel";
+            String name = mContext.getString(R.string.channel_name);
             String description = "Plays youtube audio";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);

@@ -9,7 +9,7 @@
 
     <TextView
         android:padding="5dp"
-        android:text="Youtube auto version"
+        android:text="App version"
         android:id="@+id/app_info_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
