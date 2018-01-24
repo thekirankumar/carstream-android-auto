@@ -21,6 +21,5 @@
     <string name="aspect_ratio_contain">Contain</string>
     <string name="aspect_ratio_fill">Fill</string>
     <string name="aspect_ratio_cover">Cover</string>
-    <string name="app_name">CarStream</string>
 
 </resources>
