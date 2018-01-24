@@ -149,10 +149,10 @@ public class WebViewPhoneFragment extends CarFragment {
         progressBar = view.findViewById(R.id.progress_bar);
         webView = view.findViewById(R.id.web_view);
         editText = view.findViewById(R.id.edittext_url);
-        Intent intent = new Intent(getActivity(), YoutubeMediaBrowserService.class);
+        Intent intent = new Intent(getActivity(), MyMediaBrowserService.class);
         getActivity().startService(intent);
 
-        mediaBrowser = new MediaBrowserCompat(getActivity(), new ComponentName(getActivity(), YoutubeMediaBrowserService.class),
+        mediaBrowser = new MediaBrowserCompat(getActivity(), new ComponentName(getActivity(), MyMediaBrowserService.class),
                 new MediaBrowserCompat.ConnectionCallback() {
                     @Override
                     public void onConnected() {

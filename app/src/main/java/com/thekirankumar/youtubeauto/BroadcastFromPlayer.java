@@ -10,30 +10,30 @@ import android.media.session.PlaybackState;
 
 class BroadcastFromPlayer {
     public static void broadcastPlayClicked(Context context) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.PLAYER_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PLAY);
+        Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
+        intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PLAY);
         context.sendBroadcast(intent);
     }
     public static void broadcastPauseClicked(Context context) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.PLAYER_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PAUSE);
+        Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
+        intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PAUSE);
         context.sendBroadcast(intent);
     }
     public static void broadcastNextClicked(Context context) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.PLAYER_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_SKIP_TO_NEXT);
+        Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
+        intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_SKIP_TO_NEXT);
         context.sendBroadcast(intent);
     }
     public static void broadcastPreviousClicked(Context context) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.PLAYER_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_SKIP_TO_PREVIOUS);
+        Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
+        intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_SKIP_TO_PREVIOUS);
         context.sendBroadcast(intent);
     }
 
     public static void broadcastVoiceSearch(Context context, String query) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.PLAYER_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PLAY_FROM_SEARCH);
-        intent.putExtra(YoutubeMediaBrowserService.QUERY, query);
+        Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
+        intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PLAY_FROM_SEARCH);
+        intent.putExtra(MyMediaBrowserService.QUERY, query);
         context.sendBroadcast(intent);
     }
 }

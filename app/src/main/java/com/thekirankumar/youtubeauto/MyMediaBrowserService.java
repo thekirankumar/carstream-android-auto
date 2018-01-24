@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +24,7 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_TITLE;
  * Created by kiran.kumar on 11/01/18.
  */
 
-public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
+public class MyMediaBrowserService extends MediaBrowserServiceCompat {
 
     public static final String WEBVIEW_EVENT = "com.thekirankumar.youtubeauto.webview.event";
     public static final String PLAYER_EVENT = "com.thekirankumar.youtubeauto.player.event";
@@ -33,7 +32,7 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
     public static final String MEDIA_TITLE = "title";
     public static final String PLAYBACK_STATE = "state";
     public static final String QUERY = "query";
-    private static final String TAG = YoutubeMediaBrowserService.class.getName();
+    private static final String TAG = MyMediaBrowserService.class.getName();
     private MediaSessionCompat mediaSessionCompat;
 
     @Override
@@ -57,7 +56,7 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
 
     private void setup() {
 //        final MediaPlayer mMediaPlayer;
-//        mMediaPlayer = MediaPlayer.create(YoutubeMediaBrowserService.this, R.raw.silent);
+//        mMediaPlayer = MediaPlayer.create(MyMediaBrowserService.this, R.raw.silent);
 //        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 //            @Override
 //            public void onCompletion(MediaPlayer mediaPlayer) {
@@ -131,26 +130,26 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
         @Override
         public void onSkipToPrevious() {
             super.onSkipToPrevious();
-            BroadcastFromPlayer.broadcastPreviousClicked(YoutubeMediaBrowserService.this);
+            BroadcastFromPlayer.broadcastPreviousClicked(MyMediaBrowserService.this);
 
         }
 
         @Override
         public void onSkipToNext() {
             super.onSkipToNext();
-            BroadcastFromPlayer.broadcastNextClicked(YoutubeMediaBrowserService.this);
+            BroadcastFromPlayer.broadcastNextClicked(MyMediaBrowserService.this);
         }
 
         @Override
         public void onPlay() {
             super.onPlay();
-            BroadcastFromPlayer.broadcastPlayClicked(YoutubeMediaBrowserService.this);
+            BroadcastFromPlayer.broadcastPlayClicked(MyMediaBrowserService.this);
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            BroadcastFromPlayer.broadcastPauseClicked(YoutubeMediaBrowserService.this);
+            BroadcastFromPlayer.broadcastPauseClicked(MyMediaBrowserService.this);
         }
 
         @Override
@@ -163,14 +162,14 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
         public void onPlayFromSearch(String query, Bundle extras) {
             super.onPlayFromSearch(query, extras);
             if (query != null) {
-                BroadcastFromPlayer.broadcastVoiceSearch(YoutubeMediaBrowserService.this, query);
+                BroadcastFromPlayer.broadcastVoiceSearch(MyMediaBrowserService.this, query);
             }
         }
 
         @Override
         public void onStop() {
             super.onStop();
-            BroadcastFromPlayer.broadcastPauseClicked(YoutubeMediaBrowserService.this);
+            BroadcastFromPlayer.broadcastPauseClicked(MyMediaBrowserService.this);
         }
     }
 }

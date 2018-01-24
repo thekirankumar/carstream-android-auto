@@ -24,8 +24,8 @@ class BroadcastFromWebview {
     }
 
     public static void broadcastTitle(Context context, String title) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
+        Intent intent = new Intent(MyMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(MyMediaBrowserService.MEDIA_TITLE, title);
         sendBroadcast(context, intent);
     }
 
@@ -38,29 +38,29 @@ class BroadcastFromWebview {
     }
 
     public static void broadCastPlaying(Context context, String title) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
-        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PLAYING);
+        Intent intent = new Intent(MyMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(MyMediaBrowserService.MEDIA_TITLE, title);
+        intent.putExtra(MyMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PLAYING);
         sendBroadcast(context, intent);
     }
 
     public static void broadCastPaused(Context context, String title) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, title);
-        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PAUSED);
+        Intent intent = new Intent(MyMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(MyMediaBrowserService.MEDIA_TITLE, title);
+        intent.putExtra(MyMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_PAUSED);
         sendBroadcast(context, intent);
     }
 
     public static void broadCastLoading(Context context) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_BUFFERING);
+        Intent intent = new Intent(MyMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(MyMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_BUFFERING);
         sendBroadcast(context, intent);
     }
 
     public static void broadCastError(Context context, String error) {
-        Intent intent = new Intent(YoutubeMediaBrowserService.WEBVIEW_EVENT);
-        intent.putExtra(YoutubeMediaBrowserService.MEDIA_TITLE, error);
-        intent.putExtra(YoutubeMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_ERROR);
+        Intent intent = new Intent(MyMediaBrowserService.WEBVIEW_EVENT);
+        intent.putExtra(MyMediaBrowserService.MEDIA_TITLE, error);
+        intent.putExtra(MyMediaBrowserService.PLAYBACK_STATE, PlaybackState.STATE_ERROR);
         sendBroadcast(context, intent);
     }
 

@@ -179,16 +179,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                     setParkingBrake(false);
                 }
 
-                mediaBrowser = new MediaBrowserCompat(getContext(), new ComponentName(getContext(), YoutubeMediaBrowserService.class),
+                mediaBrowser = new MediaBrowserCompat(getContext(), new ComponentName(getContext(), MyMediaBrowserService.class),
                         new MediaBrowserCompat.ConnectionCallback() {
                             @Override
                             public void onConnected() {
                                 try {
-                                    Log.d(TAG, "onConnected() called");
-                                    // Ah, here’s our Token again
                                     MediaSessionCompat.Token token =
                                             mediaBrowser.getSessionToken();
-                                    // This is what gives us access to everything
                                     MediaControllerCompat controller =
                                             new MediaControllerCompat(getContext(), token);
                                     controller.registerCallback(new MediaControllerCompat.Callback() {
@@ -196,13 +193,6 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                                         @Override
                                         public void onPlaybackStateChanged(PlaybackStateCompat state) {
                                             super.onPlaybackStateChanged(state);
-                                            PlaybackState playbackState = (PlaybackState) state.getPlaybackState();
-                                            if (playbackState.getState() == PlaybackState.STATE_SKIPPING_TO_NEXT) {
-                                                webView.playNextTrack();
-                                            } else if (playbackState.getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
-                                                webView.goBack();
-                                            }
-                                            Log.d(TAG, "onPlaybackStateChanged() called with: state = [" + state + "]");
                                         }
                                     });
                                     mediaController = controller;
@@ -214,20 +204,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
                             @Override
                             public void onConnectionSuspended() {
-                                Log.d(TAG, "onConnectionSuspended() called");
                                 super.onConnectionSuspended();
                             }
 
                             @Override
                             public void onConnectionFailed() {
-                                Log.d(TAG, "onConnectionFailed() called");
                                 super.onConnectionFailed();
                             }
                         }, null);
                 mediaBrowser.connect();
 
             } catch (Exception e) {
-                Log.w(TAG, "Error setting up car connection", e);
                 e.printStackTrace();
                 setParkingBrake(false);
             }
@@ -262,7 +249,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null && webView != null) {
-                    long actionType = intent.getLongExtra(YoutubeMediaBrowserService.ACTION_TYPE, 0);
+                    long actionType = intent.getLongExtra(MyMediaBrowserService.ACTION_TYPE, 0);
                     if (actionType == PlaybackState.ACTION_PLAY) {
                         webView.playVideo();
                     } else if (actionType == PlaybackState.ACTION_PAUSE) {
@@ -273,13 +260,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                         webView.goBack();
                     } else if (actionType == PlaybackState.ACTION_PLAY_FROM_SEARCH) {
                         clickFirstVideoAfterPageLoad = true;
-                        search(intent.getStringExtra(YoutubeMediaBrowserService.QUERY));
+                        search(intent.getStringExtra(MyMediaBrowserService.QUERY));
                     }
 
 
                 }
             }
-        }, new IntentFilter(YoutubeMediaBrowserService.PLAYER_EVENT));
+        }, new IntentFilter(MyMediaBrowserService.PLAYER_EVENT));
     }
 
     @Override
