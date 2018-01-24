@@ -135,19 +135,21 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements OnPr
             // A video wants to be shown
             FrameLayout frameLayout = (FrameLayout) view;
             View focusedChild = frameLayout.getFocusedChild();
-            focusedChild.requestFocus();
-            focusedChild.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                        if(keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                            webView.goBack();
-                            return true;
+            if (focusedChild != null) {
+                focusedChild.requestFocus();
+                focusedChild.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                                webView.goBack();
+                                return true;
+                            }
                         }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            }
 
             // Save video related variables
             this.isVideoFullscreen = true;

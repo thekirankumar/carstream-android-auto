@@ -167,7 +167,8 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 sensorManager = (CarSensorManager) car.getCarManager(Car.SENSOR_SERVICE);
                 sensorManager.addListener(mSensorsListener, CarSensorManager.SENSOR_TYPE_PARKING_BRAKE,
                         CarSensorManager.SENSOR_RATE_NORMAL);
-                if (sensorManager != null) {
+
+                if (sensorManager != null && sensorManager.isSensorSupported(CarSensorManager.SENSOR_TYPE_PARKING_BRAKE)) {
                     CarSensorEvent ds = sensorManager.getLatestSensorEvent(CarSensorManager.SENSOR_TYPE_PARKING_BRAKE);
                     if (ds != null) {
                         mSensorsListener.onSensorChanged(sensorManager, ds);
@@ -905,7 +906,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 BroadcastFromWebview.broadCastPaused(getContext(), webView.getTitle());
                 break;
             case "waiting":
-                BroadcastFromWebview.broadCastLoading(getContext(), webView.getTitle());
+                BroadcastFromWebview.broadCastLoading(getContext());
                 break;
             case "error":
                 BroadcastFromWebview.broadCastError(getContext(), webView.getTitle());
@@ -1012,7 +1013,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
-            BroadcastFromWebview.broadCastLoading(getContext(), "Loading page");
+            BroadcastFromWebview.broadCastLoading(getContext());
         }
 
         @Override

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,8 +32,8 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
     public static final String ACTION_TYPE = "action_type";
     public static final String MEDIA_TITLE = "title";
     public static final String PLAYBACK_STATE = "state";
-    private static final String TAG = YoutubeMediaBrowserService.class.getName();
     public static final String QUERY = "query";
+    private static final String TAG = YoutubeMediaBrowserService.class.getName();
     private MediaSessionCompat mediaSessionCompat;
 
     @Override
@@ -57,26 +56,21 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
     }
 
     private void setup() {
-        mediaSessionCompat.setActive(true);
-        final MediaPlayer mMediaPlayer;
-        mMediaPlayer = MediaPlayer.create(YoutubeMediaBrowserService.this, R.raw.silent);
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mMediaPlayer.release();
-            }
-        });
-        mMediaPlayer.start();
-        AudioManager audioManager = (AudioManager)
-                getSystemService(Context.AUDIO_SERVICE);
-        int result = audioManager.requestAudioFocus(null,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//        final MediaPlayer mMediaPlayer;
+//        mMediaPlayer = MediaPlayer.create(YoutubeMediaBrowserService.this, R.raw.silent);
+//        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mediaPlayer) {
+//                mMediaPlayer.release();
+//            }
+//        });
+//        mMediaPlayer.start();
 
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
         builder.setState(PlaybackState.STATE_STOPPED, 0, 1);
         MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-        metadata.putString(METADATA_KEY_TITLE, "Click last tab in bottom bar & start playing from Youtube Auto app");
+        metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
         mediaSessionCompat.setMetadata(metadata.build());
         mediaSessionCompat.setPlaybackState(builder.build());
 
@@ -84,13 +78,21 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String title = intent.getStringExtra(MEDIA_TITLE);
-                MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-                metadata.putString(METADATA_KEY_TITLE, title);
-                mediaSessionCompat.setMetadata(metadata.build());
+                if (title != null) {
+                    MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+                    metadata.putString(METADATA_KEY_TITLE, title);
+                    mediaSessionCompat.setMetadata(metadata.build());
+                }
                 PlaybackStateCompat.Builder stateCompat = new PlaybackStateCompat.Builder();
-                stateCompat.setState(intent.getIntExtra(PLAYBACK_STATE, 0), 0, 1);
+                int playbackState = intent.getIntExtra(PLAYBACK_STATE, 0);
+                stateCompat.setState(playbackState, 0, 1);
                 stateCompat.setActions(getAvailableActions());
                 mediaSessionCompat.setPlaybackState(stateCompat.build());
+                if (playbackState == PlaybackState.STATE_PLAYING) {
+                    mediaSessionCompat.setActive(true);
+                } else if (playbackState == PlaybackState.STATE_STOPPED) {
+                    mediaSessionCompat.setActive(false);
+                }
             }
         }, new IntentFilter(WEBVIEW_EVENT));
 
@@ -160,7 +162,7 @@ public class YoutubeMediaBrowserService extends MediaBrowserServiceCompat {
         @Override
         public void onPlayFromSearch(String query, Bundle extras) {
             super.onPlayFromSearch(query, extras);
-            if(query!=null) {
+            if (query != null) {
                 BroadcastFromPlayer.broadcastVoiceSearch(YoutubeMediaBrowserService.this, query);
             }
         }
