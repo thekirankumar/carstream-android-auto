@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream 播放器</string>
+    <string name="channel_name">CarStream 頻道</string>
+    <string name="warning_title">警告請注意!</string>
+    <string name="warning_body">請注意!駕駛車輛時觀看視頻可能導致車禍意外發生，若同意此警告，表示您認同並為此自行負責。本應用程式開發人員，Google以及本設備的製造商和本車製造商均不對由於您的疏忽而造成的任何事故負責。您可以通過點擊媒體圖標來切換到背景播放。</string>
+    <string name="warning_accept_button">我已了解此風險</string>
+    <string name="url_edittext_phone_app">網址 :</string>
+    <string name="about_page">關於我</string>
+    <string name="webview_back">返回</string>
+    <string name="refresh_page">刷新</string>
+    <string name="send_to_car">傳送到Android Auto</string>
+    <string name="night_mode">夜間模式</string>
+    <string name="voice_search">語音搜尋</string>
+    <string name="search">谷歌搜尋</string>
+    <string name="fullscreen">全螢幕</string>
+    <string name="receive_from_phone">接收來自手機的傳送頁面</string>
+    <string name="home">首頁</string>
+    <string name="aspect_ratio_contain">長寬比:黑邊</string>
+    <string name="aspect_ratio_fill">長寬比:填滿</string>
+    <string name="aspect_ratio_cover">長寬比:拉寬</string>
+    <string name="day_mode">日間模式</string>
+    <string name="version">版本</string>
+    <string name="Page_bookmarked">頁面已記錄</string>
+    <string name="gotoPhoneReceive">請啟動Android Auto然後按下\'接收來自手機的傳送頁面\'選項,就可以載入Youtube頁面</string>
+    <string name="Plays_youtubeaudio">播放Youtube音樂</string>
+    <string name="Loading＿page">載入頁面中...</string>
+
+</resources>
