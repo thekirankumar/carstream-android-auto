@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -60,6 +60,18 @@ import com.google.android.apps.auto.sdk.CarUiController;
 import com.google.android.apps.auto.sdk.SearchCallback;
 import com.google.android.apps.auto.sdk.SearchController;
 import com.google.android.apps.auto.sdk.SearchItem;
+import com.thekirankumar.youtubeauto.utils.BroadcastFromWebview;
+import com.thekirankumar.youtubeauto.webview.JavascriptCallback;
+import com.thekirankumar.youtubeauto.activity.MainCarActivity;
+import com.thekirankumar.youtubeauto.Manifest;
+import com.thekirankumar.youtubeauto.utils.MyExceptionHandler;
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
+import com.thekirankumar.youtubeauto.utils.MyRecognitionListener;
+import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.utils.SearchMode;
+import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;
+import com.thekirankumar.youtubeauto.webview.VideoWebView;
+import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -237,7 +249,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         handlerThread = new HandlerThread("autosuggest");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
-        //BroadcastFromWebview.setEnableBroadcast(getContext(), false);
+
     }
 
     @Override

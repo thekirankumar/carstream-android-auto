@@ -1,14 +1,16 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.media.session.PlaybackState;
 
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
+
 /**
  * Created by kiran.kumar on 11/01/18.
  */
 
-class BroadcastFromPlayer {
+public class BroadcastFromPlayer {
     public static void broadcastPlayClicked(Context context) {
         Intent intent = new Intent(MyMediaBrowserService.PLAYER_EVENT);
         intent.putExtra(MyMediaBrowserService.ACTION_TYPE, PlaybackState.ACTION_PLAY);

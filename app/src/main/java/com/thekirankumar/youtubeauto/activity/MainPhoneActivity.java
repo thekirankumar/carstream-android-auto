@@ -1,8 +1,10 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+
+import com.thekirankumar.youtubeauto.R;
 
 
 public class MainPhoneActivity extends AppCompatActivity {

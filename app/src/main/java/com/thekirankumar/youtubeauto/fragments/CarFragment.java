@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.fragments;
 
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;

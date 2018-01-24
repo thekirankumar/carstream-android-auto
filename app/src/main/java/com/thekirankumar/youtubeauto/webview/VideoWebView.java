@@ -1,8 +1,7 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.webview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;

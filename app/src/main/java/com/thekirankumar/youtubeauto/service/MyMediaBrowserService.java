@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import com.thekirankumar.youtubeauto.utils.BroadcastFromPlayer;
 
 import java.util.Collections;
 import java.util.List;

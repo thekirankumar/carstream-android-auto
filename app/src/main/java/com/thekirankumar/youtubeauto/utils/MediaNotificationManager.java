@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -41,8 +41,9 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import com.google.android.apps.auto.sdk.nav.CarNavExtender;
 import com.google.android.apps.auto.sdk.notification.CarNotificationExtender;
+import com.thekirankumar.youtubeauto.activity.MainCarActivity;
+import com.thekirankumar.youtubeauto.R;
 
 
 /**

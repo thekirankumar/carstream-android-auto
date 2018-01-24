@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.apps.auto.sdk.CarActivity;
+import com.thekirankumar.youtubeauto.activity.MainCarActivity;
 
 public class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     private CarActivity activity;

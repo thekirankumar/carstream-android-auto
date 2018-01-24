@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,6 +11,9 @@ import android.view.Window;
 
 import com.google.android.apps.auto.sdk.CarActivity;
 import com.google.android.apps.auto.sdk.CarUiController;
+import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.fragments.CarFragment;
+import com.thekirankumar.youtubeauto.fragments.WebViewCarFragment;
 
 import java.util.HashSet;
 

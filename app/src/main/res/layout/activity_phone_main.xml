@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thekirankumar.youtubeauto.MainPhoneActivity">
+    tools:context="com.thekirankumar.youtubeauto.activity.MainPhoneActivity">
 
     <fragment
         android:id="@+id/demo"
-        android:name="com.thekirankumar.youtubeauto.WebViewPhoneFragment"
+        android:name="com.thekirankumar.youtubeauto.fragments.WebViewPhoneFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></fragment>
 </android.support.constraint.ConstraintLayout>

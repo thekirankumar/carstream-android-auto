@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by kiran.kumar on 02/01/18.
  */
 
-class MyRecognitionListener implements RecognitionListener {
+public class MyRecognitionListener implements RecognitionListener {
     private static final String TAG = MyRecognitionListener.class.getName();
     private OnCompleteListener listener;
 

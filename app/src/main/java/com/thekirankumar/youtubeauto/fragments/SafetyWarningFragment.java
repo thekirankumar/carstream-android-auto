@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.thekirankumar.youtubeauto.BuildConfig;
+import com.thekirankumar.youtubeauto.R;
 
 /**
  * Created by kiran.kumar on 14/01/18.

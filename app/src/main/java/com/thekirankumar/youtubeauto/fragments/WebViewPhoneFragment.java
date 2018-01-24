@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,6 +40,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.thekirankumar.youtubeauto.BuildConfig;
+import com.thekirankumar.youtubeauto.Manifest;
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
+import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;
+import com.thekirankumar.youtubeauto.webview.VideoEnabledWebView;
+import com.thekirankumar.youtubeauto.webview.VideoWebView;
+import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 
 import java.net.URISyntaxException;
 
@@ -110,7 +119,7 @@ public class WebViewPhoneFragment extends CarFragment {
             item.setTitle("Night mode");
         }
         MenuItem infoItem = menu.findItem(R.id.app_info);
-        infoItem.setTitle("Version v"+BuildConfig.VERSION_NAME);
+        infoItem.setTitle("Version v"+ BuildConfig.VERSION_NAME);
         infoItem.setEnabled(false);
     }
 

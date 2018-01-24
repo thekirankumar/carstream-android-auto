@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.webview;
 
 import android.os.Handler;
 import android.webkit.JavascriptInterface;

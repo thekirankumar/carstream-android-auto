@@ -1,6 +1,8 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 import android.webkit.WebView;
+
+import com.thekirankumar.youtubeauto.webview.VideoEnabledWebView;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,7 +11,7 @@ import java.net.URISyntaxException;
  * Created by kiran.kumar on 06/01/18.
  */
 
-class WebviewUtils {
+public class WebviewUtils {
     public static final String NIGHT_CSS_PATH = "https://cdn.rawgit.com/thekirankumar/youtube-android-auto/8bfdac63/night_css/";
     private static final String FILE_BROWSER_SCRIPT_PATH = "file:///android_asset/filebrowser.js";
     private static final String FILE_BROWSER_CSS_PATH = "file:///android_asset/filebrowser.css";

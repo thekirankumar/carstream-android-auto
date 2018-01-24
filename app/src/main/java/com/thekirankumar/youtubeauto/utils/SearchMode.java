@@ -1,9 +1,9 @@
-package com.thekirankumar.youtubeauto;
+package com.thekirankumar.youtubeauto.utils;
 
 /**
  * Created by kiran.kumar on 02/01/18.
  */
 
-enum SearchMode {
+public enum SearchMode {
     YOUTUBE, GOOGLE
 }
