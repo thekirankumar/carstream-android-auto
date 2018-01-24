@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream</string>
+    <string name="channel_name">Ютуб канал</string>
+    <string name="warning_title">ВНИМАНИЕ!!!</string>
+    <string name="warning_body">Во время движения запрещено использование данной программы!</string>
+    <string name="warning_accept_button">Согласен</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">О программе</string>
+    <string name="webview_back">Назад</string>
+    <string name="refresh_page">Обновить</string>
+    <string name="send_to_car">Послать в машину</string>
+    <string name="night_mode">Ночной режим</string>
+    <string name="voice_search">Голосовой поиск</string>
+    <string name="search">Поиск</string>
+    <string name="fullscreen">Полный экран</string>
+    <string name="receive_from_phone">Получить</string>
+    <string name="home">Домой</string>
+    <string name="aspect_ratio_contain">Contain</string>
+    <string name="aspect_ratio_fill">Fill</string>
+    <string name="aspect_ratio_cover">Cover</string>
+    <string name="app_name">CarStream</string>
+
+</resources>
