@@ -21,5 +21,11 @@
     <string name="aspect_ratio_contain">Contain</string>
     <string name="aspect_ratio_fill">Fill</string>
     <string name="aspect_ratio_cover">Cover</string>
+    <string name="bookmarks">"закладки "</string>
+    <string name="internal_storage">"Внутреннее хранилище "</string>
+    <string name="external_storage">"Внешнее хранилище "</string>
+    <string name="generic_storage">Generic Storage</string>
+    <string name="add_bookmark">Добавить закладку</string>
+    <string name="version">Версия</string>
 
 </resources>

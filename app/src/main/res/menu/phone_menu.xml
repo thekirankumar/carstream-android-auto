@@ -17,10 +17,6 @@
         app:showAsAction="ifRoom"
         android:title="" />
     <item
-        android:id="@+id/send"
-        android:title="@string/send_to_car"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/bookmark_button"
         android:title="@string/bookmarks"
         app:showAsAction="never" />

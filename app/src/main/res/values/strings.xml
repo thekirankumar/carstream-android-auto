@@ -25,5 +25,6 @@
     <string name="external_storage">External Storage</string>
     <string name="generic_storage">Generic Storage</string>
     <string name="add_bookmark">Add current</string>
+    <string name="version">Version</string>
 
 </resources>

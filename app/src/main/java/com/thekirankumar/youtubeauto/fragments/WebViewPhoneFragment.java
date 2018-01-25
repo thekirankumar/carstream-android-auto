@@ -121,7 +121,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.phone_menu, menu);
         MenuItem infoItem = menu.findItem(R.id.app_info);
-        infoItem.setTitle("Version v" + BuildConfig.VERSION_NAME);
+        infoItem.setTitle(getString(R.string.version) + "v" + BuildConfig.VERSION_NAME);
         infoItem.setEnabled(false);
     }
 
@@ -137,12 +137,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
             webView.goBack();
         } else if (item.getItemId() == R.id.refresh) {
             webView.reload();
-        } else if (item.getItemId() == R.id.send) {
-            SharedPreferences car = getActivity().getSharedPreferences("car", Context.MODE_PRIVATE);
-            car.edit().putString("url", webView.getUrl()).commit();
-            Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
-        } else if (item.getItemId() == R.id.bookmark_button) {
+        }  else if (item.getItemId() == R.id.bookmark_button) {
             showBookmarksScreen();
         }
         return super.onOptionsItemSelected(item);

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="about_page">Info su</string>
+    <string name="add_bookmark">Aggiungi il sito corrente</string>
+    <string name="app_name_player">Lettore CarStream</string>
+    <string name="aspect_ratio_contain">Adatta</string>
+    <string name="aspect_ratio_cover">Copri</string>
+    <string name="aspect_ratio_fill">Riempi</string>
+    <string name="bookmarks">Segnalibri</string>
+    <string name="external_storage">Memoria Esterna</string>
+    <string name="fullscreen">Schermo intero</string>
+    <string name="generic_storage">Memoria generica</string>
+    <string name="home">Pagina iniziale</string>
+    <string name="internal_storage">Memoria interna</string>
+    <string name="night_mode">Modalità notte</string>
+    <string name="receive_from_phone">Ricevi dal telefono</string>
+    <string name="refresh_page">Ricarica</string>
+    <string name="search">Cerca</string>
+    <string name="send_to_car">Invia ad auto</string>
+    <string name="url_edittext_phone_app">Indirizzo :</string>
+    <string name="voice_search">Ricerca vocale</string>
+    <string name="warning_accept_button">Ho capito i rischi</string>
+    <string name="warning_body">Guardare video in auto mentre si guida potrebbe provocare incidenti stradali. Ignorando questo avviso, accetti di essere consapevole e responsabile delle conseguenze. L\'autore dell\'app e Google non sono responsabili di incidenti causati dalla tua negligenza. Per ascoltare l\'audio in sottofondo puoi premere l\'icona dei media</string>
+    <string name="warning_title">ATTENZIONE !!!</string>
+    <string name="webview_back">Indietro</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="channel_name">CarSteam Channel</string>
+    <string name="version">Versione</string>
+</resources>
