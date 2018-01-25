@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">Attention !!!</string>
+    <string name="warning_body">Regarder des vidéos en conduisant peut provoquer des accidents. Avec cet avertissement, vous reconnaissez être conscient des conséquences de cette action et en être pleinnement responsable. Ni le développeur de cette application, ni Google ni le fabricant de cet équipement, ni le fabricant de cette voiture est responsable des accidents causés par votre négligence. Vous pouvez utiliser le lectureur en arrière-plan.</string>
+    <string name="warning_accept_button">Je comprend les risques</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">À propos</string>
+    <string name="webview_back">Retour</string>
+    <string name="refresh_page">Rafraîchir</string>
+    <string name="send_to_car">Envoyer</string>
+    <string name="night_mode">Mode nuit</string>
+    <string name="bookmarks">Favoris</string>
+    <string name="voice_search">Recherche vocale</string>
+    <string name="search">Rechercher</string>
+    <string name="fullscreen">Plein écran</string>
+    <string name="receive_from_phone">Recevoir</string>
+    <string name="home">Acceuil</string>
+    <string name="aspect_ratio_contain">Contenir</string>
+    <string name="aspect_ratio_fill">Remplir</string>
+    <string name="aspect_ratio_cover">Couverture</string>
+    <string name="internal_storage">Stockage interne</string>
+    <string name="external_storage">Stockage externe</string>
+    <string name="generic_storage">Stockage générique</string>
+    <string name="add_bookmark">Ajouter</string>
+    <string name="version">Version</string>
+
+</resources>
