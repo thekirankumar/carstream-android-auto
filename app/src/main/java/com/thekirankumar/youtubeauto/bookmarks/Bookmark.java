@@ -19,8 +19,11 @@ public class Bookmark extends RealmObject {
     private long createdAt;
     private @IdRes
     int thumbnailResource;
+    private boolean preventDelete;
+
     public Bookmark() {
     }
+
     public Bookmark(String title, String faviconPath, String url) {
         this.title = title;
         this.faviconPath = faviconPath;
@@ -33,6 +36,15 @@ public class Bookmark extends RealmObject {
         this.faviconResource = faviconRes;
         this.url = url;
         this.thumbnailResource = thumbnailRes;
+        this.preventDelete = true;
+    }
+
+    public boolean isPreventDelete() {
+        return preventDelete;
+    }
+
+    public void setPreventDelete(boolean preventDelete) {
+        this.preventDelete = preventDelete;
     }
 
     public int getFaviconResource() {

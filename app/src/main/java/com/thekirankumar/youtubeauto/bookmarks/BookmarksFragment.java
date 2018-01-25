@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,20 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         toolbar.setTitle(R.string.bookmarks);
 
         recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_BACK:
+                            listener.onBookmarkFragmentClose();
+                            return true;
+                    }
+                    return false;
+                }
+                return false;
+            }
+        });
         Resources r = view.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BOOKMARK_VIEW_SIZE_IN_DP, r.getDisplayMetrics());
 
@@ -161,7 +176,7 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     }
 
     @Override
-    public void onBookmarkFragmentClose() {
-
+    public void  onBookmarkFragmentClose() {
+        listener.onBookmarkFragmentClose();
     }
 }

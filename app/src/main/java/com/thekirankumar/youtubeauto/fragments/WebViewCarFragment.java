@@ -961,8 +961,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
 
     private void showWarningScreen() {
         if (isAdded()) {
-            webView.setVisibility(View.GONE);
-            toolbar.setVisibility(View.GONE);
+
 
             warningScreenOpen = true;
             FragmentManager childFragmentManager = getChildFragmentManager();
@@ -973,7 +972,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.overlay_container, warningFragment, SAFETY_WARNING_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-            fragmentTransaction.commitAllowingStateLoss();
+            fragmentTransaction.commitNow();
+            webView.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
         }
 
     }
@@ -981,13 +982,14 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         if (isAdded()) {
             webView.setVisibility(View.VISIBLE);
             toolbar.setVisibility(View.VISIBLE);
+            showToolbar();
             FragmentManager childFragmentManager = getChildFragmentManager();
             Fragment oldFragment = childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
             if (oldFragment != null) {
                 FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
                 fragmentTransaction.remove(oldFragment);
                 fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                fragmentTransaction.commitAllowingStateLoss();
+                fragmentTransaction.commitNow();
             }
         }
         webView.requestFocus();

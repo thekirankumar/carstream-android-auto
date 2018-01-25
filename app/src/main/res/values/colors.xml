@@ -7,5 +7,6 @@
     <color name="color5">#2e9641</color>
     <color name="light_gray">#f5f5f5</color>
     <color name="very_dark_gray">#282828</color>
+    <color name="color_highlight">#AA669900</color>
 
 </resources>

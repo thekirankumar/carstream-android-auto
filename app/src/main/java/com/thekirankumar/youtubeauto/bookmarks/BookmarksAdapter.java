@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,20 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
         if (position < bookmarks.size()) {
             final Bookmark bookmark = bookmarks.get(position);
             holder.setBookmark(bookmark);
+            holder.itemView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_UP) {
+                        switch (keyCode) {
+                            case KeyEvent.KEYCODE_BACK:
+                                bookmarksClickCallback.onBookmarkFragmentClose();
+                                return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+            });
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,7 +99,11 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
                     return true;
                 }
             });
-            holder.setDeleteMode(deleteMode);
+            if (bookmark.isPreventDelete()) {
+                holder.setDeleteMode(false);
+            } else {
+                holder.setDeleteMode(deleteMode);
+            }
         } else {
             holder.title.setText(R.string.add_bookmark);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +141,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
 
         public BookmarkViewHolder(Context context, ViewGroup parent) {
             super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bookmark_layout, parent, false));
+            itemView.setBackgroundResource(R.drawable.highlighting_drawable);
             AspectRatioFrameLayout aspectFrameLayout = (AspectRatioFrameLayout) itemView;
             aspectFrameLayout.setAspectRatio(1);
             aspectFrameLayout.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
