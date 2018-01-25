@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -43,18 +46,23 @@ import android.widget.Toast;
 
 import com.thekirankumar.youtubeauto.BuildConfig;
 import com.thekirankumar.youtubeauto.Manifest;
-import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
+import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebView;
 import com.thekirankumar.youtubeauto.webview.VideoWebView;
-import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 
 import java.net.URISyntaxException;
 
 
-public class WebViewPhoneFragment extends CarFragment {
+public class WebViewPhoneFragment extends CarFragment implements BookmarksClickCallback {
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
+    private static final String BOOKMARKS_FRAGMENT_TAG = "bookmarks";
     private final String TAG = "WebViewCarFragment";
     private VideoWebView webView;
     private EditText editText;
@@ -112,14 +120,8 @@ public class WebViewPhoneFragment extends CarFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.phone_menu, menu);
-        MenuItem item = menu.findItem(R.id.night_mode);
-        if (isNightMode) {
-            item.setTitle("Day mode");
-        } else {
-            item.setTitle("Night mode");
-        }
         MenuItem infoItem = menu.findItem(R.id.app_info);
-        infoItem.setTitle("Version v"+ BuildConfig.VERSION_NAME);
+        infoItem.setTitle("Version v" + BuildConfig.VERSION_NAME);
         infoItem.setEnabled(false);
     }
 
@@ -140,14 +142,8 @@ public class WebViewPhoneFragment extends CarFragment {
             car.edit().putString("url", webView.getUrl()).commit();
             Toast.makeText(getActivity(), "Page bookmarked", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Goto Android Auto App and click 'Receive from phone' to load this page", Toast.LENGTH_LONG).show();
-        } else if (item.getItemId() == R.id.night_mode) {
-            if (isNightMode) {
-                isNightMode = false;
-            } else {
-                isNightMode = true;
-            }
-            getActivity().invalidateOptionsMenu();
-            webView.reload();
+        } else if (item.getItemId() == R.id.bookmark_button) {
+            showBookmarksScreen();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -334,6 +330,56 @@ public class WebViewPhoneFragment extends CarFragment {
         }
     }
 
+    @Override
+    public void onBookmarkSelected(Bookmark bookmark) {
+        webView.loadUrl(bookmark.getUrl());
+    }
+
+    @Override
+    public void onBookmarkAddCurrentPage() {
+        BookmarkUtils.addBookmark(webView);
+    }
+
+    @Override
+    public void onBookmarkDelete(Bookmark bookmark) {
+        BookmarkUtils.deleteBookmark(bookmark);
+    }
+
+    @Override
+    public void onBookmarkFragmentClose() {
+        hideBookmarksScreen();
+    }
+
+    private void hideBookmarksScreen() {
+        if (isAdded()) {
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.GONE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            Fragment oldFragment = childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+                fragmentTransaction.remove(oldFragment);
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+    private void showBookmarksScreen() {
+        if (isAdded()) {
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.VISIBLE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            BookmarksFragment bookmarksFragment = (BookmarksFragment) childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
+            if (bookmarksFragment == null) {
+                bookmarksFragment = new BookmarksFragment();
+            }
+            FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.full_screen_view, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+
+    }
 
     private class CustomWebViewClient extends WebViewClient {
 

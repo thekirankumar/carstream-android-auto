@@ -130,13 +130,13 @@
                     android:background="@drawable/highlighting_drawable"
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/refresh_button"
-                    android:nextFocusRight="@id/receive_button"
+                    android:nextFocusRight="@id/bookmark_button"
                     android:padding="5dp"
                     android:src="@drawable/ic_fullscreen"
                     android:text="@string/fullscreen" />
 
                 <ImageButton
-                    android:id="@+id/receive_button"
+                    android:id="@+id/bookmark_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -145,7 +145,7 @@
                     android:nextFocusRight="@id/aspect_button"
                     android:background="@drawable/highlighting_drawable"
                     android:padding="5dp"
-                    android:src="@drawable/ic_receive_from_phone"
+                    android:src="@drawable/ic_bookmarks"
                     android:text="@string/receive_from_phone" />
             </LinearLayout>
 
@@ -190,7 +190,7 @@
         android:layout_height="match_parent">
         <Button
             android:textSize="10sp"
-            android:nextFocusLeft="@id/receive_button"
+            android:nextFocusLeft="@id/bookmark_button"
             android:drawableTop="@drawable/ic_aspect_ratio"
             android:id="@+id/aspect_button"
             android:layout_width="wrap_content"
@@ -201,7 +201,7 @@
 
     </LinearLayout>
     <FrameLayout
-        android:id="@+id/safety_container"
+        android:id="@+id/overlay_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></FrameLayout>
 

@@ -60,6 +60,10 @@ import com.google.android.apps.auto.sdk.CarUiController;
 import com.google.android.apps.auto.sdk.SearchCallback;
 import com.google.android.apps.auto.sdk.SearchController;
 import com.google.android.apps.auto.sdk.SearchItem;
+import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
+import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromWebview;
 import com.thekirankumar.youtubeauto.webview.JavascriptCallback;
 import com.thekirankumar.youtubeauto.activity.MainCarActivity;
@@ -87,7 +91,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener, BookmarksClickCallback {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_OFFLINE_URL_BASE = "file:///" + Environment.getExternalStorageDirectory().getPath() + "/";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
@@ -99,6 +103,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public static final String HOME_URL = "home_url";
     public static final String JAVASCRIPT_INTERFACE = "nativecallbacks";
     public static final String SAFETY_WARNING_FRAGMENT_TAG = "safety";
+    public static final String BOOKMARKS_FRAGMENT_TAG = "bookmarks";
     private static final String TAG = "WebViewCarFragment";
     private static final String FULLSCREEN_KEY = "fullscreen";
     private static final String ASPECT_RATIO_KEY = "aspect_ratio";
@@ -419,7 +424,6 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         });
 
         handleVoiceVisibility();
-        ImageButton receiveButton = view.findViewById(R.id.receive_button);
         final ImageButton fullScreenButton = view.findViewById(R.id.fullscreen_button);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -476,15 +480,11 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
             }
         });
 
-
-        receiveButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton bookmarkButton = view.findViewById(R.id.bookmark_button);
+        bookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences car = getContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-                String url = car.getString("url", null);
-                if (url != null) {
-                    webView.loadUrl(url);
-                }
+                showBookmarksScreen();
             }
         });
 
@@ -971,7 +971,39 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 warningFragment = new SafetyWarningFragment();
             }
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.safety_container, warningFragment, SAFETY_WARNING_FRAGMENT_TAG);
+            fragmentTransaction.replace(R.id.overlay_container, warningFragment, SAFETY_WARNING_FRAGMENT_TAG);
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+
+    }
+    private void hideBookmarksScreen() {
+        if (isAdded()) {
+            webView.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            Fragment oldFragment = childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+                fragmentTransaction.remove(oldFragment);
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+    private void showBookmarksScreen() {
+        if (isAdded()) {
+            webView.setVisibility(View.INVISIBLE);
+            toolbar.setVisibility(View.GONE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            BookmarksFragment bookmarksFragment = (BookmarksFragment) childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
+            if (bookmarksFragment == null) {
+                bookmarksFragment = new BookmarksFragment();
+            }
+            FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.overlay_container, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
         }
@@ -1001,6 +1033,26 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 return getString(R.string.aspect_ratio_contain);
         }
         return "";
+    }
+
+    @Override
+    public void onBookmarkSelected(Bookmark bookmark) {
+        webView.loadUrl(bookmark.getUrl());
+    }
+
+    @Override
+    public void onBookmarkAddCurrentPage() {
+        BookmarkUtils.addBookmark(webView);
+    }
+
+    @Override
+    public void onBookmarkDelete(Bookmark bookmark) {
+        BookmarkUtils.deleteBookmark(bookmark);
+    }
+
+    @Override
+    public void onBookmarkFragmentClose() {
+        hideBookmarksScreen();
     }
 
     private enum AspectRatio {
