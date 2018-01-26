@@ -23,7 +23,6 @@
     <string name="aspect_ratio_cover">Cover</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="external_storage">External Storage</string>
-    <string name="generic_storage">Generic Storage</string>
     <string name="add_bookmark">Add current</string>
     <string name="version">Version</string>
 

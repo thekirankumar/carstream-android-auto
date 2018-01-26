@@ -25,7 +25,6 @@
     <string name="bookmarks">書籤</string>
     <string name="internal_storage">內部存儲器</string>
     <string name="external_storage">外置儲存</string>
-    <string name="generic_storage">外置儲存</string>
     <string name="add_bookmark">添加書籤</string>
 
 </resources>

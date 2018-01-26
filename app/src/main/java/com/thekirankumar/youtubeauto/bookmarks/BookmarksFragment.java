@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -21,9 +20,7 @@ import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.utils.GridAutofitLayoutManager;
 import com.thekirankumar.youtubeauto.utils.MemoryStorage;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -38,6 +35,7 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     public static final float BOOKMARK_VIEW_SIZE_IN_DP = 180;
     private BookmarksClickCallback listener;
     private RecyclerView recyclerView;
+    private RealmResults<Bookmark> bookmarks;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,18 +85,19 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Realm realm = Realm.getDefaultInstance();
 
-        RealmResults<Bookmark> bookmarks = realm.where(Bookmark.class).sort("createdAt").findAll();
-        if (bookmarks.size() == 0) {
-            handleEmptyBookmarks(realm);
-            bookmarks = realm.where(Bookmark.class).findAll();
-        }
-        final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(bookmarks);
+        RealmResults<Bookmark> bookmarksRealm = realm.where(Bookmark.class).sort("createdAt").findAll();
+        final ArrayList<Bookmark> preburntBookmarks = getPreburntBookmarks();
+        this.bookmarks = realm.where(Bookmark.class).findAll();
+        preburntBookmarks.addAll(bookmarks);
+        final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(preburntBookmarks);
         bookmarksAdapter.setBookmarksClickCallback(this);
         recyclerView.setAdapter(bookmarksAdapter);
         bookmarks.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Bookmark>>() {
             @Override
             public void onChange(@NonNull RealmResults<Bookmark> bookmarks, @javax.annotation.Nullable OrderedCollectionChangeSet changeSet) {
-                bookmarksAdapter.setBookmarks(bookmarks);
+                ArrayList<Bookmark> newBookmarks = new ArrayList<>(preburntBookmarks);
+                newBookmarks.addAll(bookmarks);
+                bookmarksAdapter.setBookmarks(newBookmarks);
                 bookmarksAdapter.notifyDataSetChanged();
             }
         });
@@ -110,31 +109,23 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         recyclerView.requestFocus();
     }
 
-    private void handleEmptyBookmarks(final Realm realm) {
+    private ArrayList<Bookmark> getPreburntBookmarks() {
         final ArrayList<Bookmark> bookmarks = new ArrayList<>();
         bookmarks.add(new Bookmark("YouTube", R.drawable.youtube_favicon, "http://youtube.com", R.drawable.youtube_bookmark));
-        Map<String, File> allStorageLocations = MemoryStorage.getAllStorageLocations();
-        for (Map.Entry<String, File> stringFileEntry : allStorageLocations.entrySet()) {
+        String[] storageDirectories = MemoryStorage.getStorageDirectories(getContext());
+        String internalSdCard = MemoryStorage.getSdCardPath();
+        for (String storageDirectory : storageDirectories) {
             String title;
-            if (stringFileEntry.getKey().equals(MemoryStorage.SD_CARD)) {
+            if (internalSdCard.startsWith(storageDirectory)) {
                 title = getString(R.string.internal_storage);
-                bookmarks.add(new Bookmark(title, 0, "file://" + stringFileEntry.getValue().getPath(), R.drawable.external_storage));
-            } else if (stringFileEntry.getKey().equals(MemoryStorage.EXTERNAL_SD_CARD)) {
-                title = getString(R.string.external_storage);
-                bookmarks.add(new Bookmark(title, 0, "file://" + stringFileEntry.getValue().getPath(), R.drawable.external_storage));
+                bookmarks.add(new Bookmark(title, 0, "file://" + storageDirectory, R.drawable.external_storage));
             } else {
-                title = getString(R.string.generic_storage);
-                bookmarks.add(new Bookmark(title, 0, "file://" + stringFileEntry.getValue().getPath(), R.drawable.external_storage));
+                title = getString(R.string.external_storage);
+                bookmarks.add(new Bookmark(title, 0, "file://" + storageDirectory, R.drawable.external_storage));
             }
-
         }
         bookmarks.add(new Bookmark("Plex.tv", 0, "http://app.plex.tv", R.drawable.plex));
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm1) {
-                realm1.insert(bookmarks);
-            }
-        });
+        return bookmarks;
     }
 
     @Override
@@ -176,7 +167,7 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     }
 
     @Override
-    public void  onBookmarkFragmentClose() {
+    public void onBookmarkFragmentClose() {
         listener.onBookmarkFragmentClose();
     }
 }

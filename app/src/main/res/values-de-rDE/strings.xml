@@ -23,7 +23,6 @@
     <string name="bookmarks">Lesezeichen</string>
     <string name="internal_storage">Interne Speicher</string>
     <string name="external_storage">Externer Speicher</string>
-    <string name="generic_storage">Generic Storage</string>
     <string name="add_bookmark">Lesezeichen hinzufügen</string>
     <string name="version">Fassung</string>
 

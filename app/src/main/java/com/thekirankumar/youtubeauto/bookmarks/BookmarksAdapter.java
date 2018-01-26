@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.utils.AspectRatioFrameLayout;
 
+import java.util.ArrayList;
+
 import io.realm.RealmResults;
 
 /**
@@ -21,12 +23,12 @@ import io.realm.RealmResults;
  */
 
 public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.BookmarkViewHolder> {
-    private RealmResults<Bookmark> bookmarks;
+    private ArrayList<Bookmark> bookmarks;
     private Bookmark addCurrentBookmark = new Bookmark();
     private BookmarksClickCallback bookmarksClickCallback;
     private boolean deleteMode;
 
-    public BookmarksAdapter(RealmResults<Bookmark> bookmarks) {
+    public BookmarksAdapter(ArrayList<Bookmark> bookmarks) {
         this.bookmarks = bookmarks;
         setHasStableIds(true);
     }
@@ -129,7 +131,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
         return bookmarks.size() + 1;
     }
 
-    public void setBookmarks(RealmResults<Bookmark> bookmarks) {
+    public void setBookmarks(ArrayList<Bookmark> bookmarks) {
         this.bookmarks = bookmarks;
     }
 
@@ -172,6 +174,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
                 this.favicon.setImageResource(faviconResource);
             } else {
                 this.favicon.setVisibility(View.GONE);
+                this.favicon.setImageBitmap(null);
             }
         }
 
