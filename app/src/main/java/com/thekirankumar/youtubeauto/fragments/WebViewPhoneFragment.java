@@ -121,7 +121,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.phone_menu, menu);
         MenuItem infoItem = menu.findItem(R.id.app_info);
-        infoItem.setTitle(getString(R.string.version) + "v" + BuildConfig.VERSION_NAME);
+        infoItem.setTitle(getString(R.string.version) + " v" + BuildConfig.VERSION_NAME);
         infoItem.setEnabled(false);
     }
 
