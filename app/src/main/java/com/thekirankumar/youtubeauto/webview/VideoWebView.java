@@ -3,26 +3,20 @@ package com.thekirankumar.youtubeauto.webview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.MotionEvent;
 
 /**
  * Created by kiran.kumar on 11/01/18.
  */
 
 public class VideoWebView extends VideoEnabledWebView {
+    private float lastDownY;
+    private float lastDownX;
+    private float TOUCH_TOLERANCE = 20;
+
     public VideoWebView(Context context) {
         super(context);
         init();
-    }
-
-    private void init() {
-        setWebViewClient(new WebViewClient(){
-            @Override
-            public void onUnhandledKeyEvent(WebView view, KeyEvent event) {
-                super.onUnhandledKeyEvent(view, event);
-            }
-        });
     }
 
     public VideoWebView(Context context, AttributeSet attrs) {
@@ -33,6 +27,30 @@ public class VideoWebView extends VideoEnabledWebView {
     public VideoWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    private void init() {
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+            showKeyboardIfInput();
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            lastDownX = event.getX();
+            lastDownY = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (Math.abs(lastDownX - event.getX()) < TOUCH_TOLERANCE && Math.abs(lastDownY - event.getY()) < TOUCH_TOLERANCE)
+                showKeyboardIfInput();
+        }
+        return super.onTouchEvent(event);
     }
 
     public void playNextTrack() {
@@ -46,6 +64,14 @@ public class VideoWebView extends VideoEnabledWebView {
 
     public void playVideo() {
         loadUrl("javascript:var v = document.querySelector(\"video\"); v.play();");
+    }
+
+    public void scrollActiveElementIntoView(boolean alignToTop) {
+        loadUrl("javascript:setTimeout(function() { const element = document.activeElement;\n" +
+                "const elementRect = element.getBoundingClientRect();\n" +
+                "const absoluteElementTop = elementRect.top + window.pageYOffset;\n" +
+                "const middle = absoluteElementTop - (window.innerHeight / 2);\n" +
+                "window.scrollTo(0, middle);},500);");
     }
 
     public void requestFullScreen() {
@@ -114,20 +140,63 @@ public class VideoWebView extends VideoEnabledWebView {
     }
 
     public void setAspectRatio(String mode) {
-        String s = "javascript:document.querySelector('video').setAttribute('style','object-fit:"+mode+"');";
+        String s = "javascript:document.querySelector('video').setAttribute('style','object-fit:" + mode + "');";
         loadUrl(s);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
+    public void showKeyboardIfInput() {
+        String s = "javascript:setTimeout(function() {" +
+                "if(document.activeElement instanceof HTMLInputElement) {" +
+                "window.nativecallbacks.showKeyboard(document.activeElement.value);" +
+                "} else if(document.activeElement.getAttribute(\"contenteditable\") == \"true\") {" +
+                "window.nativecallbacks.showKeyboard(document.activeElement.innerText);" +
+                "} else {" +
+                "" +
+                "}" +
+                "}, 500);"; // delay so that document.activeElement gets set
+        loadUrl(s);
+    }
+
+    public void sendKeyboardEnterEvent() {
+        loadUrl("javascript: var keyboardEvent = document.createEvent(\"KeyboardEvent\");\n" +
+                "var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? \"initKeyboardEvent\" : \"initKeyEvent\";\n" +
+                "keyboardEvent[initMethod](\n" +
+                "                   \"keyup\"," +
+                "                    true, " +
+                "                    true, " +
+                "                    window, " +
+                "                    false, " +
+                "                    false, " +
+                "                    false, " +
+                "                    false, " +
+                "                    13, " +
+                "                    0" +
+                ");\n" +
+                "document.activeElement.dispatchEvent(keyboardEvent);");
     }
 
 
     public void seekBySeconds(int seconds) {
-        loadUrl("javascript:var v = document.querySelector(\"video\"); v.currentTime = v.currentTime + "+seconds+";");
+        loadUrl("javascript:var v = document.querySelector(\"video\"); v.currentTime = v.currentTime + " + seconds + ";");
     }
+
     public void getCurrentVideoTimeResult() {
         loadUrl("javascript:var v = document.querySelector(\"video\"); window.nativecallbacks.onVideoCurrentTimeResult(v.currentTime);");
+    }
+
+    public void enterEditText(String s) {
+        String js = "var changeEvent = new Event('change'); " +
+                "if(document.activeElement.isContentEditable)" +
+                "{" +
+                "document.activeElement.innerText = \"" + s + "\";" +
+                "}" +
+                "" +
+                "else " +
+                "{" +
+                "document.activeElement.value = \"" + s + "\";" +
+                "} " +
+                "document.activeElement.dispatchEvent(changeEvent);";
+        loadUrl("javascript:" + js);
+
     }
 }

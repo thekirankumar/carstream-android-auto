@@ -39,12 +39,16 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -65,6 +69,7 @@ import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromWebview;
+import com.thekirankumar.youtubeauto.utils.CarEditText;
 import com.thekirankumar.youtubeauto.webview.JavascriptCallback;
 import com.thekirankumar.youtubeauto.activity.MainCarActivity;
 import com.thekirankumar.youtubeauto.Manifest;
@@ -91,7 +96,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class WebViewCarFragment extends CarFragment implements MainCarActivity.OnConfigurationChangedListener, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener, BookmarksClickCallback {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.ActivityCallbacks, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener, BookmarksClickCallback {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_OFFLINE_URL_BASE = "file:///" + Environment.getExternalStorageDirectory().getPath() + "/";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
@@ -243,6 +248,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         }
     };
     private Integer currentVideoTime;
+    private CarEditText fakeEditText;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -302,6 +308,8 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
         mainCarActivity.setIgnoreConfigChanges(512);
         Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(mainCarActivity));
 
+        fakeEditText = view.findViewById(R.id.fake_edittext);
+        setupEditTextMirroring(fakeEditText);
 
         final CarUiController carUiController = mainCarActivity.getCarUiController();
         final SearchController searchController = carUiController.getSearchController();
@@ -657,7 +665,37 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
                 return false;
             }
         });
-        mainCarActivity.addConfigurationChangedListener(this);
+        mainCarActivity.addActivityCallback(this);
+    }
+
+    private void setupEditTextMirroring(final CarEditText fakeEditText) {
+        fakeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                webView.enterEditText(fakeEditText.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        fakeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    webView.sendKeyboardEnterEvent();
+                    onHideKeyboardFromJS();
+                }
+                return false;
+            }
+        });
     }
 
     private void toggleAspectRatio() {
@@ -883,7 +921,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public void onDestroyView() {
         super.onDestroyView();
         final MainCarActivity mainCarActivity = (MainCarActivity) getContext();
-        mainCarActivity.removeConfigurationChangedListener(this);
+        mainCarActivity.removeActivityCallback(this);
 
     }
 
@@ -891,6 +929,13 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     public void onConfigChanged() {
         isNightMode = getResources().getBoolean(R.bool.isNight);
         WebviewUtils.injectNightModeCss(webView, isNightMode);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if(hasFocus) {
+            onHideKeyboardFromJS();
+        }
     }
 
     @Override
@@ -931,6 +976,27 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.O
     @Override
     public void onVideoCurrentTimeResult(int currentTime) {
         this.currentVideoTime = currentTime;
+    }
+
+    @Override
+    public void onShowKeyboardFromJS(String oldText) {
+        fakeEditText.setText(oldText);
+        MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        mainCarActivity.a().startInput(fakeEditText);
+        fakeEditText.setSelection(fakeEditText.getText().length());
+        ViewGroup.LayoutParams layoutParams = webView.getLayoutParams();
+        layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+        webView.setLayoutParams(layoutParams);
+        webView.scrollActiveElementIntoView(true);
+    }
+
+    @Override
+    public void onHideKeyboardFromJS() {
+        MainCarActivity mainCarActivity = (MainCarActivity) getContext();
+        mainCarActivity.a().stopInput();
+        ViewGroup.LayoutParams layoutParams = webView.getLayoutParams();
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        webView.setLayoutParams(layoutParams);
     }
 
     public void setParkingBrake(boolean parkingBrake) {
