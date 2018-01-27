@@ -11,8 +11,8 @@ android {
         applicationId "com.google.android.kk"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 32
-        versionName "1.7.2"
+        versionCode 33
+        versionName "1.7.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
