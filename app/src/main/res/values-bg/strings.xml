@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">ВНИМАНИЕ !!!</string>
+    <string name="warning_body">Ползването на тази програма по време на движение е опасно! Приемайки това предупреждение, вие потвърждавате, че сте наясно и сте отговорни за последиците от това. Нито автора на това приложение, нито Google, нито производителят на този автомобил са отговорни за произшествия, причинени поради вашата небрежност. Можете да превключите към фоново възпроизвеждане (без картина), като кликнете върху иконата със слушалките</string>
+    <string name="warning_accept_button">Приемам риска</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Блог</string>
+    <string name="webview_back">Назад</string>
+    <string name="refresh_page">Обновяване</string>
+    <string name="send_to_car">Изпращане</string>
+    <string name="night_mode">Ножен изглед</string>
+    <string name="bookmarks">Отметки</string>
+    <string name="voice_search">Гласово търсене</string>
+    <string name="search">Търсене</string>
+    <string name="fullscreen">Цял екран</string>
+    <string name="receive_from_phone">Получаване</string>
+    <string name="home">Начало</string>
+    <string name="aspect_ratio_contain">Нормално</string>
+    <string name="aspect_ratio_fill">Запълване</string>
+    <string name="aspect_ratio_cover">Изрязано</string>
+    <string name="internal_storage">Вътрешна памет</string>
+    <string name="external_storage">Външна памет</string>
+    <string name="add_bookmark">Добави отметка</string>
+    <string name="version">Версия</string>
+
+</resources>
