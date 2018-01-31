@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">คำเตือน !!!</string>
+    <string name="warning_body">การดูวิดีโอขณะขับรถอาจทำให้เกิดอุบัติเหตุได้ การละเว้นคำเตือนนี้หมายความว่าท่านได้ยอมรับและรับผิดชอบต่อผลอาจจะตามมาด้วยตัวท่านเอง นักพัฒนาซอฟต์แวร์ของ Google หรือผู้ผลิตอุปกรณ์นี้ หรือผู้ผลิตรถคันนี้ ไม่รับผิดชอบต่ออุบัติเหตุที่เกิดจากความประมาทของท่าน ท่านสามารถสลับไปใช้การเล่นพื้นหลังได้โดยคลิกไอคอนหูฟัง</string>
+    <string name="warning_accept_button">ฉันยอมรับความเสี่ยง</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">เกี่ยวกับ</string>
+    <string name="webview_back">กลับ</string>
+    <string name="refresh_page">รีเฟรช</string>
+    <string name="night_mode">โหมดกลางคืน</string>
+    <string name="bookmarks">เปิดบันทึก</string>
+    <string name="voice_search">ค้นด้วยเสียง</string>
+    <string name="search">ค้น</string>
+    <string name="fullscreen">เต็มจอ</string>
+    <string name="home">หน้าหลัก</string>
+    <string name="aspect_ratio_contain">ปรับขนาดภาพเต็มช่องคำนึงอัตราส่วน</string>
+    <string name="aspect_ratio_fill">ปรับขนาดภาพไม่คำนึงอัตราส่วน</string>
+    <string name="aspect_ratio_cover">ปรับขนาดภาพกว้างยาวคำนึงอัตราส่วน</string>
+    <string name="internal_storage">หน่วยความจำภายใน</string>
+    <string name="external_storage">หน่วยความจำภายนอก</string>
+    <string name="add_bookmark">จดจำ</string>
+    <string name="version">เวอร์ชัน </string>
+
+</resources>
