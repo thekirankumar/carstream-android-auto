@@ -106,7 +106,6 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     @Override
     public void onResume() {
         super.onResume();
-        recyclerView.requestFocus();
     }
 
     private ArrayList<Bookmark> getPreburntBookmarks() {
