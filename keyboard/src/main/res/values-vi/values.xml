@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference|boolean" name="showPreview"/>
+    <declare-styleable name="AnyKeyboardViewIconsTheme"><attr format="reference" name="iconKeyShift"/><attr format="reference" name="iconKeyControl"/><attr format="reference" name="iconKeyBackspace"/><attr format="reference" name="iconKeySpace"/><attr format="reference" name="iconKeyTab"/><attr format="reference" name="iconKeyCancel"/><attr format="reference" name="iconKeyGlobe"/><attr format="reference" name="iconKeyAction"/><attr format="reference" name="iconKeyArrowRight"/><attr format="reference" name="iconKeyArrowLeft"/><attr format="reference" name="iconKeyArrowUp"/><attr format="reference" name="iconKeyArrowDown"/><attr format="reference" name="iconKeyMic"/><attr format="reference" name="iconKeySettings"/><attr format="reference" name="iconKeyInputClear"/><attr format="reference" name="iconKeyInputSelectAll"/><attr format="reference" name="iconKeyInputClipboardCopy"/><attr format="reference" name="iconKeyInputClipboardCut"/><attr format="reference" name="iconKeyInputClipboardPaste"/><attr format="reference" name="iconKeyInputMoveEnd"/><attr format="reference" name="iconKeyInputMoveHome"/><attr format="reference" name="iconKeyCondenseNormal"/><attr format="reference" name="iconKeyCondenseSplit"/><attr format="reference" name="iconKeyCondenseCompactToRight"/><attr format="reference" name="iconKeyCondenseCompactToLeft"/><attr format="reference" name="iconKeyClipboardCopy"/><attr format="reference" name="iconKeyClipboardCut"/><attr format="reference" name="iconKeyClipboardPaste"/><attr format="reference" name="iconKeyClipboardSelect"/><attr format="reference" name="iconKeyQuickText"/><attr format="reference" name="iconKeyUndo"/><attr format="reference" name="iconKeyRedo"/></declare-styleable>
+    <declare-styleable name="AnyKeyboardViewTheme"><attr format="reference" name="keyBackground"/><attr format="reference|dimension" name="keyTextSize"/><attr format="reference|dimension" name="labelTextSize"/><attr format="reference|color" name="keyTextColor"/><attr format="reference|dimension" name="keyNormalHeight"/><attr format="reference|dimension" name="keySmallHeight"/><attr format="reference|dimension" name="keyLargeHeight"/><attr format="reference|dimension" name="keyHorizontalGap"/><attr format="reference|dimension" name="keyVerticalGap"/><attr format="reference|dimension" name="keyPreviewOffset"/><attr format="reference" name="keyPreviewBackground"/><attr format="reference|dimension" name="keyPreviewTextSize"/><attr format="reference|color" name="keyPreviewTextColor"/><attr format="reference|dimension" name="keyPreviewLabelTextSize"/><attr format="reference|dimension" name="keyHysteresisDistance"/><attr format="reference|dimension" name="verticalCorrection"/><attr format="reference|color" name="shadowColor"/><attr format="reference|dimension" name="shadowRadius"/><attr format="reference|dimension" name="shadowOffsetX"/><attr format="reference|dimension" name="shadowOffsetY"/><attr format="reference|float" name="backgroundDimAmount"/><attr name="keyTextStyle">
+            <flag name="normal" value="0"/>
+            <flag name="bold" value="1"/>
+            <flag name="italic" value="2"/>
+        </attr><attr name="keyTextCaseStyle">
+            <flag name="auto" value="0"/>
+            <flag name="lowercase" value="1"/>
+            <flag name="uppercase" value="2"/>
+        </attr><attr name="symbolColorScheme">
+            <flag name="white" value="0"/>
+            <flag name="black" value="1"/>
+        </attr><attr name="android:background"/><attr name="android:paddingLeft"/><attr name="android:paddingTop"/><attr name="android:paddingRight"/><attr name="android:paddingBottom"/><attr format="reference|color" name="suggestionNormalTextColor"/><attr format="reference|color" name="suggestionRecommendedTextColor"/><attr format="reference|color" name="suggestionOthersTextColor"/><attr format="reference|dimension" name="suggestionTextSize"/><attr format="reference" name="suggestionBackgroundImage"/><attr format="reference" name="suggestionDividerImage"/><attr format="reference" name="suggestionCloseImage"/><attr format="reference|dimension" name="suggestionStripHeight"/><attr format="reference|dimension" name="hintTextSize"/><attr format="reference|color" name="hintTextColor"/><attr format="reference|dimension" name="suggestionPreferedWordTextSize"/><attr format="reference|dimension" name="suggestionWordXGap"/><attr name="hintLabelAlign">
+            <flag name="left" value="3"/>
+            <flag name="center" value="17"/>
+            <flag name="right" value="5"/>
+        </attr><attr name="hintLabelVAlign">
+            <flag name="top" value="48"/>
+            <flag name="bottom" value="80"/>
+            
+            <flag name="center" value="17"/>
+        </attr><attr format="reference|string" name="hintOverflowLabel"/><attr format="reference" name="hintOverflowIcon"/><attr format="reference|string" name="extraHintLabel"/><attr format="reference" name="extraHintIcon"/><attr name="extraHintLabelAlign">
+            <flag name="left" value="3"/>
+            <flag name="center" value="17"/>
+            <flag name="right" value="5"/>
+        </attr><attr name="extraHintLabelVAlign">
+            <flag name="top" value="48"/>
+            <flag name="bottom" value="80"/>
+            
+            <flag name="center" value="17"/>
+        </attr><attr name="keyLabelIconAlign">
+            
+            <flag name="left" value="3"/>
+            <flag name="right" value="5"/>
+            
+            <flag name="center" value="17"/>
+            
+            <flag name="auto" value="7"/>
+        </attr><attr name="keyLabelIconVAlign">
+            
+            <flag name="top" value="48"/>
+            <flag name="bottom" value="80"/>
+            
+            <flag name="center" value="17"/>
+            
+            <flag name="auto" value="112"/>
+        </attr><attr format="reference" name="keyboardWallpaper"/><attr format="reference|dimension" name="keyboardNameTextSize"/><attr format="reference|color" name="keyboardNameTextColor"/><attr format="reference|dimension" name="previewGestureTextSize"/><attr format="reference|color" name="previewGestureTextColor"/><attr format="reference|boolean" name="showHintOnPreview"/><attr format="reference|boolean" name="showExtraHintOnPreview"/><attr name="previewAnimationType">
+            <flag name="none" value="0"/>
+            
+            <flag name="extend_key" value="1"/>
+            <flag name="appear" value="2"/>
+        </attr><attr format="reference|color" name="swipeTypingColor"/><attr format="reference|dimension" name="swipeTypingStrokeWidth"/><attr format="reference|dimension" name="swipeTypingStrokeMinWidth"/><attr format="reference|dimension" name="swipeTypingStrokeWidthStep"/><attr format="reference|float" name="swipeTypingStrokeMinAlpha"/><attr format="reference|integer" name="swipeTypingStrokeAlphaStep"/><attr format="reference|color" name="swipeTypingShadowColor"/><attr format="reference|dimension" name="swipeTypingShadowRadius"/><attr format="reference|dimension" name="swipeTypingShadowOffsetX"/><attr format="reference|dimension" name="swipeTypingShadowOffsetY"/></declare-styleable>
+    <declare-styleable name="KeyboardLayout"><attr name="android:keyWidth"/><attr name="android:keyHeight"/><attr name="android:horizontalGap"/><attr name="android:verticalGap"/><attr name="showPreview"/></declare-styleable>
+    <declare-styleable name="KeyboardLayout_Key"><attr name="android:codes"/><attr name="android:popupKeyboard"/><attr name="android:popupCharacters"/><attr name="android:keyEdgeFlags">
+        </attr><attr name="android:isModifier"/><attr name="android:isSticky"/><attr name="android:isRepeatable"/><attr name="android:iconPreview"/><attr name="android:keyOutputText"/><attr name="android:keyLabel"/><attr name="android:keyIcon"/><attr name="android:keyboardMode"/><attr format="reference|integer" name="longPressCode"/><attr format="reference|boolean" name="isFunctional"/><attr format="reference|integer|string" name="shiftedCodes"/><attr format="reference|string" name="shiftedKeyLabel"/><attr name="showPreview"/><attr name="keyDynamicEmblem">
+            <flag name="none" value="0"/>
+            <flag name="text" value="1"/>
+            <flag name="icon" value="2"/>
+        </attr><attr format="reference|string" name="hintLabel"/><attr name="showInLayout">
+            
+            <flag name="always" value="0"/>
+            <flag name="if_applicable" value="1"/>
+            <flag name="never" value="2"/>
+        </attr><attr format="reference|string" name="tags"/><attr format="reference|string" name="extra_key_data"/></declare-styleable>
+    <declare-styleable name="KeyboardLayout_Row"><attr name="android:rowEdgeFlags">
+        </attr><attr name="android:keyboardMode"/></declare-styleable>
+    <declare-styleable name="keyActionType"><attr format="boolean" name="action_done"/><attr format="boolean" name="action_search"/><attr format="boolean" name="action_go"/><attr format="boolean" name="action_send"/><attr format="boolean" name="action_previous"/><attr format="boolean" name="action_next"/></declare-styleable>
+    <declare-styleable name="keyType"><attr format="boolean" name="key_type_function"/><attr format="boolean" name="key_type_action"/><attr format="boolean" name="key_type_feedback"/></declare-styleable>
+    <integer name="anysoftkeyboard_api_version_code">8</integer>
+    <integer name="extension_keyboard_type_bottom_row">1</integer>
+    <integer name="extension_keyboard_type_extension_keyboard">3</integer>
+    <integer name="extension_keyboard_type_top_row">2</integer>
+    <integer name="extension_keyboard_type_utility_keyboard">4</integer>
+    <integer name="key_code_alt">-6</integer>
+    <integer name="key_code_arrow_down">-23</integer>
+    <integer name="key_code_arrow_left">-20</integer>
+    <integer name="key_code_arrow_right">-21</integer>
+    <integer name="key_code_arrow_up">-22</integer>
+    <integer name="key_code_cancel">-3</integer>
+    <integer name="key_code_clear_input">-13</integer>
+    <integer name="key_code_clipboard_copy">-130</integer>
+    <integer name="key_code_clipboard_cut">-131</integer>
+    <integer name="key_code_clipboard_paste">-132</integer>
+    <integer name="key_code_clipboard_paste_popup">-133</integer>
+    <integer name="key_code_clipboard_select">-134</integer>
+    <integer name="key_code_clipboard_select_all">-135</integer>
+    <integer name="key_code_compact_layout_to_left">-112</integer>
+    <integer name="key_code_compact_layout_to_right">-113</integer>
+    <integer name="key_code_ctrl">-11</integer>
+    <integer name="key_code_ctrl_lock">-15</integer>
+    <integer name="key_code_delete">-5</integer>
+    <integer name="key_code_delete_word">-7</integer>
+    <integer name="key_code_domain">-9</integer>
+    <integer name="key_code_enter">10</integer>
+    <integer name="key_code_esc">27</integer>
+    <integer name="key_code_external_integration">-200</integer>
+    <integer name="key_code_image_media_popup">-140</integer>
+    <integer name="key_code_keyboard_cycle">-97</integer>
+    <integer name="key_code_keyboard_cycle_inside_mode">-95</integer>
+    <integer name="key_code_keyboard_mode_change">-94</integer>
+    <integer name="key_code_keyboard_reverse_cycle">-96</integer>
+    <integer name="key_code_merge_layout">-111</integer>
+    <integer name="key_code_mode_alphabet">-99</integer>
+    <integer name="key_code_mode_alphabet_popup">-98</integer>
+    <integer name="key_code_mode_symbols">-2</integer>
+    <integer name="key_code_move_end">-25</integer>
+    <integer name="key_code_move_home">-24</integer>
+    <integer name="key_code_pre_prepared_abbreviations_popup">-150</integer>
+    <integer name="key_code_pre_prepared_emails_popup">-152</integer>
+    <integer name="key_code_pre_prepared_text_popup">-151</integer>
+    <integer name="key_code_quick_text">-10</integer>
+    <integer name="key_code_quick_text_popup">-102</integer>
+    <integer name="key_code_redo">-137</integer>
+    <integer name="key_code_settings">-100</integer>
+    <integer name="key_code_shift">-1</integer>
+    <integer name="key_code_shift_lock">-14</integer>
+    <integer name="key_code_space">32</integer>
+    <integer name="key_code_split_layout">-110</integer>
+    <integer name="key_code_tab">9</integer>
+    <integer name="key_code_undo">-136</integer>
+    <integer name="key_code_utility_keyboard">-120</integer>
+    <integer name="key_code_voice_input">-4</integer>
+    <integer name="key_normal_height">-1</integer>
+    <integer name="key_short_height">-2</integer>
+    <integer name="key_tall_height">-3</integer>
+    <integer name="key_zero_height">0</integer>
+    <integer name="keyboard_mode_email">4</integer>
+    <integer name="keyboard_mode_im">2</integer>
+    <integer name="keyboard_mode_normal">1</integer>
+    <integer name="keyboard_mode_password">5</integer>
+    <integer name="keyboard_mode_url">3</integer>
+</resources>

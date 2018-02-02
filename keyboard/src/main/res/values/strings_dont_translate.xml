@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingTranslation">
+
+    <string name="quick_text_smiley_key_label">:-)</string>
+    <string name="quick_text_short_smiley_key_label">:)</string>
+    <string name="quick_text_smiley_key_output">:-)\u0020</string>
+    <string name="quick_text_short_smiley_key_output">:)\u0020</string>
+    <string name="quick_text_smiley_key_unicode_output">\uD83D\uDE03</string>
+    <string name="quick_text_smiley_key_unicode_people_output">\uD83D\uDC76</string>
+    <string name="quick_text_smiley_key_unicode_gestures_output">\uD83D\uDC8B</string>
+    <string name="quick_text_smiley_key_unicode_accessories_output">\uD83D\uDC84</string>
+    <string name="quick_text_smiley_key_unicode_animals_output">\uD83D\uDC15</string>
+    <string name="quick_text_smiley_key_unicode_food_output">\uD83C\uDF55</string>
+    <string name="quick_text_smiley_key_unicode_nature_output">\uD83C\uDF3B</string>
+    <string name="quick_text_smiley_key_unicode_transport_output">\uD83D\uDE97</string>
+    <string name="quick_text_smiley_key_unicode_signs_output">\u2648</string>
+    <string name="quick_text_smiley_key_unicode_city_output">\uD83C\uDFE0</string>
+    <string name="quick_text_smiley_key_unicode_scape_output">\uD83C\uDFE0</string>
+    <string name="quick_text_smiley_key_unicode_activity_output">\uD83C\uDFC0</string>
+    <string name="quick_text_smiley_key_unicode_office_output">\uD83D\uDCCA</string>
+    <string name="quick_text_smiley_key_unicode_occasions_output">\uD83C\uDF83</string>
+    <string name="quick_text_smiley_key_unicode_flags_output">&#127937;</string>
+
+    <string name="default_values_keyboard_theme_name">Default Values Theme</string>
+    <string name="fallback_keyboard_theme_id">2a94cf8c-266c-47fd-8c8c-c9c57d28d7dc</string>
+
+    <string name="version_text">Version\u0020<xliff:g id="version_name">%s</xliff:g>,\u0020version-code <xliff:g id="version_number">%d</xliff:g>.</string>
+    <string name="quick_text_tab_title_template"><xliff:g id="first_key">%s</xliff:g>\u0020<xliff:g id="name">%s</xliff:g></string>
+
+    <string name="beta_tester_message">This is a\u0020<b>testing build</b>. It may contain bugs, and it may be non-backward
+        compatible!\nIt may also include\u0020&#x1f409;\u0020<i>DRAGONS</i>!\u0020And they tend to eat features.\nPlease, report\u0020<b>any problem</b>
+        you encounter at http://s.evendanan.net/ask_issues.\n\nThank you for testing a development build.\u0020&#x1f409;
+    </string>
+    <string name="about_copyright_text">Copyright\u0020©\u0020<xliff:g id="year">%d</xliff:g>\u0020Menny Even-Danan</string>
+    <string name="main_site_url">https://anysoftkeyboard.github.io/</string>
+    <string name="permissions_wiki_site_url">https://github.com/AnySoftKeyboard/AnySoftKeyboard/wiki/Why-Does-AnySoftKeyboard-Requires-Extra-Permissions</string>
+
+    <string name="change_log_bullet_point">•\u0020<xliff:g id="change_log_entry">%s</xliff:g></string>
+    <string name="switch_incognito_template">🕵️\u0020<xliff:g id="incognito">%s</xliff:g></string>
+    <string-array name="english_initial_suggestions">
+        <item>!</item>
+        <item>\?</item>
+        <item>,</item>
+        <item>\"</item>
+        <item>\'</item>
+        <item>:</item>
+        <item>(</item>
+        <item>)</item>
+        <item>-</item>
+        <item>/</item>
+        <item>\@</item>
+        <item>_</item>
+    </string-array>
+</resources>
