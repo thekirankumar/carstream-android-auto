@@ -85,9 +85,8 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Realm realm = Realm.getDefaultInstance();
 
-        RealmResults<Bookmark> bookmarksRealm = realm.where(Bookmark.class).sort("createdAt").findAll();
         final ArrayList<Bookmark> preburntBookmarks = getPreburntBookmarks();
-        this.bookmarks = realm.where(Bookmark.class).findAll();
+        this.bookmarks = realm.where(Bookmark.class).sort("createdAt").findAll();
         preburntBookmarks.addAll(bookmarks);
         final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(preburntBookmarks);
         bookmarksAdapter.setBookmarksClickCallback(this);
@@ -106,7 +105,6 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     @Override
     public void onResume() {
         super.onResume();
-        recyclerView.requestFocus();
     }
 
     private ArrayList<Bookmark> getPreburntBookmarks() {

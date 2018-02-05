@@ -42,7 +42,6 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thekirankumar.youtubeauto.BuildConfig;
 import com.thekirankumar.youtubeauto.Manifest;
@@ -51,18 +50,26 @@ import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
+import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebView;
 import com.thekirankumar.youtubeauto.webview.VideoWebView;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+
+import static com.thekirankumar.youtubeauto.fragments.WebViewCarFragment.HOME_URL;
+import static com.thekirankumar.youtubeauto.fragments.WebViewCarFragment.YOUTUBE_HOME_URL_BASE;
 
 
-public class WebViewPhoneFragment extends CarFragment implements BookmarksClickCallback {
+public class WebViewPhoneFragment extends CarFragment implements BookmarksClickCallback, ExoPlayerFragment.OnFragmentInteractionListener {
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
     private static final String BOOKMARKS_FRAGMENT_TAG = "bookmarks";
+    private static final String PLAYER_FRAGMENT_TAG = "player";
+    private static final String PREFS = "phone_prefs";
     private final String TAG = "WebViewCarFragment";
     private VideoWebView webView;
     private EditText editText;
@@ -70,6 +77,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
     private boolean isNightMode;
     private MediaSessionCompat mediaSessionCompat;
     private MediaBrowserCompat mediaBrowser;
+    private SharedPreferences sharedPrefs;
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -93,6 +101,14 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+    }
+
+    private SharedPreferences getSharedPrefs() {
+        if (sharedPrefs != null) {
+            return sharedPrefs;
+        }
+        sharedPrefs = getContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        return sharedPrefs;
     }
 
     private long getAvailableActions() {
@@ -137,7 +153,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
             webView.goBack();
         } else if (item.getItemId() == R.id.refresh) {
             webView.reload();
-        }  else if (item.getItemId() == R.id.bookmark_button) {
+        } else if (item.getItemId() == R.id.bookmark_button) {
             showBookmarksScreen();
         }
         return super.onOptionsItemSelected(item);
@@ -208,7 +224,8 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
                 WebView.setWebContentsDebuggingEnabled(true);
             }
         }
-        webView.loadUrl("https://www.youtube.com");
+        final String url = getSharedPrefs().getString(HOME_URL, YOUTUBE_HOME_URL_BASE);
+        webView.loadUrl(url);
         webView.requestFocus();
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -376,6 +393,47 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
 
     }
 
+    private void showNativePlayer(String url) {
+        if (isAdded()) {
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.VISIBLE);
+            FragmentManager fragmentManager = getFragmentManager();
+            ExoPlayerFragment exoPlayerFragment = (ExoPlayerFragment) fragmentManager.findFragmentByTag(PLAYER_FRAGMENT_TAG);
+            if (exoPlayerFragment == null) {
+                exoPlayerFragment = ExoPlayerFragment.newInstance(url);
+            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, exoPlayerFragment, PLAYER_FRAGMENT_TAG);
+            fragmentTransaction.addToBackStack("native");
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+    }
+
+    private void hideNativePlayer() {
+        if (isAdded()) {
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.GONE);
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment oldFragment = fragmentManager.findFragmentByTag(PLAYER_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(oldFragment);
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+    @Override
+    public void onNativePlayerControlsVisibilityChange(int visibility) {
+        //nothing to do
+    }
+
+    @Override
+    public WebViewCarFragment.AspectRatio getAspectRatio() {
+        return null;
+    }
+
     private class CustomWebViewClient extends WebViewClient {
 
         @Override
@@ -395,9 +453,21 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
 
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
             editText.setText(url);
-            if (url.startsWith("intent://")) {
+            if (url.startsWith("file:///") && !url.endsWith("/")) {
+                    view.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                showNativePlayer(URLDecoder.decode(url, "UTF-8"));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                return true;
+            } else if (url.startsWith("intent://")) {
                 try {
                     Context context = view.getContext();
                     Intent intent = new Intent().parseUri(url, Intent.URI_INTENT_SCHEME);
@@ -441,6 +511,8 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
             super.onPageFinished(view, url);
             WebviewUtils.injectNightModeCss(webView, isNightMode);
             WebviewUtils.injectFileListingHack(webView);
+            getSharedPrefs().edit().putString(HOME_URL, url).commit();
         }
     }
+
 }
