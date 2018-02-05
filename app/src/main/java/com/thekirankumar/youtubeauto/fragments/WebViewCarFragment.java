@@ -64,23 +64,24 @@ import com.google.android.apps.auto.sdk.CarUiController;
 import com.google.android.apps.auto.sdk.SearchCallback;
 import com.google.android.apps.auto.sdk.SearchController;
 import com.google.android.apps.auto.sdk.SearchItem;
+import com.thekirankumar.youtubeauto.Manifest;
+import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.activity.MainCarActivity;
 import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
+import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromWebview;
 import com.thekirankumar.youtubeauto.utils.CarEditText;
-import com.thekirankumar.youtubeauto.webview.JavascriptCallback;
-import com.thekirankumar.youtubeauto.activity.MainCarActivity;
-import com.thekirankumar.youtubeauto.Manifest;
 import com.thekirankumar.youtubeauto.utils.MyExceptionHandler;
-import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.MyRecognitionListener;
-import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.utils.SearchMode;
+import com.thekirankumar.youtubeauto.utils.WebviewUtils;
+import com.thekirankumar.youtubeauto.webview.JavascriptCallback;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;
 import com.thekirankumar.youtubeauto.webview.VideoWebView;
-import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,6 +89,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -96,7 +98,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class WebViewCarFragment extends CarFragment implements MainCarActivity.ActivityCallbacks, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener, BookmarksClickCallback {
+public class WebViewCarFragment extends CarFragment implements MainCarActivity.ActivityCallbacks, JavascriptCallback.JSCallbacks, SafetyWarningFragment.FragmentInteractionListener, BookmarksClickCallback, ExoPlayerFragment.OnFragmentInteractionListener {
     public static final String YOUTUBE_HOME_URL_BASE = "https://www.youtube.com";
     public static final String YOUTUBE_OFFLINE_URL_BASE = "file:///" + Environment.getExternalStorageDirectory().getPath() + "/";
     public static final String YOUTUBE_SEARCH_URL_BASE = "https://www.youtube.com/results?search_query=";
@@ -112,6 +114,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     private static final String TAG = "WebViewCarFragment";
     private static final String FULLSCREEN_KEY = "fullscreen";
     private static final String ASPECT_RATIO_KEY = "aspect_ratio";
+    private static final String PLAYER_FRAGMENT_TAG = "player";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
     private TextView carSpeedView;
@@ -249,6 +252,8 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     };
     private Integer currentVideoTime;
     private CarEditText fakeEditText;
+    private boolean nativePlayerActive;
+    private ExoPlayerFragment nativePlayerFragment;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -727,6 +732,10 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     }
 
     private boolean goBack() {
+        if (nativePlayerActive) {
+            hideNativePlayer();
+            return true;
+        }
         if (webView.isVideoFullscreen()) {
             webView.exitFullScreen();
             return true;
@@ -759,6 +768,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     }
 
     private void showToolbar() {
+        toolbar.setVisibility(View.VISIBLE);
         toolbar.removeCallbacks(toolbarHideRunnable);
         toolbar.clearAnimation();
         if (toolbar.getTranslationY() < 0) {
@@ -933,7 +943,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if(hasFocus) {
+        if (hasFocus) {
             onHideKeyboardFromJS();
         }
     }
@@ -1044,6 +1054,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
         }
 
     }
+
     private void hideBookmarksScreen() {
         if (isAdded()) {
             webView.setVisibility(View.VISIBLE);
@@ -1079,16 +1090,36 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     }
 
     @Override
-    public void onReadyToExitSafetyInstructions(SafetyWarningFragment warningFragment) {
-        warningAccepted = true;
-        hideWarningScreen();
+    public void onNativePlayerControlsVisibilityChange(int visibility) {
+        if (visibility == View.VISIBLE) {
+            showToolbar();
+            showCornerControls();
+        } else if (visibility == View.GONE) {
+            hideToolbar();
+            hideCornerControls(true);
+        }
+    }
+
+    @Override
+    public AspectRatio getAspectRatio() {
+        return currentAspectRatio;
     }
 
     public void setAspectRatio(AspectRatio aspectRatio) {
         this.currentAspectRatio = aspectRatio;
         this.aspectButton.setText(getHumanText(aspectRatio));
-        webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
+        if (nativePlayerActive) {
+            nativePlayerFragment.setAspectRatio(aspectRatio);
+        } else {
+            webView.setAspectRatio(currentAspectRatio.name().toLowerCase());
+        }
         getSharedPrefs().edit().putInt(ASPECT_RATIO_KEY, currentAspectRatio.ordinal()).apply();
+    }
+
+    @Override
+    public void onReadyToExitSafetyInstructions(SafetyWarningFragment warningFragment) {
+        warningAccepted = true;
+        hideWarningScreen();
     }
 
     private String getHumanText(AspectRatio aspectRatio) {
@@ -1123,7 +1154,45 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
         hideBookmarksScreen();
     }
 
-    private enum AspectRatio {
+    private void showNativePlayer(String url) {
+        if (isAdded()) {
+            nativePlayerActive = true;
+            webView.setVisibility(View.INVISIBLE);
+            showCornerControls();
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.VISIBLE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            ExoPlayerFragment exoPlayerFragment = (ExoPlayerFragment) childFragmentManager.findFragmentByTag(PLAYER_FRAGMENT_TAG);
+            if (exoPlayerFragment == null) {
+                exoPlayerFragment = ExoPlayerFragment.newInstance(url);
+            }
+            nativePlayerFragment = exoPlayerFragment;
+            FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.full_screen_view, exoPlayerFragment, PLAYER_FRAGMENT_TAG);
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+    }
+
+    private void hideNativePlayer() {
+        if (isAdded()) {
+            nativePlayerActive = false;
+            nativePlayerFragment = null;
+            webView.setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.GONE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            Fragment oldFragment = childFragmentManager.findFragmentByTag(PLAYER_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+                fragmentTransaction.remove(oldFragment);
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+
+    public enum AspectRatio {
         CONTAIN, FILL, COVER
     }
 
@@ -1197,7 +1266,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.startsWith("intent://")) {
+            if (nativePlayerActive) {
+                hideNativePlayer();
+            }
+            if (url.startsWith("file:///") && !url.endsWith("/")) {
+                try {
+                    showNativePlayer(URLDecoder.decode(url, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            } else if (url.startsWith("intent://")) {
                 try {
                     Context context = view.getContext();
                     new Intent();
