@@ -1,4 +1,4 @@
-h1 {
+h3 {
     border-bottom: 1px solid #c0c0c0;
     margin-bottom: 10px;
     padding-bottom: 10px;
@@ -16,6 +16,7 @@ h1 {
 
   td {
     color: #cecece;
+    padding : 15px;
   }
 
   tr {
@@ -39,6 +40,8 @@ h1 {
   a.icon {
     -webkit-padding-start: 1.5em;
     text-decoration: none;
+    background-position: left center !important;
+    padding: 20px;
   }
 
   a.icon:hover {

@@ -76,7 +76,7 @@ public class WebviewUtils {
                     "var script = document.createElement('script');" +
                     "script.src = '" + FILE_BROWSER_SCRIPT_PATH + "';" +
                     "head.appendChild(script);"+
-                    "document.body.innerHTML+= '<h1 id=\"header\">Index of LOCATION</h1><div id=\"parentDirLinkBox\" style=\"display:none\"><a id=\"parentDirLink\" class=\"icon up\"><span id=\"parentDirText\">[parent directory]</span></a> </div> <table> <thead> <tr class=\"header\" id=\"theader\"><th onclick=\"javascript:sortTable(0);\">Name</th><th class=\"detailsColumn\" onclick=\"javascript:sortTable(1);\">Size </th> <th class=\"detailsColumn\" onclick=\"javascript:sortTable(2);\">Date Modified </th> </tr> </thead> <tbody id=\"tbody\"> </tbody> </table>';" +
+                    "document.body.innerHTML+= '<h3 id=\"header\">LOCATION</h1><div id=\"parentDirLinkBox\" style=\"display:none\"><a id=\"parentDirLink\" class=\"icon up\"><span id=\"parentDirText\">[parent directory]</span></a> </div> <table> <thead> <tr class=\"header\" id=\"theader\"><th onclick=\"javascript:sortTable(0);\">Name</th><th class=\"detailsColumn\" onclick=\"javascript:sortTable(1);\">Size </th> <th class=\"detailsColumn\" onclick=\"javascript:sortTable(2);\">Date Modified </th> </tr> </thead> <tbody id=\"tbody\"> </tbody> </table>';" +
                     "document.body.innerHTML+= oldHead;");
             webView.loadUrl(js);
         }
