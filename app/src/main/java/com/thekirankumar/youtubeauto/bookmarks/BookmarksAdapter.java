@@ -40,7 +40,10 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
     @Override
     public long getItemId(int position) {
         if (position < bookmarks.size()) {
-            return bookmarks.get(position).getCreatedAt();
+            Bookmark bookmark = bookmarks.get(position);
+            if(bookmark.isValid()) {
+                return bookmark.getCreatedAt();
+            }
         }
         return 0;
     }

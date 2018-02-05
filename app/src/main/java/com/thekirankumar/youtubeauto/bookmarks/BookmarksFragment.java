@@ -94,7 +94,7 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         bookmarks.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Bookmark>>() {
             @Override
             public void onChange(@NonNull RealmResults<Bookmark> bookmarks, @javax.annotation.Nullable OrderedCollectionChangeSet changeSet) {
-                ArrayList<Bookmark> newBookmarks = new ArrayList<>(preburntBookmarks);
+                ArrayList<Bookmark> newBookmarks = new ArrayList<>(getPreburntBookmarks());
                 newBookmarks.addAll(bookmarks);
                 bookmarksAdapter.setBookmarks(newBookmarks);
                 bookmarksAdapter.notifyDataSetChanged();
