@@ -28,7 +28,7 @@ public class Bookmark extends RealmObject {
         this.title = title;
         this.faviconPath = faviconPath;
         this.url = url;
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = url.hashCode();
     }
 
     public Bookmark(String title, int faviconRes, String url, int thumbnailRes) {
@@ -37,6 +37,7 @@ public class Bookmark extends RealmObject {
         this.url = url;
         this.thumbnailResource = thumbnailRes;
         this.preventDelete = true;
+        this.createdAt = url.hashCode();
     }
 
     public boolean isPreventDelete() {
