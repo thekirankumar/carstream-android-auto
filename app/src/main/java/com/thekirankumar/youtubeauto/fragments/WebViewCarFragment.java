@@ -73,7 +73,7 @@ import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
 import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
-import com.thekirankumar.youtubeauto.utils.BroadcastFromWebview;
+import com.thekirankumar.youtubeauto.utils.BroadcastFromUI;
 import com.thekirankumar.youtubeauto.utils.CarEditText;
 import com.thekirankumar.youtubeauto.utils.MyExceptionHandler;
 import com.thekirankumar.youtubeauto.utils.MyRecognitionListener;
@@ -902,7 +902,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
             }
         });
-        //BroadcastFromWebview.setEnableBroadcast(getContext(), true);
+        //BroadcastFromUI.setEnableBroadcast(getContext(), true);
     }
 
     public void onDetach() {
@@ -953,17 +953,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
         switch (event) {
             case "playing":
                 playerState = PlaybackState.STATE_PLAYING;
-                BroadcastFromWebview.broadCastPlaying(getContext(), webView.getTitle());
+                BroadcastFromUI.broadCastPlaying(getContext(), webView.getTitle());
                 break;
             case "pause":
                 playerState = PlaybackState.STATE_PAUSED;
-                BroadcastFromWebview.broadCastPaused(getContext(), webView.getTitle());
+                BroadcastFromUI.broadCastPaused(getContext(), webView.getTitle());
                 break;
             case "waiting":
-                BroadcastFromWebview.broadCastLoading(getContext());
+                BroadcastFromUI.broadCastLoading(getContext());
                 break;
             case "error":
-                BroadcastFromWebview.broadCastError(getContext(), webView.getTitle());
+                BroadcastFromUI.broadCastError(getContext(), webView.getTitle());
                 break;
         }
     }
@@ -1201,7 +1201,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
-            BroadcastFromWebview.broadCastLoading(getContext());
+            BroadcastFromUI.broadCastLoading(getContext());
         }
 
         @Override
@@ -1245,7 +1245,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
             getSharedPrefs().edit().putString(HOME_URL, url).commit();
             webView.discoverVideoElements();
             WebviewUtils.injectFileListingHack(webView);
-            BroadcastFromWebview.broadcastTitle(getContext(), view.getTitle());
+            BroadcastFromUI.broadcastTitle(getContext(), view.getTitle());
 
             if (clickFirstVideoAfterPageLoad) {
                 clickFirstVideoAfterPageLoad = false;
@@ -1261,7 +1261,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
-            BroadcastFromWebview.broadCastError(getContext(), error.toString());
+            BroadcastFromUI.broadCastError(getContext(), error.toString());
         }
 
         @Override

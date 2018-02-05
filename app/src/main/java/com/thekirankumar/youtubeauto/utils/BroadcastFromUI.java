@@ -10,7 +10,7 @@ import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
  * Created by kiran.kumar on 11/01/18.
  */
 
-public class BroadcastFromWebview {
+public class BroadcastFromUI {
     public static Intent lastIntent = null;
     private static boolean broadcastEnabled = true;
 

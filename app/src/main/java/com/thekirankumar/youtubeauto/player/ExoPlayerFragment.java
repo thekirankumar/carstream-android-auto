@@ -1,6 +1,10 @@
 package com.thekirankumar.youtubeauto.player;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +39,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.fragments.WebViewCarFragment;
+import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
+import com.thekirankumar.youtubeauto.utils.BroadcastFromUI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -164,6 +170,33 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
             throw new RuntimeException(parent
                     + " must implement OnFragmentInteractionListener");
         }
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent != null && player != null) {
+                    long actionType = intent.getLongExtra(MyMediaBrowserService.ACTION_TYPE, 0);
+                    if (actionType == PlaybackState.ACTION_PLAY) {
+                        player.setPlayWhenReady(true);
+                    } else if (actionType == PlaybackState.ACTION_PAUSE) {
+                        player.setPlayWhenReady(false);
+                    } else if (actionType == PlaybackState.ACTION_SKIP_TO_NEXT) {
+                        if(playerQueue.hasNext()) {
+                            playerQueue.next();
+                            player.seekToDefaultPosition(playerQueue.currentIndex());
+                        }
+                    } else if (actionType == PlaybackState.ACTION_SKIP_TO_PREVIOUS) {
+                        if(playerQueue.hasPrevious()) {
+                            playerQueue.previous();
+                            player.seekToDefaultPosition(playerQueue.currentIndex());
+                        }
+                    } else if (actionType == PlaybackState.ACTION_PLAY_FROM_SEARCH) {
+
+                    }
+
+
+                }
+            }
+        }, new IntentFilter(MyMediaBrowserService.PLAYER_EVENT));
     }
 
     @Override
@@ -216,6 +249,7 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
             if (album != null) {
                 albumView.setText(album);
             }
+            BroadcastFromUI.broadcastTitle(getContext(), title);
         } else {
             File file = new File(playerQueue.current());
             titleView.setText(file.getName());
@@ -228,8 +262,21 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
 
     }
 
+
+
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if (playbackState == Player.STATE_BUFFERING) {
+            BroadcastFromUI.broadCastLoading(getContext());
+        } else if (playbackState == Player.STATE_ENDED) {
+            BroadcastFromUI.broadCastPaused(getContext(), String.valueOf(titleView.getText()));
+        } else if (playWhenReady && playbackState == Player.STATE_READY) {
+            BroadcastFromUI.broadCastPlaying(getContext(), String.valueOf(titleView.getText()));
+        } else if(playWhenReady) {
+            BroadcastFromUI.broadCastLoading(getContext());
+        } else {
+            BroadcastFromUI.broadCastPaused(getContext(), String.valueOf(titleView.getText()));
+        }
     }
 
     @Override
@@ -278,6 +325,7 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
      */
     public interface OnFragmentInteractionListener {
         void onNativePlayerControlsVisibilityChange(int visibility);
+
         WebViewCarFragment.AspectRatio getAspectRatio();
     }
 }
