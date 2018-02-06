@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/very_dark_gray"
+    android:background="@android:color/black"
     tools:context="com.thekirankumar.youtubeauto.player.ExoPlayerFragment">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <TextView
+        android:elevation="10dp"
         android:text="Loading ..."
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

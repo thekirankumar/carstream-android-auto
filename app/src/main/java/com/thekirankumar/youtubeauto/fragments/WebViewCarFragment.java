@@ -1057,9 +1057,11 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
     private void hideBookmarksScreen() {
         if (isAdded()) {
-            webView.setVisibility(View.VISIBLE);
-            toolbar.setVisibility(View.VISIBLE);
-            showToolbar();
+            if(!nativePlayerActive) {
+                webView.setVisibility(View.VISIBLE);
+                toolbar.setVisibility(View.VISIBLE);
+                showToolbar();
+            }
             FragmentManager childFragmentManager = getChildFragmentManager();
             Fragment oldFragment = childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
             if (oldFragment != null) {
@@ -1069,7 +1071,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
                 fragmentTransaction.commitNow();
             }
         }
-        webView.requestFocus();
+        if(!nativePlayerActive) {
+            webView.requestFocus();
+        }
     }
 
     private void showBookmarksScreen() {
@@ -1082,7 +1086,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
                 bookmarksFragment = new BookmarksFragment();
             }
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.overlay_container, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
+            fragmentTransaction.add(R.id.overlay_container, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
         }
@@ -1136,6 +1140,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
     @Override
     public void onBookmarkSelected(Bookmark bookmark) {
+        hideNativePlayer();
         webView.loadUrl(bookmark.getUrl());
     }
 
@@ -1167,7 +1172,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
             }
             nativePlayerFragment = exoPlayerFragment;
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.full_screen_view, exoPlayerFragment, PLAYER_FRAGMENT_TAG);
+            fragmentTransaction.add(R.id.full_screen_view, exoPlayerFragment, PLAYER_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
         }
