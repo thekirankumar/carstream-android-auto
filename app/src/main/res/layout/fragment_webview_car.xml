@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -147,6 +148,18 @@
                     android:padding="5dp"
                     android:src="@drawable/ic_bookmarks"
                     android:text="@string/receive_from_phone" />
+
+                <TextClock
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/very_dark_gray"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:targetApi="jelly_bean_mr1" />
             </LinearLayout>
 
         </FrameLayout>
@@ -176,11 +189,11 @@
                 android:indeterminate="true" />
 
             <com.thekirankumar.youtubeauto.utils.CarEditText
-                android:visibility="invisible"
                 android:id="@+id/fake_edittext"
                 android:layout_width="1px"
                 android:layout_height="1px"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionDone"
+                android:visibility="invisible" />
 
         </FrameLayout>
 
