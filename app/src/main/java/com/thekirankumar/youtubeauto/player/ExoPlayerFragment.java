@@ -104,13 +104,13 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     @Override
     public void onPause() {
         super.onPause();
-        player.setPlayWhenReady(false);
+        //player.setPlayWhenReady(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        player.setPlayWhenReady(true);
+        //player.setPlayWhenReady(true);
     }
 
     @Override

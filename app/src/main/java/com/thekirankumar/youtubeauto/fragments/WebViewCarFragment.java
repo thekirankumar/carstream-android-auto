@@ -1019,26 +1019,26 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     }
 
     private void hideWarningScreen() {
-        if (isAdded()) {
-            webView.setVisibility(View.VISIBLE);
-            toolbar.setVisibility(View.VISIBLE);
-            FragmentManager childFragmentManager = getChildFragmentManager();
-            Fragment oldFragment = childFragmentManager.findFragmentByTag(SAFETY_WARNING_FRAGMENT_TAG);
-            if (oldFragment != null) {
-                warningScreenOpen = false;
-                FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-                fragmentTransaction.remove(oldFragment);
-                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                fragmentTransaction.commitAllowingStateLoss();
+        if(warningScreenOpen) {
+            if (isAdded()) {
+                webView.setVisibility(View.VISIBLE);
+                toolbar.setVisibility(View.VISIBLE);
+                FragmentManager childFragmentManager = getChildFragmentManager();
+                Fragment oldFragment = childFragmentManager.findFragmentByTag(SAFETY_WARNING_FRAGMENT_TAG);
+                if (oldFragment != null) {
+                    warningScreenOpen = false;
+                    FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+                    fragmentTransaction.remove(oldFragment);
+                    fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                    fragmentTransaction.commitAllowingStateLoss();
+                }
             }
+            webView.requestFocus();
         }
-        webView.requestFocus();
     }
 
     private void showWarningScreen() {
         if (isAdded()) {
-
-
             warningScreenOpen = true;
             FragmentManager childFragmentManager = getChildFragmentManager();
             SafetyWarningFragment warningFragment = (SafetyWarningFragment) childFragmentManager.findFragmentByTag(SAFETY_WARNING_FRAGMENT_TAG);
