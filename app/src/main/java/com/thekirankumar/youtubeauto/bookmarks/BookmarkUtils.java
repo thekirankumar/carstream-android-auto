@@ -41,10 +41,12 @@ public class BookmarkUtils {
                 bookmark.setThumbnail(byteArray);
 
                 Bitmap favicon = webView.getFavicon();
-                ByteArrayOutputStream faviconStream = new ByteArrayOutputStream();
-                favicon.compress(Bitmap.CompressFormat.PNG, 80, faviconStream);
-                byte[] faviconBytes = faviconStream.toByteArray();
-                bookmark.setFavicon(faviconBytes);
+                if(favicon!=null) {
+                    ByteArrayOutputStream faviconStream = new ByteArrayOutputStream();
+                    favicon.compress(Bitmap.CompressFormat.PNG, 80, faviconStream);
+                    byte[] faviconBytes = faviconStream.toByteArray();
+                    bookmark.setFavicon(faviconBytes);
+                }
 
                 bookmark.setCreatedAt(System.currentTimeMillis());
                 realm.executeTransaction(new Realm.Transaction() {
