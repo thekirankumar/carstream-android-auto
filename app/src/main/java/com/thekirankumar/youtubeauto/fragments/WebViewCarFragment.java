@@ -72,7 +72,7 @@ import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
-import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
+import com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromUI;
 import com.thekirankumar.youtubeauto.utils.CarEditText;
@@ -281,8 +281,9 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
                     long actionType = intent.getLongExtra(MyMediaBrowserService.ACTION_TYPE, 0);
                     if (actionType == PlaybackState.ACTION_PLAY) {
                         webView.playVideo();
-                    } else if (actionType == PlaybackState.ACTION_PAUSE) {
+                    } else if (actionType == PlaybackState.ACTION_PAUSE || actionType == PlaybackState.ACTION_STOP) {
                         webView.pauseVideo();
+                        BroadcastFromUI.broadCastPaused(getContext(), webView.getTitle());
                     } else if (actionType == PlaybackState.ACTION_SKIP_TO_NEXT) {
                         webView.playNextTrack();
                     } else if (actionType == PlaybackState.ACTION_SKIP_TO_PREVIOUS) {
@@ -841,7 +842,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
             //webView.requestFocus();
             webView.playVideoIfPausedFlag();
         }
-        if (car != null) {
+        if (car != null && !nativePlayerActive) {
             gainAudioFocus();
         }
         handleVoiceVisibility();
@@ -1020,7 +1021,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     }
 
     private void hideWarningScreen() {
-        if(warningScreenOpen) {
+        if (warningScreenOpen) {
             if (isAdded()) {
                 webView.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.VISIBLE);
@@ -1058,7 +1059,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
 
     private void hideBookmarksScreen() {
         if (isAdded()) {
-            if(!nativePlayerActive) {
+            if (!nativePlayerActive) {
                 webView.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.VISIBLE);
                 showToolbar();
@@ -1072,7 +1073,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
                 fragmentTransaction.commitNow();
             }
         }
-        if(!nativePlayerActive) {
+        if (!nativePlayerActive) {
             webView.requestFocus();
         }
     }

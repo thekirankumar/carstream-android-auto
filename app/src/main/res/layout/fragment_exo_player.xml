@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="com.thekirankumar.youtubeauto.player.ExoPlayerFragment">
+    tools:context="com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/exoplayer_view"

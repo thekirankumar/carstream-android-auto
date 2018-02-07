@@ -50,7 +50,7 @@ import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
-import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
+import com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.WebviewUtils;
 import com.thekirankumar.youtubeauto.webview.VideoEnabledWebChromeClient;

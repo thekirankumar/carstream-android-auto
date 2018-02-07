@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto.player;
+package com.thekirankumar.youtubeauto.exoplayer;
 
 /**
  * Created by kiran.kumar on 05/02/18.

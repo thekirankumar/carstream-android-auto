@@ -6,7 +6,7 @@ import android.view.KeyEvent;
 
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.fragments.WebViewCarFragment;
-import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
+import com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment;
 
 
 public class MainPhoneActivity extends AppCompatActivity implements ExoPlayerFragment.OnFragmentInteractionListener {

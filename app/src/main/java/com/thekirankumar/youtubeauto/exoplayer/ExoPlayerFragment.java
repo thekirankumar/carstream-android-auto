@@ -1,4 +1,4 @@
-package com.thekirankumar.youtubeauto.player;
+package com.thekirankumar.youtubeauto.exoplayer;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,6 +39,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.fragments.WebViewCarFragment;
+import com.thekirankumar.youtubeauto.mediaplayer.PlayerFocusHelper;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromUI;
 
@@ -63,6 +64,8 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     private TextView titleView;
     private PlayerQueue playerQueue;
     private TextView albumView;
+    private PlayerFocusHelper playerFocusHelper;
+    private boolean wasPlayingInBackground;
 
     public ExoPlayerFragment() {
         // Required empty public constructor
@@ -104,18 +107,21 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     @Override
     public void onPause() {
         super.onPause();
-        //player.setPlayWhenReady(false);
+        wasPlayingInBackground = player.getPlayWhenReady();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //player.setPlayWhenReady(true);
+        if(wasPlayingInBackground) {
+                player.setPlayWhenReady(true);
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         titleView = view.findViewById(R.id.player_title);
         albumView = view.findViewById(R.id.player_album);
         playerView = view.findViewById(R.id.exoplayer_view);
@@ -140,7 +146,35 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
         player.prepare(mediaSource, true, false);
         player.addListener(this);
         setAspectRatio(mListener.getAspectRatio());
+        playerFocusHelper = new PlayerFocusHelper(getContext()) {
+            @Override
+            protected void onStop() {
+                super.onStop();
+                player.setPlayWhenReady(false);
+            }
+
+            @Override
+            protected void onPause() {
+                super.onPause();
+                player.setPlayWhenReady(false);
+            }
+
+            @Override
+            public boolean isPlaying() {
+                return player.getPlayWhenReady();
+            }
+
+            @Override
+            protected void onPlay() {
+                super.onPlay();
+                player.setPlayWhenReady(true);
+            }
+        };
+
+
     }
+
+
 
 
     private MediaSource buildMediaSource(PlayerQueue playerQueue) {
@@ -271,6 +305,7 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
             BroadcastFromUI.broadCastPaused(getContext(), String.valueOf(titleView.getText()));
         } else if (playWhenReady && playbackState == Player.STATE_READY) {
             BroadcastFromUI.broadCastPlaying(getContext(), String.valueOf(titleView.getText()));
+            playerFocusHelper.play();
         } else if(playWhenReady) {
             BroadcastFromUI.broadCastLoading(getContext());
         } else {
