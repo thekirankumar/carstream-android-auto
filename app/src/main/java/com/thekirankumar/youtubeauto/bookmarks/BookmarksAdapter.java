@@ -161,7 +161,11 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             int thumbnailResource = bookmark.getThumbnailResource();
             int faviconResource = bookmark.getFaviconResource();
             if (thumbnail != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = false;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                options.inDither = true;
+                Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length, options);
                 this.thumbnail.setImageBitmap(bitmap);
             } else {
                 this.thumbnail.setImageResource(thumbnailResource);
