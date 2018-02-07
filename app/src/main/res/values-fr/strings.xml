@@ -10,13 +10,11 @@
     <string name="about_page">À propos</string>
     <string name="webview_back">Retour</string>
     <string name="refresh_page">Rafraîchir</string>
-    <string name="send_to_car">Envoyer</string>
     <string name="night_mode">Mode nuit</string>
     <string name="bookmarks">Favoris</string>
     <string name="voice_search">Recherche vocale</string>
     <string name="search">Rechercher</string>
     <string name="fullscreen">Plein écran</string>
-    <string name="receive_from_phone">Recevoir</string>
     <string name="home">Acceuil</string>
     <string name="aspect_ratio_contain">Contenir</string>
     <string name="aspect_ratio_fill">Remplir</string>
