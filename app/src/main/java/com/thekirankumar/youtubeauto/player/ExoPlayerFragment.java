@@ -202,7 +202,6 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
