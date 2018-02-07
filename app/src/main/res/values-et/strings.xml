@@ -11,13 +11,11 @@
     <string name="about_page">Info</string>
     <string name="webview_back">Tagasi</string>
     <string name="refresh_page">Värskenda</string>
-    <string name="send_to_car">Saada autosse</string>
     <string name="night_mode">Öövaade</string>
     <string name="bookmarks">Järjehoidjad</string>
     <string name="voice_search">Häälotsing</string>
     <string name="search">Otsi</string>
     <string name="fullscreen">Täisekraan</string>
-    <string name="receive_from_phone">Võta vastu</string>
     <string name="home">Kodu</string>
     <string name="aspect_ratio_contain">Hoia originaal kuvasuhe</string>
     <string name="aspect_ratio_fill">Täida ekraan</string>
