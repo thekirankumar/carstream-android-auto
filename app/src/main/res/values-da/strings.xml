@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CarStream</string>
     <string name="car_service_name">CarStream</string>
     <string name="app_name_player">CarStream player</string>
     <string name="channel_name">CarStream Channel</string>
     <string name="warning_title">ADVARSEL !!!</string>
-    <string name="warning_body">At se videoer under kørsel kan forårsage bilulykker. Ved at afvise denne advarsel accepterer du, at du er klar over og ansvarlig for konsekvenserne af at gøre dette. Hverken udvikleren af ??denne app, Google, producenten af ??dette udstyr eller producenten af denne bil er ansvarlige for ulykker forårsaget af din forsømmelighed. Du kan skifte til baggrundsafspilning ved at klikke på medieikonet i stedet.</string>
+    <string name="warning_body">At se videoer under kørsel kan forårsage bilulykker. Ved at afvise denne advarsel accepterer du, at du er klar over og ansvarlig for konsekvenserne af at gøre dette. Hverken udvikleren af denne app, Google, producenten af dette udstyr eller producenten af denne bil er ansvarlige for ulykker forårsaget af din forsømmelighed. Du kan skifte til baggrundsafspilning ved at klikke på medieikonet i stedet.</string>
     <string name="warning_accept_button">Jeg forstår risikoen</string>
     <string name="url_edittext_phone_app">URL :</string>
     <string name="about_page">Om</string>
