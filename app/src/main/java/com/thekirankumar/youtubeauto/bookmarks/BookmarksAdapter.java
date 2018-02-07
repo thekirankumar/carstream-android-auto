@@ -146,7 +146,6 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
 
         public BookmarkViewHolder(Context context, ViewGroup parent) {
             super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bookmark_layout, parent, false));
-            itemView.setBackgroundResource(R.drawable.highlighting_drawable);
             AspectRatioFrameLayout aspectFrameLayout = (AspectRatioFrameLayout) itemView;
             aspectFrameLayout.setAspectRatio(1);
             aspectFrameLayout.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
