@@ -1,8 +1,10 @@
 package com.thekirankumar.youtubeauto.bookmarks;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.utils.GridAutofitLayoutManager;
@@ -80,8 +83,8 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         });
         Resources r = view.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BOOKMARK_VIEW_SIZE_IN_DP, r.getDisplayMetrics());
-
-        recyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), (int) px));
+        GridAutofitLayoutManager gridAutofitLayoutManager = new GridAutofitLayoutManager(getContext(), (int) px);
+        recyclerView.setLayoutManager(gridAutofitLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Realm realm = Realm.getDefaultInstance();
 
@@ -98,6 +101,20 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
                 newBookmarks.addAll(bookmarks);
                 bookmarksAdapter.setBookmarks(newBookmarks);
                 bookmarksAdapter.notifyDataSetChanged();
+            }
+        });
+        bookmarksAdapter.notifyDataSetChanged();
+
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+                /** this is a hack for dpad support **/
+                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                recyclerView.smoothScrollToPosition(0);
+                if (recyclerView.getChildCount() > 0) {
+                    recyclerView.getChildAt(0).requestFocus();
+                }
             }
         });
     }
