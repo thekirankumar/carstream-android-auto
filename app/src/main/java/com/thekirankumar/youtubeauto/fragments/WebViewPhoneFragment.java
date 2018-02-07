@@ -378,7 +378,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
     }
 
     private void showBookmarksScreen() {
-        if (isAdded()) {
+        if (isAdded() && getView()!=null) {
             getView().findViewById(R.id.full_screen_view).setVisibility(View.VISIBLE);
             FragmentManager childFragmentManager = getChildFragmentManager();
             BookmarksFragment bookmarksFragment = (BookmarksFragment) childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
