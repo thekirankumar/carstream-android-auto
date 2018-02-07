@@ -128,7 +128,8 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
 
     private ArrayList<Bookmark> getPreburntBookmarks() {
         final ArrayList<Bookmark> bookmarks = new ArrayList<>();
-        bookmarks.add(new Bookmark("YouTube", R.drawable.youtube_favicon, "http://youtube.com", R.drawable.youtube_bookmark));
+        bookmarks.add(new Bookmark("YouTube", R.drawable.youtube_favicon, "https://youtube.com", R.drawable.youtube_bookmark));
+        bookmarks.add(new Bookmark("YouTube TV", R.drawable.youtube_favicon, "https://youtube.com/tv", R.drawable.youtube_bookmark));
         String[] storageDirectories = MemoryStorage.getStorageDirectories(getContext());
         String internalSdCard = MemoryStorage.getSdCardPath();
         for (String storageDirectory : storageDirectories) {
