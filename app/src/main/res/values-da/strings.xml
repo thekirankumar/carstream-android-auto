@@ -10,13 +10,11 @@
     <string name="about_page">Om</string>
     <string name="webview_back">Tilbage</string>
     <string name="refresh_page">Opdater</string>
-    <string name="send_to_car">Send til bil</string>
     <string name="night_mode">Nattilstand</string>
     <string name="bookmarks">Bogmærker</string>
     <string name="voice_search">Stemmesøgning</string>
     <string name="search">Søg</string>
     <string name="fullscreen">Fuld Skærm</string>
-    <string name="receive_from_phone">Modtag</string>
     <string name="home">Hjem</string>
     <string name="aspect_ratio_contain">Bibehold</string>
     <string name="aspect_ratio_fill">Udfyld</string>
@@ -25,5 +23,4 @@
     <string name="external_storage">Eksterne Lager</string>
     <string name="add_bookmark">Tilføj nuværende</string>
     <string name="version">Version</string>
-
 </resources>
