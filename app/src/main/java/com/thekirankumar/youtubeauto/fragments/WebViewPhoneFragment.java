@@ -43,6 +43,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.thekirankumar.youtubeauto.BuildConfig;
 import com.thekirankumar.youtubeauto.Manifest;
 import com.thekirankumar.youtubeauto.R;
@@ -70,6 +73,8 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
     private static final String BOOKMARKS_FRAGMENT_TAG = "bookmarks";
     private static final String PLAYER_FRAGMENT_TAG = "player";
     private static final String PREFS = "phone_prefs";
+    public static final String GITHUB_REPO_USERNAME = "thekirankumar";
+    public static final String GITHUB_REPO_URL = "youtube-android-auto";
     private final String TAG = "WebViewCarFragment";
     private VideoWebView webView;
     private EditText editText;
@@ -260,6 +265,12 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
 
             }
         });
+        AppUpdater appUpdater = new AppUpdater(getActivity())
+                .setUpdateFrom(UpdateFrom.GITHUB)
+                .setGitHubUserAndRepo(GITHUB_REPO_USERNAME, GITHUB_REPO_URL)
+                .setDisplay(Display.DIALOG)
+                .setButtonDoNotShowAgain("Huh, not interested");
+        appUpdater.start();
 
     }
 
