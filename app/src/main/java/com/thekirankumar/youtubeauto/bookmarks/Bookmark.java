@@ -20,6 +20,7 @@ public class Bookmark extends RealmObject {
     private @IdRes
     int thumbnailResource;
     private boolean preventDelete;
+    private OverrideSettings overrideSettings;
 
     public Bookmark() {
     }
@@ -38,6 +39,14 @@ public class Bookmark extends RealmObject {
         this.thumbnailResource = thumbnailRes;
         this.preventDelete = true;
         this.createdAt = url.hashCode();
+    }
+
+    public OverrideSettings getOverrideSettings() {
+        return overrideSettings;
+    }
+
+    public void setOverrideSettings(OverrideSettings overrideSettings) {
+        this.overrideSettings = overrideSettings;
     }
 
     public boolean isPreventDelete() {
