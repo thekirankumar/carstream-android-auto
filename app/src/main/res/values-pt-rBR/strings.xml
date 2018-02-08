@@ -10,13 +10,11 @@
     <string name="about_page">Sobre</string>
     <string name="webview_back">Voltar</string>
     <string name="refresh_page">Atualizar</string>
-    <string name="send_to_car">Enviar para o Carro</string>
     <string name="night_mode">Modo Noturno</string>
     <string name="bookmarks">Favoritos</string>
     <string name="voice_search">Procurar por Voz</string>
     <string name="search">Procurar</string>
     <string name="fullscreen">Tela Cheia</string>
-    <string name="receive_from_phone">Receber</string>
     <string name="home">Início</string>
     <string name="aspect_ratio_contain">Conter</string>
     <string name="aspect_ratio_fill">Preencher</string>
