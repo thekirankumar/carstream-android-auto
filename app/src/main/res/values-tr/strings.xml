@@ -11,13 +11,11 @@
     <string name="about_page">Hakkında</string>
     <string name="webview_back">Geri</string>
     <string name="refresh_page">Yenile</string>
-    <string name="send_to_car">Araca Gönder</string>
     <string name="night_mode">Gece Modu</string>
     <string name="bookmarks">Kısayollar</string>
     <string name="voice_search">Sesli Arama</string>
     <string name="search">Ara</string>
     <string name="fullscreen">Tam Ekran</string>
-    <string name="receive_from_phone">Telefondan Al</string>
     <string name="home">Ana Ekran</string>
     <string name="aspect_ratio_contain">Sığdır</string>
     <string name="aspect_ratio_fill">Genişlet</string>
