@@ -838,12 +838,30 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     @Override
     public void onResume() {
         super.onResume();
-        if (webView != null) {
-            //webView.requestFocus();
-            webView.playVideoIfPausedFlag();
+        //resumePlayback();
+    }
+
+    @Override
+    public void onStop() {
+        if (playerState == PlaybackState.STATE_PLAYING) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    resumePlayback();
+                }
+            }, 200);
         }
+        super.onStop();
+    }
+
+    public void resumePlayback(){
         if (car != null && !nativePlayerActive) {
             gainAudioFocus();
+        }
+        if (webView != null) {
+            //webView.requestFocus();
+            BroadcastFromUI.broadCastPlaying(getContext(), webView.getTitle());
+            webView.playVideo();
         }
         handleVoiceVisibility();
     }
