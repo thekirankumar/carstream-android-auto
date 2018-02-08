@@ -11,13 +11,11 @@
     <string name="about_page">O programie</string>
     <string name="webview_back">Wstecz</string>
     <string name="refresh_page">Odśwież</string>
-    <string name="send_to_car">Wyślij do samochodu</string>
     <string name="night_mode">Tryb Nocny</string>
     <string name="bookmarks">Zakładki</string>
     <string name="voice_search">Szukaj głosowo</string>
     <string name="search">Szukaj</string>
     <string name="fullscreen">Pełny Ekran</string>
-    <string name="receive_from_phone">Odebrane z tel.</string>
     <string name="home">Strona Główna</string>
     <string name="aspect_ratio_contain">Oryginalny</string>
     <string name="aspect_ratio_fill">Rozszerzony</string>
