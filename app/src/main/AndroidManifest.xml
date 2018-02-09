@@ -55,6 +55,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.thekirankumar.youtubeauto.activity.SettingsPhoneActivity"
+            android:label="@string/settings"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".activity.MainPhoneActivity">
+        </activity>
     </application>
 
 </manifest>

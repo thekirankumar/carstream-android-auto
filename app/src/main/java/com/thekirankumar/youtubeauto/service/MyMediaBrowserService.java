@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.thekirankumar.youtubeauto.utils.BroadcastFromPlayer;
+import com.thekirankumar.youtubeauto.utils.SettingsUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,18 +55,22 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
         builder.setState(PlaybackState.STATE_STOPPED, 0, 1);
-        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-        metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
-        mediaSessionCompat.setMetadata(metadata.build());
+        if (!SettingsUtils.isDisabledNotifications(this)) {
+            MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+            metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
+            mediaSessionCompat.setMetadata(metadata.build());
+        }
         mediaSessionCompat.setPlaybackState(builder.build());
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String title = intent.getStringExtra(MEDIA_TITLE);
-                if (title != null) {
-                    MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-                    metadata.putString(METADATA_KEY_TITLE, title);
-                    mediaSessionCompat.setMetadata(metadata.build());
+                if (!SettingsUtils.isDisabledNotifications(context)) {
+                    String title = intent.getStringExtra(MEDIA_TITLE);
+                    if (title != null) {
+                        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+                        metadata.putString(METADATA_KEY_TITLE, title);
+                        mediaSessionCompat.setMetadata(metadata.build());
+                    }
                 }
                 PlaybackStateCompat.Builder stateCompat = new PlaybackStateCompat.Builder();
                 int playbackState = intent.getIntExtra(PLAYBACK_STATE, 0);

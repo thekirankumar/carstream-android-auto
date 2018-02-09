@@ -1,0 +1,14 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_car_category">
+
+        <CheckBoxPreference
+            android:key="pref_disable_notifications"
+            android:defaultValue="false"
+            android:title="@string/settings_car_disable_notifications_title"
+            android:summary="@string/settings_car_disable_notifications_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

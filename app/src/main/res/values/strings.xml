@@ -23,5 +23,9 @@
     <string name="external_storage">External Storage</string>
     <string name="add_bookmark">Add current site</string>
     <string name="version">Version </string>
+    <string name="settings">Settings</string>
+    <string name="settings_car_category">Car settings</string>
+    <string name="settings_car_disable_notifications_title">Disable notifications</string>
+    <string name="settings_car_disable_notifications_summary">Disable head-up notifications in Android Auto</string>
 
 </resources>
