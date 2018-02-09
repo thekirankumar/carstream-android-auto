@@ -20,7 +20,7 @@ public class Bookmark extends RealmObject {
     private @IdRes
     int thumbnailResource;
     private boolean preventDelete;
-    private OverrideSettings overrideSettings;
+    private OverrideSettings overrideSettings = new OverrideSettings();
 
     public Bookmark() {
     }

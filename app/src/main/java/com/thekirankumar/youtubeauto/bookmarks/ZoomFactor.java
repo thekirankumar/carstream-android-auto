@@ -6,8 +6,11 @@ import io.realm.RealmObject;
  * Created by kiran.kumar on 08/02/18.
  */
 
-class ZoomFactor extends RealmObject {
+public class ZoomFactor extends RealmObject {
     private float factor = 1f;
+
+    public ZoomFactor() {
+    }
 
     public ZoomFactor(float factor) {
 

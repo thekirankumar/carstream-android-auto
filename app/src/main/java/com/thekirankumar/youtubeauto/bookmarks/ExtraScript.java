@@ -6,13 +6,16 @@ import io.realm.RealmObject;
  * Created by kiran.kumar on 08/02/18.
  */
 
-class ExtraScript extends RealmObject {
+public class ExtraScript extends RealmObject {
     private String url;
     private boolean enabled;
 
     public ExtraScript(String url, boolean enabled) {
         this.url = url;
         this.enabled = enabled;
+    }
+
+    public ExtraScript() {
     }
 
     public String getUrl() {

@@ -1,17 +1,29 @@
 package com.thekirankumar.youtubeauto.bookmarks;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
  * Created by kiran.kumar on 08/02/18.
  */
 
-class OverrideSettings extends RealmObject {
-    private UserAgentMode userAgentMode;
-    private OverviewMode overviewMode;
-    private ZoomFactor zoomFactor;
-    private ToolbarMode toolbarMode;
-    private ExtraScript[] extraScripts;
+public class OverrideSettings extends RealmObject {
+    private UserAgentMode userAgentMode = new UserAgentMode();
+    private OverviewMode overviewMode = new OverviewMode();
+    private ZoomFactor zoomFactor = new ZoomFactor();
+    private ToolbarMode toolbarMode = new ToolbarMode();
+    private RealmList<ExtraScript> extraScripts = new RealmList<>();
+
+    public OverrideSettings() {
+    }
+
+    public RealmList<ExtraScript> getExtraScripts() {
+        return extraScripts;
+    }
+
+    public void setExtraScripts(RealmList<ExtraScript> extraScripts) {
+        this.extraScripts = extraScripts;
+    }
 
     public OverviewMode getOverviewMode() {
         return overviewMode;
@@ -35,14 +47,6 @@ class OverrideSettings extends RealmObject {
 
     public void setToolbarMode(ToolbarMode toolbarMode) {
         this.toolbarMode = toolbarMode;
-    }
-
-    public ExtraScript[] getExtraScripts() {
-        return extraScripts;
-    }
-
-    public void setExtraScripts(ExtraScript[] extraScripts) {
-        this.extraScripts = extraScripts;
     }
 
     public UserAgentMode getUserAgentMode() {
