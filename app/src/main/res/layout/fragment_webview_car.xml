@@ -48,7 +48,7 @@
                     android:background="@drawable/highlighting_drawable"
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusRight="@id/home_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_back"
                     android:text="@string/webview_back" />
 
@@ -62,7 +62,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/back_button"
                     android:nextFocusRight="@id/refresh_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_home"
                     android:text="@string/home" />
 
@@ -76,7 +76,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/home_button"
                     android:nextFocusRight="@id/voice_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_refresh"
                     android:text="@string/refresh_page" />
 
@@ -90,7 +90,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/refresh_button"
                     android:nextFocusRight="@id/search_youtube_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_voice_input"
                     android:text="@string/voice_search" />
 
@@ -105,7 +105,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/voice_button"
                     android:nextFocusRight="@id/search_google_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_search_youtube"
                     android:text="@string/search" />
 
@@ -119,7 +119,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/search_youtube_button"
                     android:nextFocusRight="@id/fullscreen_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_search_google"
                     android:text="@string/search" />
 
@@ -132,7 +132,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/refresh_button"
                     android:nextFocusRight="@id/bookmark_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_fullscreen"
                     android:text="@string/fullscreen" />
 
@@ -145,7 +145,7 @@
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/fullscreen_button"
                     android:nextFocusRight="@id/aspect_button"
-                    android:padding="5dp"
+                    style="@style/ToolbarButton"
                     android:src="@drawable/ic_bookmarks"
                     android:text="@string/receive_from_phone" />
 
