@@ -49,6 +49,7 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.thekirankumar.youtubeauto.BuildConfig;
 import com.thekirankumar.youtubeauto.Manifest;
 import com.thekirankumar.youtubeauto.R;
+import com.thekirankumar.youtubeauto.activity.SettingsPhoneActivity;
 import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
@@ -160,6 +161,8 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
             webView.reload();
         } else if (item.getItemId() == R.id.bookmark_button) {
             showBookmarksScreen();
+        } else if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(getContext(), SettingsPhoneActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

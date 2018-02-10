@@ -13,11 +13,17 @@
         android:id="@+id/refresh"
         android:title="@string/refresh_page"
         app:showAsAction="never" />
+
     <item android:id="@+id/app_info"
         app:showAsAction="ifRoom"
         android:title="" />
     <item
         android:id="@+id/bookmark_button"
         android:title="@string/bookmarks"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 </menu>
