@@ -66,7 +66,7 @@ public class PlayerQueue implements MediaQueue {
 
     @Override
     public boolean hasNext() {
-        return currentIndex < currentQueue.length;
+        return currentIndex < currentQueue.length - 1;
     }
 
     @Override
