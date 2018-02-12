@@ -7,21 +7,25 @@ import io.realm.RealmObject;
  */
 
 public class ZoomFactor extends RealmObject {
-    private float factor = 1f;
+    private float pageZoom = 1f;
+    private float textSize = 1f;
 
     public ZoomFactor() {
     }
 
-    public ZoomFactor(float factor) {
-
-        this.factor = factor;
+    public float getTextSize() {
+        return textSize;
     }
 
-    public float getFactor() {
-        return factor;
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
     }
 
-    public void setFactor(float factor) {
-        this.factor = factor;
+    public float getPageZoom() {
+        return pageZoom;
+    }
+
+    public void setPageZoom(float pageZoom) {
+        this.pageZoom = pageZoom;
     }
 }

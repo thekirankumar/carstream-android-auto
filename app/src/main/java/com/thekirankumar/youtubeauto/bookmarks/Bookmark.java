@@ -8,7 +8,7 @@ import io.realm.RealmObject;
  * Created by kiran.kumar on 24/01/18.
  */
 
-public class Bookmark extends RealmObject {
+public class Bookmark extends RealmObject implements IBookmark {
     private String title;
     private String faviconPath;
     private @IdRes
@@ -41,82 +41,102 @@ public class Bookmark extends RealmObject {
         this.createdAt = url.hashCode();
     }
 
+    @Override
     public OverrideSettings getOverrideSettings() {
         return overrideSettings;
     }
 
+    @Override
     public void setOverrideSettings(OverrideSettings overrideSettings) {
         this.overrideSettings = overrideSettings;
     }
 
+    @Override
     public boolean isPreventDelete() {
         return preventDelete;
     }
 
+    @Override
     public void setPreventDelete(boolean preventDelete) {
         this.preventDelete = preventDelete;
     }
 
+    @Override
     public int getFaviconResource() {
         return faviconResource;
     }
 
+    @Override
     public void setFaviconResource(int faviconResource) {
         this.faviconResource = faviconResource;
     }
 
+    @Override
     public int getThumbnailResource() {
         return thumbnailResource;
     }
 
+    @Override
     public void setThumbnailResource(int thumbnailResource) {
         this.thumbnailResource = thumbnailResource;
     }
 
+    @Override
     public long getCreatedAt() {
         return createdAt;
     }
 
+    @Override
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
+    @Override
     public byte[] getFavicon() {
         return favicon;
     }
 
+    @Override
     public void setFavicon(byte[] favicon) {
         this.favicon = favicon;
     }
 
+    @Override
     public byte[] getThumbnail() {
         return thumbnail;
     }
 
+    @Override
     public void setThumbnail(byte[] thumbnail) {
         this.thumbnail = thumbnail;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public String getFaviconPath() {
         return faviconPath;
     }
 
+    @Override
     public void setFaviconPath(String faviconPath) {
         this.faviconPath = faviconPath;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public void setUrl(String url) {
         this.url = url;
     }

@@ -6,7 +6,7 @@
     <permission android:name="android.permission.RECORD_AUDIO" />
     <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -18,13 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/Base.Theme.AppCompat">
         <service
-            android:name="com.thekirankumar.youtubeauto.service.CarService"
-            android:label="@string/car_service_name"
+            android:name=".service.CarService"
             android:exported="true"
+            android:label="@string/car_service_name"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="com.google.android.gms.car.category.CATEGORY_PROJECTION" />
                 <category android:name="com.google.android.gms.car.category.CATEGORY_PROJECTION_OEM" />
             </intent-filter>
@@ -37,7 +38,8 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
@@ -48,10 +50,11 @@
             android:resource="@xml/automotive_app_desc" />
 
         <activity
-            android:name="com.thekirankumar.youtubeauto.activity.MainPhoneActivity"
+            android:name=".activity.MainPhoneActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -37,6 +37,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -54,6 +55,11 @@ import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
+import com.thekirankumar.youtubeauto.bookmarks.HomeBookmark;
+import com.thekirankumar.youtubeauto.bookmarks.IBookmark;
+import com.thekirankumar.youtubeauto.bookmarks.UserAgentMode;
+import com.thekirankumar.youtubeauto.bookmarks.settings.SettingsFragment;
+import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.WebviewUtils;
@@ -72,6 +78,7 @@ import static com.thekirankumar.youtubeauto.fragments.WebViewCarFragment.YOUTUBE
 public class WebViewPhoneFragment extends CarFragment implements BookmarksClickCallback, ExoPlayerFragment.OnFragmentInteractionListener {
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 10;
     private static final String BOOKMARKS_FRAGMENT_TAG = "bookmarks";
+    private static final String SETTINGS_FRAGMENT_TAG = "settings";
     private static final String PLAYER_FRAGMENT_TAG = "player";
     private static final String PREFS = "phone_prefs";
     public static final String GITHUB_REPO_USERNAME = "thekirankumar";
@@ -84,6 +91,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
     private MediaSessionCompat mediaSessionCompat;
     private MediaBrowserCompat mediaBrowser;
     private SharedPreferences sharedPrefs;
+    private IBookmark currentBookmark = new HomeBookmark();
 
     public WebViewPhoneFragment() {
         // Required empty public constructor
@@ -161,11 +169,14 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
             webView.reload();
         } else if (item.getItemId() == R.id.bookmark_button) {
             showBookmarksScreen();
+        } else if (item.getItemId() == R.id.settings_button) {
+            showSettingsScreen();
         } else if (item.getItemId() == R.id.settings) {
             startActivity(new Intent(getContext(), SettingsPhoneActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
@@ -214,24 +225,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
         webView.setWebViewClient(new CustomWebViewClient());
         VideoEnabledWebChromeClient videoEnabledWebChromeClient = new VideoEnabledWebChromeClient(webViewContainer, fullScreenView, new ProgressBar(getActivity()), webView);
         webView.setWebChromeClient(videoEnabledWebChromeClient);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            webView.getSettings().setAllowFileAccessFromFileURLs(true);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        }
-        webView.getSettings().setAllowContentAccess(true);
-        if (BuildConfig.DEBUG) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                WebView.setWebContentsDebuggingEnabled(true);
-            }
-        }
+        loadWebviewSettingsFromBookmark(currentBookmark);
         final String url = getSharedPrefs().getString(HOME_URL, YOUTUBE_HOME_URL_BASE);
         webView.loadUrl(url);
         webView.requestFocus();
@@ -275,6 +269,40 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
                 .setButtonDoNotShowAgain("Huh, not interested");
         appUpdater.start();
 
+    }
+
+    private void loadWebviewSettingsFromBookmark(IBookmark bookmark) {
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setInitialScale((int) (bookmark.getOverrideSettings().getZoomFactor().getPageZoom() * 100));
+        int userAgentMode = bookmark.getOverrideSettings().getUserAgentMode().getMode();
+        if (userAgentMode == UserAgentMode.MODE_MOBILE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                webView.getSettings().setUserAgentString(WebSettings.getDefaultUserAgent(getContext()));
+            }
+        } else if (userAgentMode == UserAgentMode.MODE_DESKTOP) {
+            webView.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+        } else if (userAgentMode == UserAgentMode.MODE_CUSTOM) {
+            String customUserAgent = bookmark.getOverrideSettings().getUserAgentMode().getCustomUserAgent();
+            webView.getSettings().setUserAgentString(customUserAgent);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
+        webView.getSettings().setAllowContentAccess(true);
+        if (BuildConfig.DEBUG) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                WebView.setWebContentsDebuggingEnabled(true);
+            }
+        }
     }
 
     private void hideKeyboard(EditText editTextURL) {
@@ -358,6 +386,7 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
 
     @Override
     public void onBookmarkSelected(Bookmark bookmark) {
+        setCurrentBookmark(bookmark);
         webView.loadUrl(bookmark.getUrl());
     }
 
@@ -378,7 +407,6 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
 
     private void hideBookmarksScreen() {
         if (isAdded()) {
-            getView().findViewById(R.id.full_screen_view).setVisibility(View.GONE);
             FragmentManager childFragmentManager = getChildFragmentManager();
             Fragment oldFragment = childFragmentManager.findFragmentByTag(BOOKMARKS_FRAGMENT_TAG);
             if (oldFragment != null) {
@@ -400,9 +428,33 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
                 bookmarksFragment = new BookmarksFragment();
             }
             FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.full_screen_view, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
+            fragmentTransaction.add(R.id.full_screen_view, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
+        }
+
+    }
+
+    private void hideSettingsScreen() {
+        if (isAdded()) {
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            SettingsFragment oldFragment = (SettingsFragment) childFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                oldFragment.dismiss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+    private void showSettingsScreen() {
+        if (isAdded()) {
+            getView().findViewById(R.id.full_screen_view).setVisibility(View.VISIBLE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            SettingsFragment settingsFragment = (SettingsFragment) childFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG);
+            if (settingsFragment == null) {
+                settingsFragment = new SettingsFragment();
+            }
+            settingsFragment.show(childFragmentManager, SETTINGS_FRAGMENT_TAG);
         }
 
     }
@@ -448,6 +500,11 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
         return null;
     }
 
+    public void setCurrentBookmark(Bookmark currentBookmark) {
+        this.currentBookmark = currentBookmark;
+        loadWebviewSettingsFromBookmark(currentBookmark);
+    }
+
     private class CustomWebViewClient extends WebViewClient {
 
         @Override
@@ -470,16 +527,16 @@ public class WebViewPhoneFragment extends CarFragment implements BookmarksClickC
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
             editText.setText(url);
             if (url.startsWith("file:///") && !url.endsWith("/")) {
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                showNativePlayer(URLDecoder.decode(url, "UTF-8"));
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            showNativePlayer(URLDecoder.decode(url, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+                });
                 return true;
             } else if (url.startsWith("intent://")) {
                 try {

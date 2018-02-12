@@ -16,8 +16,6 @@ import com.thekirankumar.youtubeauto.utils.AspectRatioFrameLayout;
 
 import java.util.ArrayList;
 
-import io.realm.RealmResults;
-
 /**
  * Created by kiran.kumar on 24/01/18.
  */
@@ -26,7 +24,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
     private ArrayList<Bookmark> bookmarks;
     private Bookmark addCurrentBookmark = new Bookmark();
     private BookmarksClickCallback bookmarksClickCallback;
-    private boolean deleteMode;
+    private boolean editMode;
 
     public BookmarksAdapter(ArrayList<Bookmark> bookmarks) {
         this.bookmarks = bookmarks;
@@ -76,11 +74,11 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!deleteMode && bookmarksClickCallback != null) {
+                    if (!editMode && bookmarksClickCallback != null) {
                         bookmarksClickCallback.onBookmarkSelected(bookmark);
                     }
-                    if (deleteMode) {
-                        deleteMode = false;
+                    if (editMode) {
+                        editMode = false;
                     }
                     notifyDataSetChanged();
                 }
@@ -95,11 +93,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if (deleteMode) {
-                        deleteMode = false;
-                    } else {
-                        deleteMode = true;
-                    }
+                    editMode = !editMode;
                     notifyDataSetChanged();
                     return true;
                 }
@@ -107,15 +101,16 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             if (bookmark.isPreventDelete()) {
                 holder.setDeleteMode(false);
             } else {
-                holder.setDeleteMode(deleteMode);
+                holder.setDeleteMode(editMode);
             }
+            holder.setEditMode(editMode);
         } else {
             holder.title.setText(R.string.add_bookmark);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (deleteMode) {
-                        deleteMode = false;
+                    if (editMode) {
+                        editMode = false;
                     }
                     notifyDataSetChanged();
                     if (bookmarksClickCallback != null) {
@@ -124,7 +119,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
                 }
             });
             holder.thumbnail.setImageResource(R.drawable.add_bookmark);
-            holder.setDeleteMode(false);
+            holder.setEditMode(false);
         }
 
     }
@@ -143,6 +138,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
         private final ImageView thumbnail;
         private final ImageView favicon;
         private final ImageView delete;
+        private final ImageView settings;
 
         public BookmarkViewHolder(Context context, ViewGroup parent) {
             super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bookmark_layout, parent, false));
@@ -153,6 +149,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             thumbnail = itemView.findViewById(R.id.bookmark_thumbnail);
             favicon = itemView.findViewById(R.id.bookmark_favicon);
             delete = itemView.findViewById(R.id.bookmark_delete);
+            settings = itemView.findViewById(R.id.bookmark_settings);
         }
 
         public void setBookmark(Bookmark bookmark) {
@@ -189,6 +186,15 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
                 delete.setVisibility(View.VISIBLE);
             } else {
                 delete.setVisibility(View.GONE);
+            }
+        }
+        public void setEditMode(boolean editMode) {
+            if (editMode) {
+                settings.setVisibility(View.VISIBLE);
+                thumbnail.setAlpha(0.5f);
+            } else {
+                settings.setVisibility(View.GONE);
+                thumbnail.setAlpha(1f);
             }
         }
     }

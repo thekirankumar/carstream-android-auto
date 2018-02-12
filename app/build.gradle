@@ -14,6 +14,7 @@ android {
         versionCode 37
         versionName "1.8.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -50,6 +51,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:11.0.4'
     implementation 'com.google.firebase:firebase-crash:11.0.4'
     implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

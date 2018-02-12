@@ -63,7 +63,18 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="top|right"
-        android:elevation="10dp"
+        android:elevation="7dp"
         android:src="@drawable/ic_close"
+        android:visibility="visible" />
+    <ImageView
+        android:id="@+id/bookmark_settings"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:elevation="7dp"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/circle"
+        android:src="@drawable/ic_settings_white_50dp"
         android:visibility="visible" />
 </com.thekirankumar.youtubeauto.utils.AspectRatioFrameLayout>
