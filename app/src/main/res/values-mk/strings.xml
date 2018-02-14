@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">ПРЕДУПРЕДУВАЊЕ !!!</string>
+    <string name="warning_body">Гледањето видеозаписи додека возите може да предизвика сообраќајни несреќи. Отфрлајќи го ова предупредување, вие се согласувате дека сте свесни и одговорни за последиците од тоа. Ниту развивачот на оваа апликација, ниту Гугл, ниту производителот на оваа опрема, ниту производителот на овој автомобил не е одговорен за несреќи предизвикани поради вашата неодговорност. Можете да се префрлите на слушање во позадина со кликнување на иконата за аудио.</string>
+    <string name="warning_accept_button">Го прифаќам ризикот</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Блог</string>
+    <string name="webview_back">Назад</string>
+    <string name="refresh_page">Освежи</string>
+    <string name="night_mode">Ноќен мод</string>
+    <string name="bookmarks">Фаворити</string>
+    <string name="voice_search">Гласовно барање</string>
+    <string name="search">Пребарај</string>
+    <string name="fullscreen">Цел екран</string>
+    <string name="home">Дома</string>
+    <string name="aspect_ratio_contain">Нормално</string>
+    <string name="aspect_ratio_fill">Пополнето</string>
+    <string name="aspect_ratio_cover">Препокриено</string>
+    <string name="internal_storage">Внатрешна меморија</string>
+    <string name="external_storage">Надворешна меморија</string>
+    <string name="add_bookmark">Додади фаворит</string>
+    <string name="version">Верзија </string>
+    <string name="settings">Подесувања</string>
+    <string name="settings_car_category">Подесувања за автомобилот</string>
+    <string name="settings_car_disable_notifications_title">Исклучи известувања</string>
+    <string name="settings_car_disable_notifications_summary">Исклучи head-up известувања во Android Auto</string>
+</resources>
