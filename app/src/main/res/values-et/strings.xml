@@ -24,5 +24,9 @@
     <string name="external_storage">Välimälu</string>
     <string name="add_bookmark">Lisa järjehoidja</string>
     <string name="version">Versioon</string>
-
+    <string name="settings">Seaded</string>
+    <string name="settings_car_category">Auto Seaded</string>
+    <string name="settings_car_disable_notifications_title">Keela Teavitused</string>
+    <string name="settings_car_disable_notifications_summary">Keela Android Auto teavitused</string>
+	
 </resources>
