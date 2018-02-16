@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">Kanał CarStream</string>
+    <string name="warning_title">UWAGA !!!</string>
+    <string name="warning_body">Oglądanie filmów podczas jazdy może doprowadzić do wypadku! Akceptując to ostrzeżenie jesteś odpowiedzialny za użytkowanie tego oprogramowania i ponosisz tego wszelkie konsekwencje. Ani deweloper tej aplikacji, ani Google, ani producent tego sprzętu, ani producent tego samochodu nie jest odpowiedzialny za wypadki spowodowane przez Twoją nieuwagę podczas użytkowania tego oprogramowania. Alternatywnie możesz odtwarzać sam dźwięk, wybierając ikonę Muzyka/Audio.</string>
+    <string name="warning_accept_button">Akceptuję ryzyko</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">O programie</string>
+    <string name="webview_back">Wstecz</string>
+    <string name="refresh_page">Odśwież</string>
+    <string name="night_mode">Tryb Nocny</string>
+    <string name="bookmarks">Zakładki</string>
+    <string name="voice_search">Szukaj głosowo</string>
+    <string name="search">Szukaj</string>
+    <string name="fullscreen">Pełny Ekran</string>
+    <string name="home">Strona Główna</string>
+    <string name="aspect_ratio_contain">Oryginalny</string>
+    <string name="aspect_ratio_fill">Rozszerzony</string>
+    <string name="aspect_ratio_cover">Powiększony</string>
+    <string name="internal_storage">Pamięć wewnętrzna</string>
+    <string name="external_storage">Pamięć zewnętrzna</string>
+    <string name="add_bookmark">Dodaj zakładkę</string>
+    <string name="version">Wersja</string>
+
+</resources>

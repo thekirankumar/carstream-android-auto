@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.thekirankumar.youtubeauto.utils.BroadcastFromPlayer;
+import com.thekirankumar.youtubeauto.utils.SettingsUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,44 +46,31 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
         mediaSessionCompat.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-//        try {
-//            MediaNotificationManager notificationManager = new MediaNotificationManager(this, mediaSessionCompat.getSessionToken());
-//            notificationManager.startNotification(this);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-
         setSessionToken(mediaSessionCompat.getSessionToken());
         setup();
     }
 
     private void setup() {
-//        final MediaPlayer mMediaPlayer;
-//        mMediaPlayer = MediaPlayer.create(MyMediaBrowserService.this, R.raw.silent);
-//        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mediaPlayer) {
-//                mMediaPlayer.release();
-//            }
-//        });
-//        mMediaPlayer.start();
 
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
         builder.setState(PlaybackState.STATE_STOPPED, 0, 1);
-        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-        metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
-        mediaSessionCompat.setMetadata(metadata.build());
+        if (!SettingsUtils.isDisabledNotifications(this)) {
+            MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+            metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
+            mediaSessionCompat.setMetadata(metadata.build());
+        }
         mediaSessionCompat.setPlaybackState(builder.build());
-
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String title = intent.getStringExtra(MEDIA_TITLE);
-                if (title != null) {
-                    MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
-                    metadata.putString(METADATA_KEY_TITLE, title);
-                    mediaSessionCompat.setMetadata(metadata.build());
+                if (!SettingsUtils.isDisabledNotifications(context)) {
+                    String title = intent.getStringExtra(MEDIA_TITLE);
+                    if (title != null) {
+                        MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+                        metadata.putString(METADATA_KEY_TITLE, title);
+                        mediaSessionCompat.setMetadata(metadata.build());
+                    }
                 }
                 PlaybackStateCompat.Builder stateCompat = new PlaybackStateCompat.Builder();
                 int playbackState = intent.getIntExtra(PLAYBACK_STATE, 0);
@@ -123,7 +111,6 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
 
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-
         result.sendResult(Collections.<MediaBrowserCompat.MediaItem>emptyList());
     }
 

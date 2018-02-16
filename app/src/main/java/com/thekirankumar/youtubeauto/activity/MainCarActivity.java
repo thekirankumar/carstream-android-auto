@@ -28,16 +28,14 @@ public class MainCarActivity extends CarActivity {
             updateStatusBarTitle();
         }
     };
-    private HashSet<OnConfigurationChangedListener> onConfigListener = new HashSet<>(0);
+    private HashSet<ActivityCallbacks> activityCallbacks = new HashSet<>(0);
 
     @Override
-    public void onWindowFocusChanged(boolean b, boolean b1) {
-        super.onWindowFocusChanged(b, b1);
-    }
-
-    @Override
-    public boolean onKeyUp(int i, KeyEvent keyEvent) {
-        return super.onKeyUp(i, keyEvent);
+    public void onWindowFocusChanged(boolean hasFocus, boolean b1) {
+        super.onWindowFocusChanged(hasFocus, b1);
+        for (ActivityCallbacks next : activityCallbacks) {
+            next.onWindowFocusChanged(hasFocus);
+        }
     }
 
 
@@ -113,20 +111,22 @@ public class MainCarActivity extends CarActivity {
     @Override
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        for (OnConfigurationChangedListener next : onConfigListener) {
+        for (ActivityCallbacks next : activityCallbacks) {
             next.onConfigChanged();
         }
     }
 
-    public void addConfigurationChangedListener(OnConfigurationChangedListener listener) {
-        this.onConfigListener.add(listener);
+
+    public void addActivityCallback(ActivityCallbacks listener) {
+        this.activityCallbacks.add(listener);
     }
 
-    public void removeConfigurationChangedListener(OnConfigurationChangedListener listener) {
-        this.onConfigListener.remove(listener);
+    public void removeActivityCallback(ActivityCallbacks listener) {
+        this.activityCallbacks.remove(listener);
     }
 
-    public interface OnConfigurationChangedListener {
+    public interface ActivityCallbacks {
         void onConfigChanged();
+        void onWindowFocusChanged(boolean hasFocus);
     }
 }

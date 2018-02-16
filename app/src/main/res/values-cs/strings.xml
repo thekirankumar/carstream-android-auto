@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream přehrávač</string>
+    <string name="channel_name">CarStream kanál</string>
+    <string name="warning_title">VAROVÁNÍ !!!</string>
+    <string name="warning_body">Sledování videa během jízdy může způsobit dopravní nehodu. Potvrzením tohoto hlášení souhlasíte s tím, že jste si vědomi všech rizik a jste zodpovědný za důsledky tohoto jednání. Ani vývojář této aplikace, ani výrobce vašeho zařízení, ani výrobce vašeho vozidla neneseou žádnou zodpovědnost za jakékoliv škody způsobené vaší nedbalostí. Pokud nechcete zbytečně riskovat, můžete přejít na přehrávání videí na pozadí po kliknutí na ikonu médií.</string>
+    <string name="warning_accept_button">Rozumím rizikům</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">O aplikaci</string>
+    <string name="webview_back">Zpět</string>
+    <string name="refresh_page">Obnovit</string>
+    <string name="night_mode">Noční režim</string>
+    <string name="bookmarks">Záložky</string>
+    <string name="voice_search">Hlasové vyhledávání</string>
+    <string name="search">Vyhledávání</string>
+    <string name="fullscreen">Celá obrazovka</string>
+    <string name="home">Domů</string>
+    <string name="aspect_ratio_contain">Contain</string>
+    <string name="aspect_ratio_fill">Fill</string>
+    <string name="aspect_ratio_cover">Cover</string>
+    <string name="internal_storage">Interní úložiště</string>
+    <string name="external_storage">Externí úložiště</string>
+    <string name="add_bookmark">Přidat aktuální stránku</string>
+    <string name="version">Verze </string>
+    <string name="settings">Nastavení</string>
+    <string name="settings_car_category">Nastavení vozidla</string>
+    <string name="settings_car_disable_notifications_title">Vypnout notifikace</string>
+    <string name="settings_car_disable_notifications_summary">Vypnout head-up notifikace v Android Auto</string>
+</resources>

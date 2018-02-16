@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">UYARI !!!</string>
+    <string name="warning_body"> Sürüş esnasında video izlemek araç kazalarına sebep olabilir. Bu uyarıyı kabul ederek tüm sorumluluğun farkında olduğunuzu kabul etmiş olursunuz. Bu uygulamanın geliştiricisi, Google, bu ekipmanın üreticisi veya aracın üreticisi, kazalardan sorumlu değildir. Risk almamak için bunun yerine Medya simgesini tıklatarak arka planda oynatmaya geçebilirsiniz.</string>
+    <string name="warning_accept_button">Riskleri kabul ediyorum.</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Hakkında</string>
+    <string name="webview_back">Geri</string>
+    <string name="refresh_page">Yenile</string>
+    <string name="night_mode">Gece Modu</string>
+    <string name="bookmarks">Kısayollar</string>
+    <string name="voice_search">Sesli Arama</string>
+    <string name="search">Ara</string>
+    <string name="fullscreen">Tam Ekran</string>
+    <string name="home">Ana Ekran</string>
+    <string name="aspect_ratio_contain">Sığdır</string>
+    <string name="aspect_ratio_fill">Genişlet</string>
+    <string name="aspect_ratio_cover">Kapak</string>
+    <string name="internal_storage">Dahili Depolama</string>
+    <string name="external_storage">Harici Depolama</string>
+    <string name="add_bookmark">Bunu Ekle</string>
+    <string name="version">Versiyon</string>
+
+</resources>

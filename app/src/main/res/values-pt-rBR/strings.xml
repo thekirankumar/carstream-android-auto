@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">Reprodutor CarStream</string>
+    <string name="channel_name">Canal CarStream</string>
+    <string name="warning_title">ATENÇÃO !!!</string>
+    <string name="warning_body">Assistir vídeos enquanto dirige pode ocasionar acidentes. Ignorando esse aviso, você concorda que está ciente e é responsável pelas consequências de fazer o mesmo. Nem o desenvolvedor deste aplicativo, bem como a Google, ou a fabricante deste dispositivo e/ou carro são responsáveis por qualquer acidente causado devido sua negligência. Você pode alternar para o modo de reprodução em segundo plano através do icone de mídia.</string>
+    <string name="warning_accept_button">Eu compreendo os riscos</string>
+    <string name="url_edittext_phone_app">Endereço :</string>
+    <string name="about_page">Sobre</string>
+    <string name="webview_back">Voltar</string>
+    <string name="refresh_page">Atualizar</string>
+    <string name="night_mode">Modo Noturno</string>
+    <string name="bookmarks">Favoritos</string>
+    <string name="voice_search">Procurar por Voz</string>
+    <string name="search">Procurar</string>
+    <string name="fullscreen">Tela Cheia</string>
+    <string name="home">Início</string>
+    <string name="aspect_ratio_contain">Conter</string>
+    <string name="aspect_ratio_fill">Preencher</string>
+    <string name="aspect_ratio_cover">Cobrir</string>
+    <string name="internal_storage">Armazenamento Interno</string>
+    <string name="external_storage">Armazenamento Externo</string>
+    <string name="add_bookmark">Adicionar Atual</string>
+    <string name="version">Versão</string>
+</resources>

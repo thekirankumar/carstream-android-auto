@@ -1,3 +1,8 @@
 <resources>
-
+    <style name="ToolbarButton" parent="@android:style/Widget.ImageButton">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+    </style>
 </resources>

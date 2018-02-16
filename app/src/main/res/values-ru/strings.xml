@@ -11,12 +11,10 @@
     <string name="about_page">О программе</string>
     <string name="webview_back">Назад</string>
     <string name="refresh_page">Обновить</string>
-    <string name="send_to_car">Послать в машину</string>
     <string name="night_mode">Ночной режим</string>
     <string name="voice_search">Голосовой поиск</string>
     <string name="search">Поиск</string>
     <string name="fullscreen">Полный экран</string>
-    <string name="receive_from_phone">Получить</string>
     <string name="home">Домой</string>
     <string name="aspect_ratio_contain">Contain</string>
     <string name="aspect_ratio_fill">Fill</string>
@@ -26,5 +24,4 @@
     <string name="external_storage">"Внешнее хранилище "</string>
     <string name="add_bookmark">Добавить закладку</string>
     <string name="version">Версия</string>
-
 </resources>

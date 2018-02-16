@@ -48,12 +48,36 @@ public class JavascriptCallback {
         });
     }
 
+    @JavascriptInterface
+    public void showKeyboard(final String oldText) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                callbacks.onShowKeyboardFromJS(oldText);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void hideKeyboard() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                callbacks.onHideKeyboardFromJS();
+            }
+        });
+    }
+
     public interface JSCallbacks {
         void onJSVideoEvent(String event);
 
         void onVideoElementDiscovered();
 
         void onVideoCurrentTimeResult(int currentTime);
+
+        void onShowKeyboardFromJS(String oldText);
+
+        void onHideKeyboardFromJS();
     }
 
 }

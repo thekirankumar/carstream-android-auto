@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream kanal</string>
+    <string name="warning_title">HOIATUS !!!</string>
+    <string name="warning_body">Videote vaatamine sõidu ajal võib viia õnnetusteni. Nõustudes selle hoiatusega kinnitad, et oled teadlik tagajärgedest antud toiminguga. Ei arendaja ega Google ei saa hoida vastutavana õnnestusega selle app kasutamisest.  Soovi korral saad lülituda ümber taustal taasesitusele vajutades meedia ikooni.</string>
+    <string name="warning_accept_button">Nõustun tingimustega</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Info</string>
+    <string name="webview_back">Tagasi</string>
+    <string name="refresh_page">Värskenda</string>
+    <string name="night_mode">Öövaade</string>
+    <string name="bookmarks">Järjehoidjad</string>
+    <string name="voice_search">Häälotsing</string>
+    <string name="search">Otsi</string>
+    <string name="fullscreen">Täisekraan</string>
+    <string name="home">Kodu</string>
+    <string name="aspect_ratio_contain">Hoia originaal kuvasuhe</string>
+    <string name="aspect_ratio_fill">Täida ekraan</string>
+    <string name="aspect_ratio_cover">Originaal kuva</string>
+    <string name="internal_storage">Sisemälu</string>
+    <string name="external_storage">Välimälu</string>
+    <string name="add_bookmark">Lisa järjehoidja</string>
+    <string name="version">Versioon</string>
+    <string name="settings">Seaded</string>
+    <string name="settings_car_category">Auto Seaded</string>
+    <string name="settings_car_disable_notifications_title">Keela Teavitused</string>
+    <string name="settings_car_disable_notifications_summary">Keela Android Auto teavitused</string>
+	
+</resources>

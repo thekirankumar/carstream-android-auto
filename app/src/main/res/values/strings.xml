@@ -4,26 +4,28 @@
     <string name="app_name_player">CarStream player</string>
     <string name="channel_name">CarStream Channel</string>
     <string name="warning_title">WARNING !!!</string>
-    <string name="warning_body">Watching videos when driving can cause car crashes. By dismissing this warning, you agree that you are aware of and responsible for the consequences of doing this. Neither the developer of this app nor Google nor the manufacturer of this equipment nor the manufacturer of this car is responsible for any accidents caused due to your negligence. You can switch to background playback by clicking on the media icon instead.</string>
+    <string name="warning_body">Watching videos while driving can cause car crashes. By dismissing this warning, you agree that you are aware of and responsible for the consequences of doing this. Neither the developer of this app nor Google nor the manufacturer of this equipment nor the manufacturer of this car is responsible for any accidents caused due to your negligence. You can switch to background playback by clicking on the media icon instead.</string>
     <string name="warning_accept_button">I understand the risks</string>
     <string name="url_edittext_phone_app">URL :</string>
     <string name="about_page">About</string>
     <string name="webview_back">Back</string>
     <string name="refresh_page">Refresh</string>
-    <string name="send_to_car">Send to car</string>
     <string name="night_mode">Night Mode</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="voice_search">Voice search</string>
     <string name="search">Search</string>
     <string name="fullscreen">FullScreen</string>
-    <string name="receive_from_phone">Receive</string>
     <string name="home">Home</string>
     <string name="aspect_ratio_contain">Contain</string>
     <string name="aspect_ratio_fill">Fill</string>
     <string name="aspect_ratio_cover">Cover</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="external_storage">External Storage</string>
-    <string name="add_bookmark">Add current</string>
-    <string name="version">Version</string>
+    <string name="add_bookmark">Add current site</string>
+    <string name="version">Version </string>
+    <string name="settings">Settings</string>
+    <string name="settings_car_category">Car settings</string>
+    <string name="settings_car_disable_notifications_title">Disable notifications</string>
+    <string name="settings_car_disable_notifications_summary">Disable head-up notifications in Android Auto</string>
 
 </resources>

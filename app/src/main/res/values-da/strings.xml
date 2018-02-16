@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">ADVARSEL !!!</string>
+    <string name="warning_body">At se videoer under kørsel kan forårsage bilulykker. Ved at afvise denne advarsel accepterer du, at du er klar over og ansvarlig for konsekvenserne af at gøre dette. Hverken udvikleren af denne app, Google, producenten af dette udstyr eller producenten af denne bil er ansvarlige for ulykker forårsaget af din forsømmelighed. Du kan skifte til baggrundsafspilning ved at klikke på medieikonet i stedet.</string>
+    <string name="warning_accept_button">Jeg forstår risikoen</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Om</string>
+    <string name="webview_back">Tilbage</string>
+    <string name="refresh_page">Opdater</string>
+    <string name="night_mode">Nattilstand</string>
+    <string name="bookmarks">Bogmærker</string>
+    <string name="voice_search">Stemmesøgning</string>
+    <string name="search">Søg</string>
+    <string name="fullscreen">Fuld Skærm</string>
+    <string name="home">Hjem</string>
+    <string name="aspect_ratio_contain">Bibehold</string>
+    <string name="aspect_ratio_fill">Udfyld</string>
+    <string name="aspect_ratio_cover">Beskær</string>
+    <string name="internal_storage">Interne Lager</string>
+    <string name="external_storage">Eksterne Lager</string>
+    <string name="add_bookmark">Tilføj nuværende</string>
+    <string name="version">Version</string>
+</resources>

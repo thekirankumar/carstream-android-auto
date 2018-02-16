@@ -244,6 +244,10 @@ public class MediaNotificationManager extends BroadcastReceiver {
             return null;
         }
 
+        if (SettingsUtils.isDisabledNotifications(mContext)) {
+            return null;
+        }
+
         MediaDescriptionCompat description = mMetadata.getDescription();
 
         String fetchArtUrl = null;

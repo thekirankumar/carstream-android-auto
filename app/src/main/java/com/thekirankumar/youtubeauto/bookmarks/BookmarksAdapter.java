@@ -40,7 +40,10 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
     @Override
     public long getItemId(int position) {
         if (position < bookmarks.size()) {
-            return bookmarks.get(position).getCreatedAt();
+            Bookmark bookmark = bookmarks.get(position);
+            if(bookmark.isValid()) {
+                return bookmark.getCreatedAt();
+            }
         }
         return 0;
     }
@@ -143,7 +146,6 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
 
         public BookmarkViewHolder(Context context, ViewGroup parent) {
             super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bookmark_layout, parent, false));
-            itemView.setBackgroundResource(R.drawable.highlighting_drawable);
             AspectRatioFrameLayout aspectFrameLayout = (AspectRatioFrameLayout) itemView;
             aspectFrameLayout.setAspectRatio(1);
             aspectFrameLayout.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
@@ -159,7 +161,11 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             int thumbnailResource = bookmark.getThumbnailResource();
             int faviconResource = bookmark.getFaviconResource();
             if (thumbnail != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = false;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                options.inDither = true;
+                Bitmap bitmap = BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length, options);
                 this.thumbnail.setImageBitmap(bitmap);
             } else {
                 this.thumbnail.setImageResource(thumbnailResource);

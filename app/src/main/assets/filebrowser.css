@@ -1,8 +1,9 @@
-h1 {
+h3 {
     border-bottom: 1px solid #c0c0c0;
     margin-bottom: 10px;
     padding-bottom: 10px;
     white-space: nowrap;
+    color: #FFF;
   }
 
   table {
@@ -11,6 +12,23 @@ h1 {
 
   th {
     cursor: pointer;
+  }
+
+  td {
+    color: #cecece;
+    padding : 15px;
+  }
+
+  tr {
+    color: #FFF;
+  }
+
+  a {
+    color: #FFF;
+  }
+
+  body {
+    background-color: #303030;
   }
 
   td.detailsColumn {
@@ -22,6 +40,8 @@ h1 {
   a.icon {
     -webkit-padding-start: 1.5em;
     text-decoration: none;
+    background-position: left center !important;
+    padding: 20px;
   }
 
   a.icon:hover {

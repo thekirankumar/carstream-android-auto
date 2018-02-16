@@ -1,8 +1,10 @@
 package com.thekirankumar.youtubeauto.bookmarks;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.utils.GridAutofitLayoutManager;
@@ -80,14 +83,13 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         });
         Resources r = view.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, BOOKMARK_VIEW_SIZE_IN_DP, r.getDisplayMetrics());
-
-        recyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), (int) px));
+        GridAutofitLayoutManager gridAutofitLayoutManager = new GridAutofitLayoutManager(getContext(), (int) px);
+        recyclerView.setLayoutManager(gridAutofitLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Realm realm = Realm.getDefaultInstance();
 
-        RealmResults<Bookmark> bookmarksRealm = realm.where(Bookmark.class).sort("createdAt").findAll();
         final ArrayList<Bookmark> preburntBookmarks = getPreburntBookmarks();
-        this.bookmarks = realm.where(Bookmark.class).findAll();
+        this.bookmarks = realm.where(Bookmark.class).sort("createdAt").findAll();
         preburntBookmarks.addAll(bookmarks);
         final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(preburntBookmarks);
         bookmarksAdapter.setBookmarksClickCallback(this);
@@ -95,10 +97,26 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
         bookmarks.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Bookmark>>() {
             @Override
             public void onChange(@NonNull RealmResults<Bookmark> bookmarks, @javax.annotation.Nullable OrderedCollectionChangeSet changeSet) {
-                ArrayList<Bookmark> newBookmarks = new ArrayList<>(preburntBookmarks);
-                newBookmarks.addAll(bookmarks);
-                bookmarksAdapter.setBookmarks(newBookmarks);
-                bookmarksAdapter.notifyDataSetChanged();
+                if(isAdded() && getContext()!=null) {
+                    ArrayList<Bookmark> newBookmarks = new ArrayList<>(getPreburntBookmarks());
+                    newBookmarks.addAll(bookmarks);
+                    bookmarksAdapter.setBookmarks(newBookmarks);
+                    bookmarksAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        bookmarksAdapter.notifyDataSetChanged();
+
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+                /** this is a hack for dpad support **/
+                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                recyclerView.smoothScrollToPosition(0);
+                if (recyclerView.getChildCount() > 0) {
+                    recyclerView.getChildAt(0).requestFocus();
+                }
             }
         });
     }
@@ -106,12 +124,12 @@ public class BookmarksFragment extends Fragment implements BookmarksClickCallbac
     @Override
     public void onResume() {
         super.onResume();
-        recyclerView.requestFocus();
     }
 
     private ArrayList<Bookmark> getPreburntBookmarks() {
         final ArrayList<Bookmark> bookmarks = new ArrayList<>();
-        bookmarks.add(new Bookmark("YouTube", R.drawable.youtube_favicon, "http://youtube.com", R.drawable.youtube_bookmark));
+        bookmarks.add(new Bookmark("YouTube", R.drawable.youtube_favicon, "https://youtube.com", R.drawable.youtube_bookmark));
+        bookmarks.add(new Bookmark("YouTube TV", R.drawable.youtube_favicon, "https://youtube.com/tv", R.drawable.youtube_bookmark));
         String[] storageDirectories = MemoryStorage.getStorageDirectories(getContext());
         String internalSdCard = MemoryStorage.getSdCardPath();
         for (String storageDirectory : storageDirectories) {

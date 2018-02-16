@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">ATENTIE !!!</string>
+    <string name="warning_body"> Vizionarea videoclipurilor in timpul conducerii vehiculelor poate produce accidente. Prin respingerea acestui avertisment, acceptati ca sunteti informat si responsabil de consecintele acestui act. Atat dezvolatatorul acestei aplicatii cat si Google si producatorul acestei masini,nu pot fi facuti responsabili de niciun accident cauzat de neglijenta dumneavoastra. Puteti schimba la imaginea de fundal apasand in schimb butonul media.</string>
+    <string name="warning_accept_button">Inteleg Riscurile.</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Despre</string>
+    <string name="webview_back">Inapoi</string>
+    <string name="refresh_page">Reimprospatare</string>
+    <string name="send_to_car">Trimitere la masina</string>
+    <string name="night_mode">Modul Noapte</string>
+    <string name="bookmarks">Semne de Carte</string>
+    <string name="voice_search">Cautare Vocala</string>
+    <string name="search">Cautare</string>
+    <string name="fullscreen">Ecran Mare</string>
+    <string name="receive_from_phone">Primire</string>
+    <string name="home">Acasa</string>
+    <string name="aspect_ratio_contain">Cuprins</string>
+    <string name="aspect_ratio_fill">Completare</string>
+    <string name="aspect_ratio_cover">Coperta</string>
+    <string name="internal_storage">Stocare Interna</string>
+    <string name="external_storage">Stocare Externa</string>
+    <string name="add_bookmark">Adaugati Semn</string>
+    <string name="version">Versiune</string>
+</resources>

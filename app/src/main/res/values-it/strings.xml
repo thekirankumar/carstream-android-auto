@@ -13,10 +13,8 @@
     <string name="home">Pagina iniziale</string>
     <string name="internal_storage">Memoria interna</string>
     <string name="night_mode">Modalità notte</string>
-    <string name="receive_from_phone">Ricevi dal telefono</string>
     <string name="refresh_page">Ricarica</string>
     <string name="search">Cerca</string>
-    <string name="send_to_car">Invia ad auto</string>
     <string name="url_edittext_phone_app">Indirizzo :</string>
     <string name="voice_search">Ricerca vocale</string>
     <string name="warning_accept_button">Ho capito i rischi</string>
@@ -25,5 +23,9 @@
     <string name="webview_back">Indietro</string>
     <string name="car_service_name">CarStream</string>
     <string name="channel_name">CarSteam Channel</string>
-    <string name="version">Versione</string>
+    <string name="version">Versione </string>
+    <string name="settings">Impostazioni</string>
+    <string name="settings_car_category">Impostazioni dell'auto</string>
+    <string name="settings_car_disable_notifications_title">Disattiva notifiche</string>
+    <string name="settings_car_disable_notifications_summary">Disattiva notifiche a comparsa in Android Auto</string>
 </resources>

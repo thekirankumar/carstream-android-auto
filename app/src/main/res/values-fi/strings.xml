@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Channel</string>
+    <string name="warning_title">VAROITUS !!!</string>
+    <string name="warning_body">Videoiden katsominen ajaessa voi aiheuttaa liikenneonnettomuuksia. Ohittamalla tämän varoituksen, tiedostat ja olet vastuussa tämän valinnan mahdollisista seuraamuksista. Sovelluksen kehittäjä, Google, tämän laitteen valmistaja tai autovalmistaja eivät ole vastuussa välinpitämättömyydestä aiheutuvista onnettomuuksista. Voit myös vaihtaa taustatoistoon painamalla media kuvaketta.</string>
+    <string name="warning_accept_button">Ymmärrän riskit</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Tietoja</string>
+    <string name="webview_back">Edellinen</string>
+    <string name="refresh_page">Päivitä</string>
+    <string name="night_mode">Yö tila</string>
+    <string name="bookmarks">Kirjanmerkit</string>
+    <string name="voice_search">Ääni haku</string>
+    <string name="search">Haku</string>
+    <string name="fullscreen">Koko näyttö</string>
+    <string name="home">Koti</string>
+    <string name="aspect_ratio_contain">Sovita</string>
+    <string name="aspect_ratio_fill">Täytä</string>
+    <string name="aspect_ratio_cover">Peitä</string>
+    <string name="internal_storage">Sisäinen tallennustila</string>
+    <string name="external_storage">Ulkoinen tallennustila</string>
+    <string name="add_bookmark">Lisää nykyinen</string>
+    <string name="version">Versio</string>
+
+</resources>
