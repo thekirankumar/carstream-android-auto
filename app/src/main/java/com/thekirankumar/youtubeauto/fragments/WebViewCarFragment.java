@@ -72,6 +72,8 @@ import com.thekirankumar.youtubeauto.bookmarks.Bookmark;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarkUtils;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksClickCallback;
 import com.thekirankumar.youtubeauto.bookmarks.BookmarksFragment;
+import com.thekirankumar.youtubeauto.bookmarks.settings.SettingsFragment;
+import com.thekirankumar.youtubeauto.player.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.exoplayer.ExoPlayerFragment;
 import com.thekirankumar.youtubeauto.service.MyMediaBrowserService;
 import com.thekirankumar.youtubeauto.utils.BroadcastFromUI;
@@ -116,6 +118,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     private static final String FULLSCREEN_KEY = "fullscreen";
     private static final String ASPECT_RATIO_KEY = "aspect_ratio";
     private static final String PLAYER_FRAGMENT_TAG = "player";
+    private static final String SETTINGS_FRAGMENT_TAG = "settings";
     private HandlerThread handlerThread;
     private Runnable searchRunnable;
     private TextView carSpeedView;
@@ -255,6 +258,7 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
     private CarEditText fakeEditText;
     private boolean nativePlayerActive;
     private ExoPlayerFragment nativePlayerFragment;
+    private boolean settingsShown;
 
     public WebViewCarFragment() {
         // Required empty public constructor
@@ -502,7 +506,17 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
                 showBookmarksScreen();
             }
         });
-
+        ImageButton settingsButton = view.findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (settingsShown) {
+                    hideSettingsScreen();
+                } else {
+                    showSettingsScreen();
+                }
+            }
+        });
         toolbar = view.findViewById(R.id.toolbar);
         View webViewContainer = view.findViewById(R.id.webview_container);
         ViewGroup fullScreenVideoView = view.findViewById(R.id.full_screen_view);
@@ -1109,6 +1123,32 @@ public class WebViewCarFragment extends CarFragment implements MainCarActivity.A
             fragmentTransaction.add(R.id.overlay_container, bookmarksFragment, BOOKMARKS_FRAGMENT_TAG);
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.commitAllowingStateLoss();
+        }
+
+    }
+
+    private void hideSettingsScreen() {
+        if (isAdded()) {
+            settingsShown = false;
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            SettingsFragment oldFragment = (SettingsFragment) childFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG);
+            if (oldFragment != null) {
+                oldFragment.dismiss();
+            }
+        }
+        webView.requestFocus();
+    }
+
+    private void showSettingsScreen() {
+        if (isAdded()) {
+            settingsShown = true;
+            getView().findViewById(R.id.overlay_container).setVisibility(View.VISIBLE);
+            FragmentManager childFragmentManager = getChildFragmentManager();
+            SettingsFragment settingsFragment = (SettingsFragment) childFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG);
+            if (settingsFragment == null) {
+                settingsFragment = new SettingsFragment();
+            }
+            settingsFragment.show(childFragmentManager, SETTINGS_FRAGMENT_TAG);
         }
 
     }

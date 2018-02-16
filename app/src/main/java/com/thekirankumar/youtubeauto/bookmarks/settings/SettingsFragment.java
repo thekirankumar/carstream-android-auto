@@ -1,8 +1,10 @@
 package com.thekirankumar.youtubeauto.bookmarks.settings;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +18,12 @@ public class SettingsFragment extends DialogFragment {
 
     public SettingsFragment() {
         // Required empty public constructor
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getContext(), getTheme());
     }
 
     public static SettingsFragment newInstance(String param1, String param2) {

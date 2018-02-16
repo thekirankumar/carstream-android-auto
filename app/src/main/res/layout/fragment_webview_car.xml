@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
@@ -144,10 +145,24 @@
                     android:background="@drawable/highlighting_drawable"
                     android:nextFocusDown="@id/web_view"
                     android:nextFocusLeft="@id/fullscreen_button"
-                    android:nextFocusRight="@id/aspect_button"
                     style="@style/ToolbarButton"
+                    android:nextFocusRight="@id/settings_button"
                     android:src="@drawable/ic_bookmarks"
                     android:text="@string/receive_from_phone" />
+
+                <ImageButton
+                    android:id="@+id/settings_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:background="@drawable/highlighting_drawable"
+                    android:nextFocusDown="@id/web_view"
+                    android:nextFocusLeft="@id/bookmark_button"
+                    android:nextFocusRight="@id/aspect_button"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_settings_white_50dp"
+                    android:text="@string/settings" />
 
                 <TextClock
                     android:layout_width="wrap_content"
