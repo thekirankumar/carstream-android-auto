@@ -28,4 +28,5 @@
     <string name="settings_car_category">Настройки автомобил</string>
     <string name="settings_car_disable_notifications_title">Деактивиране на известията</string>
     <string name="settings_car_disable_notifications_summary">Деактивира известията в Android Auto</string>
+    
 </resources>
