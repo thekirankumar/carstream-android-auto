@@ -24,4 +24,8 @@
     <string name="external_storage">Външна памет</string>
     <string name="add_bookmark">Добави отметка</string>
     <string name="version">Версия</string>
+    <string name="settings">Настройки</string>
+    <string name="settings_car_category">Настройки автомобил</string>
+    <string name="settings_car_disable_notifications_title">Деактивиране на известията</string>
+    <string name="settings_car_disable_notifications_summary">Деактивира известията в Android Auto</string>
 </resources>
