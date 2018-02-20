@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,12 +32,14 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.thekirankumar.youtubeauto.R;
 import com.thekirankumar.youtubeauto.fragments.WebViewCarFragment;
 import com.thekirankumar.youtubeauto.mediaplayer.PlayerFocusHelper;
@@ -113,8 +116,8 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     @Override
     public void onResume() {
         super.onResume();
-        if(wasPlayingInBackground) {
-                player.setPlayWhenReady(true);
+        if (wasPlayingInBackground) {
+            player.setPlayWhenReady(true);
         }
     }
 
@@ -175,17 +178,24 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     }
 
 
-
-
     private MediaSource buildMediaSource(PlayerQueue playerQueue) {
         ArrayList<MediaSource> mediaSources = new ArrayList<>();
         File[] currentQueue = playerQueue.getCurrentQueue();
         for (File file : currentQueue) {
             Uri fileUri = Uri.fromFile(file);
-            ExtractorMediaSource extractorMediaSource = new ExtractorMediaSource(fileUri,
-                    new DefaultDataSourceFactory(getContext(), "ua"),
-                    new DefaultExtractorsFactory(), null, null);
-            mediaSources.add(extractorMediaSource);
+            String userAgent = Util.getUserAgent(getContext(), "CarStream");
+            if (file != null && (file.getName().endsWith(".m3u") || file.getName().endsWith(".m3u8"))) {
+                Handler mHandler = new Handler();
+                DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(getContext(), userAgent);
+                HlsMediaSource mediaSource = new HlsMediaSource(fileUri, defaultDataSourceFactory, 1800000,
+                        mHandler, null);
+                mediaSources.add(mediaSource);
+            } else {
+                ExtractorMediaSource extractorMediaSource = new ExtractorMediaSource(fileUri,
+                        new DefaultDataSourceFactory(getContext(), userAgent),
+                        new DefaultExtractorsFactory(), null, null);
+                mediaSources.add(extractorMediaSource);
+            }
         }
         ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource(mediaSources.toArray(new MediaSource[mediaSources.size()]));
         return concatenatingMediaSource;
@@ -214,12 +224,12 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
                     } else if (actionType == PlaybackState.ACTION_PAUSE) {
                         player.setPlayWhenReady(false);
                     } else if (actionType == PlaybackState.ACTION_SKIP_TO_NEXT) {
-                        if(playerQueue.hasNext()) {
+                        if (playerQueue.hasNext()) {
                             playerQueue.next();
                             player.seekToDefaultPosition(playerQueue.currentIndex());
                         }
                     } else if (actionType == PlaybackState.ACTION_SKIP_TO_PREVIOUS) {
-                        if(playerQueue.hasPrevious()) {
+                        if (playerQueue.hasPrevious()) {
                             playerQueue.previous();
                             player.seekToDefaultPosition(playerQueue.currentIndex());
                         }
@@ -296,7 +306,6 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
     }
 
 
-
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playbackState == Player.STATE_BUFFERING) {
@@ -306,7 +315,7 @@ public class ExoPlayerFragment extends Fragment implements Player.EventListener 
         } else if (playWhenReady && playbackState == Player.STATE_READY) {
             BroadcastFromUI.broadCastPlaying(getContext(), String.valueOf(titleView.getText()));
             playerFocusHelper.play();
-        } else if(playWhenReady) {
+        } else if (playWhenReady) {
             BroadcastFromUI.broadCastLoading(getContext());
         } else {
             BroadcastFromUI.broadCastPaused(getContext(), String.valueOf(titleView.getText()));
