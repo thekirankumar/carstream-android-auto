@@ -7,20 +7,20 @@
     <string name="url_edittext_phone_app">URL :</string>
     <string name="about_page">Über uns</string>
     <string name="webview_back">Zurück</string>
-    <string name="refresh_page">Aktuallisieren</string>
-    <string name="night_mode">Nacht Modus</string>
+    <string name="refresh_page">Aktualisieren</string>
+    <string name="night_mode">Nachtmodus</string>
     <string name="voice_search">Sprachsuche</string>
     <string name="search">Suche</string>
     <string name="fullscreen">Vollbild</string>
     <string name="home">Home</string>
     <string name="aspect_ratio_contain">Beibehalten</string>
     <string name="aspect_ratio_fill">Füllen</string>
-    <string name="aspect_ratio_cover">Beschneiden</string>
+    <string name="aspect_ratio_cover">Zuschneiden</string>
     <string name="app_name_player">CarStream player</string>
     <string name="channel_name">CarSteam Channel</string>
     <string name="bookmarks">Lesezeichen</string>
-    <string name="internal_storage">Interne Speicher</string>
+    <string name="internal_storage">Interner Speicher</string>
     <string name="external_storage">Externer Speicher</string>
     <string name="add_bookmark">Lesezeichen hinzufügen</string>
-    <string name="version">Fassung</string>
+    <string name="version">Version</string>
 </resources>
