@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">CarStream Kanaal</string>
+    <string name="warning_title">WAARSCHUWING !!!</string>
+    <string name="warning_body">Video's kijken terwijl je rijdt kan ongelukken veroorzaken. Als je deze waarschuwing wegklikt ga je akkoord met de risico's en ben je zelf aansprakelijk voor de gevolgen. Zowel de ontwikkelaar van deze applicatie, Google, de fabrikant van je auto als de fabrikant van je apparatuur kan niet verantwoordelijk worden gesteld voor ongelukken veroorzaakt hierdoor. Je kunt afspelen op de achtergrond aanzetten door op het media-icoon te klikken.</string>
+    <string name="warning_accept_button">Ik begrijp de risico's</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Over</string>
+    <string name="webview_back">Terug</string>
+    <string name="refresh_page">Verversen</string>
+    <string name="night_mode">Nachtmodus</string>
+    <string name="bookmarks">Favorieten</string>
+    <string name="voice_search">Spraakgestuurd zoeken</string>
+    <string name="search">Zoeken</string>
+    <string name="fullscreen">Volledig scherm</string>
+    <string name="home">Home</string>
+    <string name="aspect_ratio_contain">Bevat</string>
+    <string name="aspect_ratio_fill">Opvullen</string>
+    <string name="aspect_ratio_cover">Uitrekken</string>
+    <string name="internal_storage">Interne opslag</string>
+    <string name="external_storage">Externe opslag</string>
+    <string name="add_bookmark">Voeg toe aan favorieten</string>
+    <string name="version">Versie </string>
+
+</resources>
