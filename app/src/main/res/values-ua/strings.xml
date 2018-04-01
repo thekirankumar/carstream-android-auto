@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream player</string>
+    <string name="channel_name">Youtube канал</string>
+    <string name="warning_title">УВАГА !!!</string>
+    <string name="warning_body"> Використання програми під час руху заборонено!</string>
+    <string name="warning_accept_button">Згоден</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Про програму</string>
+    <string name="webview_back">Назад</string>
+    <string name="refresh_page">Оновити</string>
+    <string name="night_mode">Нічний режим</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="voice_search">Звуковий пошук</string>
+    <string name="search">Пошук</string>
+    <string name="fullscreen">Повний екран</string>
+    <string name="home">Основна сторінка</string>
+    <string name="aspect_ratio_contain">Contain</string>
+    <string name="aspect_ratio_fill">Fill</string>
+    <string name="aspect_ratio_cover">Cover</string>
+    <string name="internal_storage">Внутрішнє сховище</string>
+    <string name="external_storage">Зовнішнє сховище</string>
+    <string name="add_bookmark">Добавити в закладки</string>
+    <string name="version">Версія</string>
+    <string name="settings">Налаштування</string>
+    <string name="settings_car_category">Налаштування авто</string>
+    <string name="settings_car_disable_notifications_title">Відключити повідомлення</string>
+    <string name="settings_car_disable_notifications_summary">Відключити повідомлення в Android Auto</string>
+
+</resources>
