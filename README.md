@@ -1,3 +1,4 @@
+# Apr 2018 : Google has blocked all custom apps on Android Auto, hence this app won't work anymore. 
 # youtube-android-auto [![Build Status](https://travis-ci.org/thekirankumar/youtube-android-auto.svg?branch=master)](https://travis-ci.org/thekirankumar/youtube-android-auto)
 A youtube player for Android Auto. 
 Please visit http://www.thekirankumar.com/blog/2017/12/29/play-youtube-video-android-auto-app/ for downloading the APK.
