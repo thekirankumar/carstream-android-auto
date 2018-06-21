@@ -26,4 +26,9 @@
         android:id="@+id/settings"
         android:title="@string/settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/unlock"
+        android:title="@string/unlock"
+        app:showAsAction="never" />
+
 </menu>
