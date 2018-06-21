@@ -17,6 +17,7 @@ public class MainPhoneActivity extends AppCompatActivity implements ExoPlayerFra
         setContentView(R.layout.activity_phone_main);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
