@@ -1,3 +1,4 @@
+# June 2018 : If you own a ROOTED phone, go to the [releases](https://github.com/thekirankumar/carstream-android-auto/releases) section to download v2.0.
 # Apr 2018 : Google has blocked all custom apps on Android Auto, hence this app won't work anymore. 
 # youtube-android-auto [![Build Status](https://travis-ci.org/thekirankumar/youtube-android-auto.svg?branch=master)](https://travis-ci.org/thekirankumar/youtube-android-auto)
 A youtube player for Android Auto. 
