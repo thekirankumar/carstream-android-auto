@@ -33,6 +33,14 @@ android {
             }
         }
     }
+    compileOptions {
+        // This went in on 2019-05-25 because okhttp3-4.0.0-alpha01 contains Java 8 bytecode.
+        // The error message for this kindly offered the alternative of setting minSdkVersion to 26,
+        // which would be pretty not kind to users with slightly older phones, so let's not do that,
+        // and just set these compatibility flags instead.
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 buildscript {
