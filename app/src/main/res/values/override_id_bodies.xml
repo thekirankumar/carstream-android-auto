@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- These items define values that are probably present in some 3rd-party library but were
+    defined in an antiquated or incorrect manner by those authors. Such problems tend to cause
+    errors in the ":app:mergeDebugResources" build step with a message along the lines of
+    "Inner element must either be a resource reference or empty".
+    The solution in this case is to override those values in this file and declare them in the
+    "correct" way that Android Studio's build system expects.
+    This advice originally comes from the following Stack Overflow answer: https://stackoverflow.com/a/53332571
+    -->
+    <item name="container" type="id"/>
+    <item name="filler" type="id"/>
+    <item name="icon" type="id"/>
+    <item name="icon_container" type="id"/>
+    <item name="max_width_layout" type="id"/>
+    <item name="page_down" type="id"/>
+    <item name="page_up" type="id"/>
+    <item name="paged_scroll_view" type="id"/>
+    <item name="recycler_view" type="id"/>
+    <item name="right_icon" type="id"/>
+    <item name="scrollbar_thumb" type="id"/>
+    <item name="text" type="id"/>
+    <item name="text_container" type="id"/>
+    <item name="title" type="id"/>
+</resources>
