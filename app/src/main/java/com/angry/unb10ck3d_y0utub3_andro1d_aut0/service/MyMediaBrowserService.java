@@ -37,6 +37,7 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
     public static final String QUERY = "query";
     private static final String TAG = MyMediaBrowserService.class.getName();
     private MediaSessionCompat mediaSessionCompat;
+    private BroadcastReceiver  webviewBroadcastReceiver = null;
 
     @Override
     public void onCreate() {
@@ -51,17 +52,17 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
     }
 
     private void setup() {
-
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(getAvailableActions());
-        builder.setState(PlaybackState.STATE_STOPPED, 0, 1);
+        builder.setState(PlaybackStateCompat.STATE_STOPPED, 0, 1);
         if (!SettingsUtils.isDisabledNotifications(this)) {
             MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
             metadata.putString(METADATA_KEY_TITLE, "Click last icon in bottom bar & start playing from Youtube Auto app");
             mediaSessionCompat.setMetadata(metadata.build());
         }
         mediaSessionCompat.setPlaybackState(builder.build());
-        registerReceiver(new BroadcastReceiver() {
+
+        webviewBroadcastReceiver = new BroadcastReceiver(){
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (!SettingsUtils.isDisabledNotifications(context)) {
@@ -83,9 +84,17 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
                     mediaSessionCompat.setActive(false);
                 }
             }
-        }, new IntentFilter(WEBVIEW_EVENT));
+        };
+
+        registerReceiver(webviewBroadcastReceiver, new IntentFilter(WEBVIEW_EVENT));
 
 
+    }
+
+    private void teardown() {
+        if ( webviewBroadcastReceiver != null ) {
+            unregisterReceiver(webviewBroadcastReceiver);
+        }
     }
 
     private long getAvailableActions() {
@@ -98,9 +107,15 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
         return actions;
     }
 
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         MediaButtonReceiver.handleIntent(mediaSessionCompat, intent);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override public void onDestroy() {
+        teardown();
+        super.onDestroy();
     }
 
     @Nullable
