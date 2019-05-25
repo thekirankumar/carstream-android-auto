@@ -4,8 +4,8 @@
     <string name="app_name_player">CarStream player</string>
     <string name="channel_name">CarStream Kanaal</string>
     <string name="warning_title">WAARSCHUWING !!!</string>
-    <string name="warning_body">Video's bekijken tijdens het rijden kan auto-ongelukken veroorzaken. Door deze waarschuwing af te wijzen, gaat u ermee akkoord dat u op de hoogte bent van en verantwoordelijk bent voor de gevolgen. Noch de ontwikkelaar van deze app, noch Google, noch de fabrikant van deze apparatuur, noch de fabrikant van deze auto is verantwoordelijk voor ongevallen veroorzaakt door uw nalatigheid. U kunt overschakelen naar achtergrondweergave door in plaats daarvan op het mediapictogram te klikken.</string>
-    <string name="warning_accept_button">Ik begrijp de risico's</string>
+    <string name="warning_body">Video\'s bekijken tijdens het rijden kan auto-ongelukken veroorzaken. Door deze waarschuwing af te wijzen, gaat u ermee akkoord dat u op de hoogte bent van en verantwoordelijk bent voor de gevolgen. Noch de ontwikkelaar van deze app, noch Google, noch de fabrikant van deze apparatuur, noch de fabrikant van deze auto is verantwoordelijk voor ongevallen veroorzaakt door uw nalatigheid. U kunt overschakelen naar achtergrondweergave door in plaats daarvan op het mediapictogram te klikken.</string>
+    <string name="warning_accept_button">Ik begrijp de risico\'s</string>
     <string name="url_edittext_phone_app">URL :</string>
     <string name="about_page">Over</string>
     <string name="webview_back">Terug</string>
