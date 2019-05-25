@@ -41,6 +41,12 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
+    dexOptions {
+        // This workaround exists to mitigate an error that can be encountered when
+        // generating a signed APK:
+        //   com.android.dex.DexException: Cannot merge new index 65536 into a non-jumbo instruction!
+        jumboMode = true
+    }
 }
 
 buildscript {
