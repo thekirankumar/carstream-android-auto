@@ -10,6 +10,7 @@
     <string name="about_page">About</string>
     <string name="webview_back">Back</string>
     <string name="refresh_page">Refresh</string>
+    <string name="send_to_car">Send to car</string>
     <string name="night_mode">Night Mode</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="voice_search">Voice search</string>
