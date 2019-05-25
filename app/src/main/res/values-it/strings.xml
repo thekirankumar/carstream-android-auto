@@ -25,7 +25,7 @@
     <string name="channel_name">CarSteam Channel</string>
     <string name="version">Versione </string>
     <string name="settings">Impostazioni</string>
-    <string name="settings_car_category">Impostazioni dell'auto</string>
+    <string name="settings_car_category">Impostazioni dell\'auto</string>
     <string name="settings_car_disable_notifications_title">Disattiva notifiche</string>
     <string name="settings_car_disable_notifications_summary">Disattiva notifiche a comparsa in Android Auto</string>
 </resources>
