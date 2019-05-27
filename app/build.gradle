@@ -39,7 +39,15 @@ android {
         //   com.android.dex.DexException: Cannot merge new index 65536 into a non-jumbo instruction!
         jumboMode = true
     }
-}
+    
+    compileOptions {
+        // This went in on 2019-05-25 because okhttp3-4.0.0-alpha01 contains Java 8 bytecode.
+        // The error message for this kindly offered the alternative of setting minSdkVersion to 26,
+        // which would be pretty not kind to users with slightly older phones, so let's not do that,
+        // and just set these compatibility flags instead.
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 
 buildscript {
     repositories {
@@ -68,6 +76,7 @@ dependencies {
     compile 'com.github.zagum:SpeechRecognitionView:1.2.2'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.squareup.okio:okio:2.2.2' // Needed as dependency for okhttp3
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.google.android.exoplayer:exoplayer:2.6.1'
