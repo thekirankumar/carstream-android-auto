@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">CarStream</string>
+    <string name="car_service_name">CarStream</string>
+    <string name="app_name_player">CarStream avspiller</string>
+    <string name="channel_name">CarStream Kanal</string>
+    <string name="warning_title">ADVARSEL !!!</string>
+    <string name="warning_body">Å se på videoer under kjøring kan føre til at bilen krasjer. Ved å avvise denne advarselen, godtar du at du er klar over og ansvarlig for konsekvensene av å gjøre dette. Verken utvikleren av denne appen, heller ikke Google eller produsenten av dette utstyret eller produsenten av denne bilen, er ansvarlig for ulykker forårsaket av uaktsomhet. Du kan bytte til bakgrunnsavspilling ved å klikke på medieikonet i stedet.</string>
+    <string name="warning_accept_button">Jeg forstår risikoen</string>
+    <string name="url_edittext_phone_app">URL :</string>
+    <string name="about_page">Om</string>
+    <string name="webview_back">Tilbake</string>
+    <string name="refresh_page">Oppdater</string>
+    <string name="night_mode">Nattmodus</string>
+    <string name="bookmarks">Bokmerker</string>
+    <string name="voice_search">Stemmesøk</string>
+    <string name="search">Søk</string>
+    <string name="fullscreen">Fullskjerm</string>
+    <string name="home">Hjem</string>
+    <string name="aspect_ratio_contain">Tilpass</string>
+    <string name="aspect_ratio_fill">Fyll</string>
+    <string name="aspect_ratio_cover">Dekk</string>
+    <string name="internal_storage">Intern Lagring</string>
+    <string name="external_storage">Ekstern Lagring</string>
+    <string name="add_bookmark">Legg til denne siden</string>
+    <string name="version">Versjon </string>
+    <string name="settings">Innstillinger</string>
+    <string name="settings_car_category">Bilinnstillinger</string>
+    <string name="settings_car_disable_notifications_title">Skru av varslinger</string>
+    <string name="settings_car_disable_notifications_summary">Skru av head-up varslinger i Android Auto</string>
+</resources>
